@@ -258,33 +258,59 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 10px 25px rgba(28, 28, 28, 0.08);
 }
 
-/* Rolling Text Container */
+/* Icon Slide Button styles (Framer style) */
+.cta-button .btn-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
 .cta-button .btn-text {
   display: inline-block;
   position: relative;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.45s var(--transition-fast);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s var(--transition-fast);
   pointer-events: none;
 }
 
-.cta-button .btn-text[data-text]::after {
-  content: attr(data-text);
+.cta-button .btn-icon {
   position: absolute;
-  top: 150%;
-  left: 0;
-  width: 100%;
-  text-align: center;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  transform: translateX(15px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s var(--transition-fast);
+  pointer-events: none;
 }
 
-.cta-button-primary:hover .btn-text {
+.cta-button .btn-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+}
+
+.cta-button-primary:hover .btn-text,
+.cta-button-primary:hover .btn-icon {
   color: var(--color-text-primary);
 }
 
-.cta-button-secondary:hover .btn-text {
+.cta-button-secondary:hover .btn-text,
+.cta-button-secondary:hover .btn-icon {
   color: var(--color-bg-warm);
 }
 
-.cta-button:hover .btn-text[data-text] {
-  transform: translateY(-150%);
+.cta-button:hover .btn-text {
+  transform: translateX(-10px);
+}
+
+.cta-button:hover .btn-icon {
+  opacity: 1;
+  transform: translateX(-2px);
 }
 
 /* ==========================================================================
@@ -863,7 +889,8 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--color-white);
 }
 
-.hero-ctas .cta-button-secondary:hover .btn-text {
+.hero-ctas .cta-button-secondary:hover .btn-text,
+.hero-ctas .cta-button-secondary:hover .btn-icon {
   color: var(--color-text-primary);
 }
 
