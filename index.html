@@ -1443,8 +1443,11 @@
       
       <form class="newsletter-form-v2" id="newsletter-form">
         <div class="newsletter-input-group">
-          <input type="email" placeholder="Enter your email address" aria-label="Email Address" required>
-          <button type="submit" class="newsletter-submit-btn">Subscribe →</button>
+          <input type="email" placeholder="Enter your email address" aria-label="Email Address" required class="newsletter-input-field">
+          <button type="submit" class="newsletter-submit-btn-solid">
+            <span>Subscribe</span>
+            <span class="btn-icon"><i data-lucide="arrow-right"></i></span>
+          </button>
         </div>
       </form>
       
@@ -1459,16 +1462,16 @@
   <footer class="footer-v2" id="site-footer">
     <div class="footer-grid-v2">
       <div class="footer-brand-v2">
-        <a href="#home" class="brand-logo nav-trigger" data-view="home" style="margin-bottom: var(--spacing-md); display: inline-block; background-color: var(--color-white); padding: var(--spacing-xs) var(--spacing-md); border-radius: var(--border-radius-sm); width: max-content;">
-          <img src="/logo.png" alt="Ruven Studio Label Logo" style="height: 38px; width: auto; object-fit: contain;">
+        <a href="#home" class="brand-logo nav-trigger" data-view="home" style="margin-bottom: var(--spacing-md); display: inline-block; padding: var(--spacing-2xs) 0; width: max-content;">
+          <img src="/logo_white.png" alt="Ruven Studio Label Logo" style="height: 48px; width: auto; object-fit: contain;">
         </a>
         <p class="footer-statement-v2">
           An independent Christian lifestyle fashion label crafting heavy-weight apparel designed to start quiet, meaningful conversations about faith, renewal, and identity.
         </p>
         <div class="footer-social-row" style="margin-bottom: var(--spacing-sm);">
           <a href="https://instagram.com/ruven.studio" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
           <a href="#" aria-label="WhatsApp Group"><i data-lucide="message-circle"></i></a>
-          <a href="#" aria-label="Pinterest"><i data-lucide="chrome"></i></a>
         </div>
         <div class="footer-contact-details" style="font-size: 0.8rem; line-height: 1.6; color: var(--color-text-muted); margin-top: 12px;">
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
@@ -1529,9 +1532,6 @@
     <span id="toast-message">Submission successful!</span>
   </div>
 
-  <!-- Premium Custom Cursor (desktop only) -->
-  <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
-  <div class="custom-cursor-ring" id="custom-cursor-ring"></div>
 
   <!-- Application Logic JavaScript -->
   <script type="module" src="/main.js"></script>

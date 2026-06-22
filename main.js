@@ -294,7 +294,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSearchModal();
   setupHeroParallax();
   setupScrollReveal();
-  initCustomCursor();
   
   // Render Dynamic Sections
   renderHomepageGrids();
@@ -4280,86 +4279,3 @@ function renderAccountPage() {
 
   if (window.lucide) window.lucide.createIcons();
 }
-
-// Premium Desktop Custom Cursor
-function initCustomCursor() {
-  const dot = document.getElementById("custom-cursor-dot");
-  const ring = document.getElementById("custom-cursor-ring");
-  
-  if (!dot || !ring) return;
-  
-  // Disable on devices without fine pointer (touchscreens)
-  if (!window.matchMedia("(pointer: fine)").matches) {
-    dot.style.display = "none";
-    ring.style.display = "none";
-    return;
-  }
-  
-  let mouseX = 0;
-  let mouseY = 0;
-  let ringX = 0;
-  let ringY = 0;
-  let isMoving = false;
-  
-  window.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    
-    if (!isMoving) {
-      dot.style.opacity = "1";
-      ring.style.opacity = "1";
-      isMoving = true;
-    }
-  });
-  
-  window.addEventListener("mouseout", () => {
-    dot.style.opacity = "0";
-    ring.style.opacity = "0";
-    isMoving = false;
-  });
-  
-  function updateCursor() {
-    // Smooth lerp follow for the ring
-    const ease = 0.15;
-    ringX += (mouseX - ringX) * ease;
-    ringY += (mouseY - ringY) * ease;
-    
-    // Direct transform for performance
-    dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate3d(-50%, -50%, 0)`;
-    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate3d(-50%, -50%, 0)`;
-    
-    requestAnimationFrame(updateCursor);
-  }
-  
-  requestAnimationFrame(updateCursor);
-  
-  // Attach hover styles to interactive elements
-  const addHoverListeners = () => {
-    const interactives = document.querySelectorAll("a, button, input, select, textarea, [role='button'], .product-card, .journal-card, .testimony-card, .pray-card, .size-selector-btn, .color-selector-btn");
-    interactives.forEach(el => {
-      // Avoid duplicate listeners
-      if (el.dataset.cursorBound) return;
-      el.dataset.cursorBound = "true";
-      
-      el.addEventListener("mouseenter", () => {
-        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-          document.body.classList.add("cursor-hover-text");
-        } else {
-          document.body.classList.add("cursor-hover");
-        }
-      });
-      
-      el.addEventListener("mouseleave", () => {
-        document.body.classList.remove("cursor-hover");
-        document.body.classList.remove("cursor-hover-text");
-      });
-    });
-  };
-  
-  addHoverListeners();
-  
-  // Observe mutations to handle newly rendered items (like products or cart cards)
-  const observer = new MutationObserver(addHoverListeners);
-  observer.observe(document.body, { childList: true, subtree: true });
-}
-
