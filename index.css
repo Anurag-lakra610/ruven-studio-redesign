@@ -2168,23 +2168,36 @@ h1, h2, h3, h4, h5, h6 {
 .footer-social-row {
   display: flex;
   gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
 }
 
 .footer-social-row a {
   color: #FFFFFF;
-  transition: color var(--transition-fast);
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--border-radius-full);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .footer-social-row a:hover {
-  color: var(--color-brand-gold);
+  color: var(--color-white);
+  background-color: var(--color-brand-gold);
+  border-color: var(--color-brand-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
 }
 
-.footer-social-row i {
-  width: 18px;
-  height: 18px;
+.footer-social-row i,
+.footer-social-row svg {
+  width: 16px !important;
+  height: 16px !important;
+  stroke-width: 2px;
 }
 
 .footer-links-col-v2 h4 {
