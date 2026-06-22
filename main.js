@@ -89,6 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
   setupProductPageListeners();
   setupPrayerWall();
   setupNewsletter();
+  setupAnnouncementBar();
+  setupSearchModal();
+  setupHeroParallax();
   
   // Render Dynamic Sections
   renderHomepageGrids();
@@ -104,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Header Scroll Effect
   window.addEventListener("scroll", () => {
     const header = document.getElementById("site-header");
-    if (window.scrollY > 50) {
+    if (window.scrollY > 30) {
       header.classList.add("scrolled");
     } else {
       header.classList.remove("scrolled");
@@ -939,4 +942,118 @@ function setupNewsletter() {
       form.reset();
     });
   }
+}
+
+// 11. ANNOUNCEMENT BAR VALUE ROTATION
+function setupAnnouncementBar() {
+  const messages = [
+    "Designed to Start Conversations About Christ",
+    "Premium Quality • Faith Inspired • Limited Collections",
+    "Made with Purpose"
+  ];
+  let currentIndex = 0;
+  const container = document.getElementById("announcement-text");
+  if (!container) return;
+
+  setInterval(() => {
+    container.style.opacity = 0;
+    setTimeout(() => {
+      currentIndex = (currentIndex + 1) % messages.length;
+      container.textContent = messages[currentIndex];
+      container.style.opacity = 1;
+    }, 400);
+  }, 4500);
+}
+
+// 12. SEARCH MODAL TRIGGERS & HANDLING
+function setupSearchModal() {
+  const searchBtn = document.getElementById("search-btn");
+  const closeBtn = document.getElementById("search-modal-close-btn");
+  const modal = document.getElementById("search-modal");
+  const form = document.getElementById("search-modal-form");
+  const input = document.getElementById("search-modal-input");
+
+  if (!searchBtn || !modal) return;
+
+  searchBtn.addEventListener("click", () => {
+    modal.classList.add("active");
+    setTimeout(() => input.focus(), 150);
+  });
+
+  const closeSearch = () => {
+    modal.classList.remove("active");
+    input.value = "";
+  };
+
+  if (closeBtn) closeBtn.addEventListener("click", closeSearch);
+
+  // Close search on Esc key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("active")) {
+      closeSearch();
+    }
+  });
+
+  // Handle click on suggestions or trigger search
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = input.value.trim().toLowerCase();
+      if (query) {
+        closeSearch();
+        switchView("shop");
+        
+        // Search inside products
+        const shopGrid = document.getElementById("shop-products-grid");
+        if (shopGrid) {
+          const filtered = PRODUCTS.filter(p => 
+            p.title.toLowerCase().includes(query) || 
+            p.verseRef.toLowerCase().includes(query) || 
+            p.designStory.toLowerCase().includes(query)
+          );
+          
+          const countEl = document.getElementById("shop-items-count");
+          if (countEl) {
+            countEl.textContent = `Search results for "${query}": ${filtered.length} found`;
+          }
+          
+          shopGrid.innerHTML = filtered.length > 0
+            ? filtered.map(product => createProductCardMarkup(product)).join("")
+            : `<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted); padding: var(--spacing-xl) 0;">No matching drops found. Try searching 'tee' or 'hoodie'.</p>`;
+          
+          if (window.lucide) {
+            window.lucide.createIcons();
+          }
+          attachCardEvents();
+        }
+      }
+    });
+  }
+
+  // Intercept search suggestion links to close modal
+  document.querySelectorAll(".search-suggestion-link").forEach(link => {
+    link.addEventListener("click", () => {
+      closeSearch();
+    });
+  });
+}
+
+// 13. HERO PARALLAX MOUSE INTERACTION
+function setupHeroParallax() {
+  const bg = document.getElementById("hero-bg-parallax");
+  if (!bg) return;
+
+  document.addEventListener("mousemove", (e) => {
+    if (state.activeView !== "home") return;
+    
+    // Parallax relative to center of screen
+    const xPct = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+    const yPct = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    
+    // Move bg image slightly in opposite direction
+    const img = bg.querySelector(".hero-img");
+    if (img) {
+      img.style.transform = `scale(1.03) translate(${xPct * -15}px, ${yPct * -15}px)`;
+    }
+  });
 }
