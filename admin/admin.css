@@ -2712,3 +2712,9 @@ ul, ol { list-style: none; }
   .cmd-palette { margin: var(--space-4); }
   .role-grid { grid-template-columns: 1fr; }
 }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}

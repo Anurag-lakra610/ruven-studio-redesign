@@ -12,9 +12,24 @@ const STATE = {
   currentSection: 'dashboard',
   sidebarCollapsed: false,
   isAuthenticated: false,
-  user: { name: 'Super Admin', email: 'admin@ruvenstudio.com', role: 'super-admin', initials: 'SA' },
-  notifications: 5,
+  user: { name: 'Samuel Ruven', email: 'samuel@ruvenstudio.in', role: 'super-admin', initials: 'SR' },
 };
+
+// Valid admin accounts — email: password
+// Password is checked against localStorage first, then falls back to default
+const ADMIN_ACCOUNTS = {
+  'samuel@ruvenstudio.in':  { name: 'Samuel Ruven',  initials: 'SR', defaultPw: 'Ruven@2026' },
+  'admin@ruvenstudio.com':  { name: 'Super Admin',   initials: 'SA', defaultPw: 'Ruven@2026' },
+  'admin@ruvenstudio.in':   { name: 'Samuel Ruven',  initials: 'SR', defaultPw: 'Ruven@2026' },
+};
+
+function getStoredPassword(email) {
+  return localStorage.getItem(`rs_pw_${btoa(email)}`) || null;
+}
+
+function setStoredPassword(email, pw) {
+  localStorage.setItem(`rs_pw_${btoa(email)}`, pw);
+}
 
 // ============================================================
 // DOM READY
@@ -44,36 +59,78 @@ function initAuth() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value.trim();
-      const btn = document.getElementById('login-btn');
+      const email    = document.getElementById('login-email').value.trim().toLowerCase();
+      const password = document.getElementById('login-password').value;
+      const btn      = document.getElementById('login-btn');
+      const errBox   = document.getElementById('login-error');
+
+      errBox.style.display = 'none';
 
       if (!email || !password) {
-        showToast('error', 'Missing Fields', 'Please enter your email and password');
+        errBox.textContent = '❌ Please enter both your email and password.';
+        errBox.style.display = 'block';
         return;
       }
 
+      const account = ADMIN_ACCOUNTS[email];
+      if (!account) {
+        errBox.textContent = '❌ No admin account found for this email.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      // Check stored password first, then fall back to default
+      const storedPw  = getStoredPassword(email);
+      const validPw   = storedPw || account.defaultPw;
+
+      if (password !== validPw) {
+        errBox.textContent = '❌ Incorrect password. Hint: default is Ruven@2026';
+        errBox.style.display = 'block';
+        // shake the card
+        const card = btn.closest('.auth-card');
+        card.style.animation = 'none';
+        setTimeout(() => card.style.animation = 'shake 0.4s ease', 10);
+        return;
+      }
+
+      // Correct credentials
       btn.classList.add('btn-loading');
       btn.disabled = true;
-      btn.textContent = 'Signing in…';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;animation:spin 0.8s linear infinite"><path d="M12 2a10 10 0 1 0 10 10"/></svg> Signing in…';
+
+      STATE.user = { name: account.name, email, role: 'super-admin', initials: account.initials };
 
       setTimeout(() => {
         btn.classList.remove('btn-loading');
         btn.disabled = false;
-        // Skip 2FA for demo — go straight to admin
         sessionStorage.setItem('rs_admin_auth', 'true');
+        sessionStorage.setItem('rs_admin_user', JSON.stringify(STATE.user));
         enterAdmin();
-      }, 1200);
+      }, 1000);
     });
   }
 }
 
 function enterAdmin() {
   STATE.isAuthenticated = true;
+
+  // Restore user from session if available
+  const savedUser = sessionStorage.getItem('rs_admin_user');
+  if (savedUser) STATE.user = JSON.parse(savedUser);
+
   document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
   document.getElementById('admin-app').classList.add('active');
+
+  // Update sidebar with logged-in user info
+  const nameEl   = document.getElementById('sidebar-name');
+  const emailEl  = document.getElementById('sidebar-email');
+  const avatarEl = document.getElementById('sidebar-avatar');
+  if (nameEl)   nameEl.textContent   = STATE.user.name;
+  if (emailEl)  emailEl.textContent  = STATE.user.email;
+  if (avatarEl) avatarEl.textContent = STATE.user.initials;
+
   navigate('dashboard');
-  showToast('success', 'Welcome back 👋', 'Logged in as Super Admin');
+  showToast('success', `Welcome back, ${STATE.user.name.split(' ')[0]} 👋`, 'You are logged in as Super Admin');
   startRealTimeClock();
 }
 
