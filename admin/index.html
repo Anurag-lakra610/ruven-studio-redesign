@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruven Studio — Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="../public/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- ============================================================
+     AUTH SCREENS
+     ============================================================ -->
+
+<!-- LOGIN -->
+<div id="screen-login" class="auth-screen active">
+  <div class="auth-bg"></div>
+  <div class="auth-grid-pattern"></div>
+  <div class="auth-center">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-mark">R</div>
+        <h1>Ruven Studio</h1>
+      </div>
+      <h2 class="auth-title">Welcome back</h2>
+      <p class="auth-subtitle">Sign in to your admin account</p>
+      <form class="auth-form" id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <div class="form-input-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            <input type="email" class="form-input" id="login-email" placeholder="admin@ruvenstudio.com" value="admin@ruvenstudio.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="form-input-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" class="form-input" id="login-password" placeholder="••••••••" value="admin123">
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:-8px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text-muted);cursor:pointer;">
+            <input type="checkbox" checked style="accent-color:var(--brand-burgundy);"> Remember device
+          </label>
+          <a href="#" class="auth-link" style="font-size:0.8rem;color:var(--brand-gold);" onclick="showScreen('screen-forgot')">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px;" id="login-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Sign in
+        </button>
+      </form>
+      <div class="auth-divider"><span>or continue with</span></div>
+      <button class="btn-social" onclick="showToast('info','Magic Link','A sign-in link has been sent to your email')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Magic Link
+      </button>
+      <div class="auth-footer">
+        Need access? <a href="#" onclick="showScreen('screen-invite')">Request Invitation</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2FA -->
+<div id="screen-2fa" class="auth-screen">
+  <div class="auth-bg"></div>
+  <div class="auth-grid-pattern"></div>
+  <div class="auth-center">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-mark">🔐</div>
+        <h1>Two-Factor Auth</h1>
+      </div>
+      <h2 class="auth-title">Verify your identity</h2>
+      <p class="auth-subtitle">Enter the 6-digit code from your authenticator app</p>
+      <div class="otp-group">
+        <input type="text" maxlength="1" class="otp-input" id="otp-1">
+        <input type="text" maxlength="1" class="otp-input" id="otp-2">
+        <input type="text" maxlength="1" class="otp-input" id="otp-3">
+        <input type="text" maxlength="1" class="otp-input" id="otp-4">
+        <input type="text" maxlength="1" class="otp-input" id="otp-5">
+        <input type="text" maxlength="1" class="otp-input" id="otp-6">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="complete2FA()">Verify &amp; Continue</button>
+      <div class="auth-footer">
+        <a href="#" onclick="showScreen('screen-login')" style="color:var(--text-muted);">← Back to login</a>
+        &nbsp;·&nbsp; <a href="#">Use recovery code</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div id="screen-forgot" class="auth-screen">
+  <div class="auth-bg"></div>
+  <div class="auth-grid-pattern"></div>
+  <div class="auth-center">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-mark">✉️</div>
+        <h1>Reset Password</h1>
+      </div>
+      <h2 class="auth-title">Forgot your password?</h2>
+      <p class="auth-subtitle">Enter your email and we'll send a reset link</p>
+      <form class="auth-form">
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-input" placeholder="admin@ruvenstudio.com">
+        </div>
+        <button type="button" class="btn btn-primary btn-full" onclick="showToast('success','Email Sent','Check your inbox for the reset link');showScreen('screen-login')">Send Reset Link</button>
+      </form>
+      <div class="auth-footer"><a href="#" onclick="showScreen('screen-login')" style="color:var(--text-muted);">← Back to login</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- INVITE SCREEN -->
+<div id="screen-invite" class="auth-screen">
+  <div class="auth-bg"></div>
+  <div class="auth-grid-pattern"></div>
+  <div class="auth-center">
+    <div class="auth-card">
+      <div class="auth-logo"><div class="auth-logo-mark">👤</div><h1>Request Access</h1></div>
+      <h2 class="auth-title">Join Ruven Studio Admin</h2>
+      <p class="auth-subtitle">Select your role and we'll send an invite link</p>
+      <div class="role-select-grid" style="margin-bottom:20px;">
+        <div class="role-card active" onclick="selectRole(this)"><div class="role-icon">🛍️</div><div class="role-name">Store Manager</div></div>
+        <div class="role-card" onclick="selectRole(this)"><div class="role-icon">📦</div><div class="role-name">Product Manager</div></div>
+        <div class="role-card" onclick="selectRole(this)"><div class="role-icon">✍️</div><div class="role-name">Content Editor</div></div>
+        <div class="role-card" onclick="selectRole(this)"><div class="role-icon">🎯</div><div class="role-name">Marketing</div></div>
+      </div>
+      <input type="email" class="form-input" placeholder="your@email.com" style="margin-bottom:12px;">
+      <button class="btn btn-primary btn-full" onclick="showToast('info','Request Sent','An admin will review your request');showScreen('screen-login')">Submit Request</button>
+      <div class="auth-footer"><a href="#" onclick="showScreen('screen-login')" style="color:var(--text-muted);">← Back to login</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN ADMIN APP
+     ============================================================ -->
+<div id="admin-app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">R</div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">Ruven Studio</span>
+        <span class="sidebar-brand-sub">Admin Portal</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" onclick="navigate('dashboard')" title="Dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="nav-label">Dashboard</span>
+      </div>
+
+      <div class="nav-section-label">Catalog</div>
+      <div class="nav-item" onclick="navigate('products')" title="Products">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="nav-label">Products</span>
+      </div>
+      <div class="nav-item" onclick="navigate('collections')" title="Collections">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h6l2 3h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg>
+        <span class="nav-label">Collections</span>
+      </div>
+      <div class="nav-item" onclick="navigate('media')" title="Media Library">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span class="nav-label">Media Library</span>
+      </div>
+
+      <div class="nav-section-label">Commerce</div>
+      <div class="nav-item" onclick="navigate('orders')" title="Orders">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="nav-label">Orders</span>
+        <span class="nav-badge">12</span>
+      </div>
+      <div class="nav-item" onclick="navigate('customers')" title="Customers">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="nav-label">Customers</span>
+      </div>
+      <div class="nav-item" onclick="navigate('discounts')" title="Discounts">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        <span class="nav-label">Discounts</span>
+      </div>
+
+      <div class="nav-section-label">Content</div>
+      <div class="nav-item" onclick="navigate('articles')" title="Articles">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="nav-label">Faith Journal</span>
+        <span class="nav-badge">3</span>
+      </div>
+      <div class="nav-item" onclick="navigate('verses')" title="Verse Library">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span class="nav-label">Verse Library</span>
+      </div>
+      <div class="nav-item" onclick="navigate('homepage')" title="Homepage Builder">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Homepage Builder</span>
+      </div>
+      <div class="nav-item" onclick="navigate('navigation')" title="Navigation">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span class="nav-label">Navigation</span>
+      </div>
+
+      <div class="nav-section-label">Community</div>
+      <div class="nav-item" onclick="navigate('community')" title="Community">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="nav-label">Community</span>
+        <span class="nav-badge">5</span>
+      </div>
+      <div class="nav-item" onclick="navigate('reviews')" title="Reviews">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span class="nav-label">Reviews</span>
+      </div>
+
+      <div class="nav-section-label">Growth</div>
+      <div class="nav-item" onclick="navigate('marketing')" title="Marketing">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="nav-label">Marketing</span>
+      </div>
+      <div class="nav-item" onclick="navigate('analytics')" title="Analytics">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span class="nav-label">Analytics</span>
+      </div>
+      <div class="nav-item" onclick="navigate('newsletter')" title="Newsletter">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        <span class="nav-label">Newsletter</span>
+      </div>
+
+      <div class="nav-section-label">Settings</div>
+      <div class="nav-item" onclick="navigate('users')" title="Users & Roles">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="nav-label">Users &amp; Roles</span>
+      </div>
+      <div class="nav-item" onclick="navigate('settings')" title="Settings">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="nav-label">Settings</span>
+      </div>
+      <div class="nav-item" onclick="navigate('audit')" title="Audit Logs">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span class="nav-label">Audit Logs</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-avatar-row" onclick="navigate('settings')">
+        <div class="user-avatar">SA</div>
+        <div class="user-info">
+          <div class="user-name">Super Admin</div>
+          <div class="user-role">admin@ruvenstudio.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="admin-main" id="admin-main">
+
+    <!-- HEADER -->
+    <header class="admin-header">
+      <div class="header-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </div>
+      <div class="header-breadcrumb">
+        <span id="header-section">Dashboard</span>
+      </div>
+      <div class="header-search">
+        <div class="search-trigger" onclick="openCmdPalette()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--text-muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Search everything…</span>
+          <div class="search-kbd"><kbd>⌘</kbd><kbd>K</kbd></div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="header-btn" onclick="openNotifications()" title="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="header-btn" onclick="showToast('info','Help','Documentation is available at docs.ruvenstudio.com')" title="Help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openNewItemModal()" id="header-new-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="logout()" style="color:var(--text-muted);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== PAGE PANELS ===== -->
+    <div class="admin-content">
+
+      <!-- DASHBOARD -->
+      <div id="panel-dashboard" class="section-panel active">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title">Good morning, Admin 👋</h1>
+            <p class="page-subtitle">Here's what's happening with Ruven Studio today.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Last 30 days
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="showToast('success','Report Ready','Downloading analytics report...')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-accent accent-burgundy"></div>
+            <div class="stat-header">
+              <span class="stat-label">Revenue Today</span>
+              <div class="stat-icon" style="background:var(--brand-burgundy-glow);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-burgundy-light)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+            </div>
+            <div class="stat-value">₹24,890</div>
+            <div class="stat-change up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              +18.4% vs yesterday
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent accent-gold"></div>
+            <div class="stat-header">
+              <span class="stat-label">Orders Today</span>
+              <div class="stat-icon" style="background:var(--brand-gold-dim);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-gold)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+            </div>
+            <div class="stat-value">47</div>
+            <div class="stat-change up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              +7 from yesterday
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent accent-success"></div>
+            <div class="stat-header">
+              <span class="stat-label">Visitors Today</span>
+              <div class="stat-icon" style="background:var(--color-success-bg);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+            </div>
+            <div class="stat-value">1,842</div>
+            <div class="stat-change up">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              +12.2%
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-accent accent-info"></div>
+            <div class="stat-header">
+              <span class="stat-label">Conversion Rate</span>
+              <div class="stat-icon" style="background:var(--color-info-bg);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-info)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+            </div>
+            <div class="stat-value">2.55%</div>
+            <div class="stat-change down">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+              -0.3% vs last week
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <div class="quick-action" onclick="navigate('products');setTimeout(()=>openProductEditor(),200)">
+            <div class="qa-icon" style="background:var(--brand-burgundy-glow);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-burgundy-light)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <span class="qa-label">New Product</span>
+          </div>
+          <div class="quick-action" onclick="navigate('articles');setTimeout(()=>openArticleEditor(),200)">
+            <div class="qa-icon" style="background:var(--brand-gold-dim);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-gold)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <span class="qa-label">Write Article</span>
+          </div>
+          <div class="quick-action" onclick="navigate('orders')">
+            <div class="qa-icon" style="background:var(--color-info-bg);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-info)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <span class="qa-label">View Orders</span>
+          </div>
+          <div class="quick-action" onclick="navigate('discounts')">
+            <div class="qa-icon" style="background:var(--color-success-bg);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </div>
+            <span class="qa-label">Add Discount</span>
+          </div>
+          <div class="quick-action" onclick="navigate('media')">
+            <div class="qa-icon" style="background:var(--color-warning-bg);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-warning)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <span class="qa-label">Upload Media</span>
+          </div>
+          <div class="quick-action" onclick="navigate('analytics')">
+            <div class="qa-icon" style="background:rgba(139,92,246,0.1);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <span class="qa-label">Analytics</span>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="chart-grid">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Revenue Overview</div>
+                <div class="card-subtitle">Last 7 days</div>
+              </div>
+              <div class="tabs">
+                <div class="tab active">7D</div>
+                <div class="tab">30D</div>
+                <div class="tab">90D</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;gap:20px;margin-bottom:16px;">
+                <div><div style="font-size:1.6rem;font-weight:800;letter-spacing:-0.04em;">₹1,24,890</div><div style="font-size:0.75rem;color:var(--text-muted);">Total Revenue</div></div>
+                <div><div style="font-size:1.6rem;font-weight:800;letter-spacing:-0.04em;color:var(--color-success);">+23.1%</div><div style="font-size:0.75rem;color:var(--text-muted);">vs last period</div></div>
+              </div>
+              <div class="chart-area">
+                <svg viewBox="0 0 400 140" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#670000" stop-opacity="0.4"/>
+                      <stop offset="100%" stop-color="#670000" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0,110 C50,100 80,60 120,50 S180,30 220,40 S300,20 340,15 S380,20 400,18" fill="url(#revGrad)" class="sparkline-area"/>
+                  <path d="M0,110 C50,100 80,60 120,50 S180,30 220,40 S300,20 340,15 S380,20 400,18" fill="none" stroke="#670000" stroke-width="2.5" class="sparkline"/>
+                  <circle cx="400" cy="18" r="4" fill="#670000"/>
+                </svg>
+              </div>
+              <div class="bar-chart" style="height:80px;margin-top:8px;">
+                <div class="bar-group"><div class="bar bar-primary" style="height:40%;"></div><div class="bar-label">Mon</div></div>
+                <div class="bar-group"><div class="bar bar-primary" style="height:60%;"></div><div class="bar-label">Tue</div></div>
+                <div class="bar-group"><div class="bar bar-primary" style="height:45%;"></div><div class="bar-label">Wed</div></div>
+                <div class="bar-group"><div class="bar bar-primary" style="height:80%;"></div><div class="bar-label">Thu</div></div>
+                <div class="bar-group"><div class="bar bar-primary" style="height:55%;"></div><div class="bar-label">Fri</div></div>
+                <div class="bar-group"><div class="bar bar-primary" style="height:100%;"></div><div class="bar-label">Sat</div></div>
+                <div class="bar-group"><div class="bar bar-primary" style="height:70%;opacity:0.4;"></div><div class="bar-label">Sun</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Traffic Sources</div><div class="card-subtitle">Today's visitors</div></div>
+            </div>
+            <div class="card-body">
+              <div class="donut-wrapper" style="margin-bottom:20px;">
+                <svg class="donut-svg" viewBox="0 0 42 42">
+                  <circle cx="21" cy="21" r="15.91549431" fill="none" stroke="var(--bg-elevated)" stroke-width="5"/>
+                  <circle cx="21" cy="21" r="15.91549431" fill="none" stroke="#670000" stroke-width="5" stroke-dasharray="42 58" stroke-dashoffset="25"/>
+                  <circle cx="21" cy="21" r="15.91549431" fill="none" stroke="#C09A6B" stroke-width="5" stroke-dasharray="28 72" stroke-dashoffset="-17"/>
+                  <circle cx="21" cy="21" r="15.91549431" fill="none" stroke="#22c55e" stroke-width="5" stroke-dasharray="18 82" stroke-dashoffset="-45"/>
+                  <circle cx="21" cy="21" r="15.91549431" fill="none" stroke="#3b82f6" stroke-width="5" stroke-dasharray="12 88" stroke-dashoffset="-63"/>
+                  <text x="21" y="21" text-anchor="middle" fill="var(--text-primary)" font-size="5" dy="2" font-weight="700">1,842</text>
+                </svg>
+                <div class="donut-legend">
+                  <div class="legend-item"><div class="legend-dot" style="background:#670000;"></div><span class="legend-label">Organic</span><span class="legend-value">42%</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#C09A6B;"></div><span class="legend-label">Instagram</span><span class="legend-value">28%</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div><span class="legend-label">Direct</span><span class="legend-value">18%</span></div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div><span class="legend-label">WhatsApp</span><span class="legend-value">12%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="grid-2" style="margin-top:var(--space-6);">
+          <!-- Pending Orders -->
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Pending Orders</div><div class="card-subtitle">Require attention</div></div>
+              <button class="btn btn-ghost btn-sm" onclick="navigate('orders')">View all →</button>
+            </div>
+            <div style="overflow:hidden;">
+              <table class="table">
+                <thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td class="td-primary">#RS-1042</td><td>Priya S.</td><td>₹2,890</td><td><span class="badge badge-warning"><span class="badge-dot"></span>Pending</span></td></tr>
+                  <tr><td class="td-primary">#RS-1041</td><td>Rahul M.</td><td>₹1,450</td><td><span class="badge badge-info"><span class="badge-dot"></span>Processing</span></td></tr>
+                  <tr><td class="td-primary">#RS-1040</td><td>Anjali K.</td><td>₹3,200</td><td><span class="badge badge-warning"><span class="badge-dot"></span>Pending</span></td></tr>
+                  <tr><td class="td-primary">#RS-1039</td><td>Vikram D.</td><td>₹980</td><td><span class="badge badge-success"><span class="badge-dot"></span>Shipped</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Activity</div></div>
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div class="activity-icon activity-icon-order">🛍️</div>
+                <div class="activity-content">
+                  <div class="activity-title"><strong>New order #RS-1042</strong> — ₹2,890 from Priya S.</div>
+                  <div class="activity-time">2 minutes ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon activity-icon-product">📦</div>
+                <div class="activity-content">
+                  <div class="activity-title"><strong>Product published</strong> — Child of God Tee (Black)</div>
+                  <div class="activity-time">14 minutes ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon activity-icon-customer">👤</div>
+                <div class="activity-content">
+                  <div class="activity-title"><strong>New customer</strong> — Rahul Mehta signed up</div>
+                  <div class="activity-time">1 hour ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon activity-icon-article">✍️</div>
+                <div class="activity-content">
+                  <div class="activity-title"><strong>Article drafted</strong> — "Romans 13: Put on the Armor"</div>
+                  <div class="activity-time">3 hours ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div class="card" style="margin-top:var(--space-4);border-color:rgba(245,158,11,0.2);">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:1rem;">⚠️</span>
+              <div><div class="card-title">Low Stock Alert</div><div class="card-subtitle">These products need restocking</div></div>
+            </div>
+            <button class="btn btn-secondary btn-sm">Bulk Restock</button>
+          </div>
+          <div style="padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-3);">
+            <div style="display:flex;align-items:center;gap:var(--space-4);">
+              <div style="width:36px;height:36px;background:var(--bg-elevated);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">👕</div>
+              <div style="flex:1;"><div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Armor of Light Tee — White / M</div></div>
+              <div class="stock-indicator stock-low" style="width:120px;">
+                <div class="stock-bar"><div class="stock-fill" style="width:15%;"></div></div>
+                <span style="font-size:0.72rem;color:var(--color-error);font-weight:600;">3 left</span>
+              </div>
+              <button class="btn btn-secondary btn-sm">Restock</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-4);">
+              <div style="width:36px;height:36px;background:var(--bg-elevated);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">👕</div>
+              <div style="flex:1;"><div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Child of God Tee — Black / L</div></div>
+              <div class="stock-indicator stock-mid" style="width:120px;">
+                <div class="stock-bar"><div class="stock-fill" style="width:35%;"></div></div>
+                <span style="font-size:0.72rem;color:var(--color-warning);font-weight:600;">7 left</span>
+              </div>
+              <button class="btn btn-secondary btn-sm">Restock</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div id="panel-products" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title">Products</h1>
+            <p class="page-subtitle">Manage your product catalog</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm">Import CSV</button>
+            <button class="btn btn-primary btn-sm" onclick="openProductEditor()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Product
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-bottom:var(--space-6);">
+          <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
+            <div style="font-size:1.5rem;font-weight:800;color:var(--text-primary);">24</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Total Products</div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
+            <div style="font-size:1.5rem;font-weight:800;color:var(--color-success);">18</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Published</div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
+            <div style="font-size:1.5rem;font-weight:800;color:var(--color-warning);">4</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Draft</div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
+            <div style="font-size:1.5rem;font-weight:800;color:var(--color-error);">2</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Low Stock</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" placeholder="Search products…" oninput="filterTable(this,'products-table')">
+            </div>
+            <div class="filter-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Filter</div>
+            <select class="filter-btn" style="border:none;cursor:pointer;outline:none;background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:6px 12px;border-radius:var(--radius-md);color:var(--text-secondary);font-size:0.8rem;">
+              <option>All Collections</option>
+              <option>Faith Essentials</option>
+              <option>Armor Collection</option>
+            </select>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+              <span class="filter-btn">Sort: Newest</span>
+            </div>
+          </div>
+          <table class="table" id="products-table">
+            <thead>
+              <tr>
+                <th style="width:40px;"><input type="checkbox" class="table-checkbox" onchange="selectAll(this,'products-table')"></th>
+                <th>Product</th>
+                <th>Collection</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" class="table-checkbox"></td>
+                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">👕</div><div><div class="td-primary">Armor of Light Tee</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-001 · 3 variants</div></div></div></td>
+                <td>Faith Essentials</td>
+                <td class="td-primary">₹2,890</td>
+                <td><span style="color:var(--color-error);font-weight:600;">3</span></td>
+                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
+                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm" onclick="showToast('info','Viewing','Opening product preview')">View</button></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="table-checkbox"></td>
+                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">🖤</div><div><div class="td-primary">Child of God Tee (Black)</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-002 · 4 variants</div></div></div></td>
+                <td>Armor Collection</td>
+                <td class="td-primary">₹2,690</td>
+                <td><span style="color:var(--color-warning);font-weight:600;">7</span></td>
+                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
+                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm">View</button></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="table-checkbox"></td>
+                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">⚪</div><div><div class="td-primary">Child of God Tee (White)</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-003 · 4 variants</div></div></div></td>
+                <td>Faith Essentials</td>
+                <td class="td-primary">₹2,690</td>
+                <td>42</td>
+                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
+                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm">View</button></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="table-checkbox"></td>
+                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">🕊️</div><div><div class="td-primary">Grace Oversized Hoodie</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-004 · 3 variants</div></div></div></td>
+                <td>Armor Collection</td>
+                <td class="td-primary">₹4,490</td>
+                <td>15</td>
+                <td><span class="badge badge-muted"><span class="badge-dot"></span>Draft</span></td>
+                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-primary btn-sm" onclick="showToast('success','Published','Product is now live on the website')">Publish</button></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="table-checkbox"></td>
+                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">📿</div><div><div class="td-primary">Faith Walk Cap</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-005 · 2 variants</div></div></div></td>
+                <td>Accessories</td>
+                <td class="td-primary">₹1,290</td>
+                <td>28</td>
+                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
+                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm">View</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-pagination">
+            <span class="pagination-info">Showing 1–5 of 24 products</span>
+            <div class="pagination-btns">
+              <div class="page-btn">‹</div>
+              <div class="page-btn active">1</div>
+              <div class="page-btn">2</div>
+              <div class="page-btn">3</div>
+              <div class="page-btn">›</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div id="panel-orders" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1 class="page-title">Orders</h1>
+            <p class="page-subtitle">Manage and fulfil customer orders</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" onclick="showToast('info','Exporting','Preparing order export...')">Export CSV</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-3);margin-bottom:var(--space-6);">
+          <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;cursor:pointer;" onclick="filterOrders('all')">
+            <div style="font-size:1.4rem;font-weight:800;">47</div><div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">All</div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;cursor:pointer;" onclick="filterOrders('pending')">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--color-warning);">12</div><div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Pending</div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid rgba(59,130,246,0.3);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;cursor:pointer;">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--color-info);">8</div><div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Processing</div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;cursor:pointer;">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--color-success);">24</div><div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Shipped</div>
+          </div>
+          <div style="background:var(--bg-surface);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;cursor:pointer;">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--color-error);">3</div><div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Returns</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="table-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" placeholder="Search by order # or customer…">
+            </div>
+            <div class="filter-btn">Date Range</div>
+            <div class="filter-btn">Payment Status</div>
+          </div>
+          <table class="table">
+            <thead><tr><th><input type="checkbox" class="table-checkbox"></th><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><input type="checkbox" class="table-checkbox"></td><td class="td-primary">#RS-1042</td><td>Priya Sharma</td><td>2 items</td><td class="td-primary">₹2,890</td><td><span class="badge badge-success">Paid</span></td><td><span class="badge badge-warning"><span class="badge-dot"></span>Pending</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 23</td><td><button class="btn btn-secondary btn-sm" onclick="openOrderDetail()">View</button></td></tr>
+              <tr><td><input type="checkbox" class="table-checkbox"></td><td class="td-primary">#RS-1041</td><td>Rahul Mehta</td><td>1 item</td><td class="td-primary">₹1,450</td><td><span class="badge badge-success">Paid</span></td><td><span class="badge badge-info"><span class="badge-dot"></span>Processing</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 22</td><td><button class="btn btn-secondary btn-sm" onclick="openOrderDetail()">View</button></td></tr>
+              <tr><td><input type="checkbox" class="table-checkbox"></td><td class="td-primary">#RS-1040</td><td>Anjali Kumar</td><td>3 items</td><td class="td-primary">₹3,200</td><td><span class="badge badge-success">Paid</span></td><td><span class="badge badge-success"><span class="badge-dot"></span>Shipped</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 22</td><td><button class="btn btn-secondary btn-sm" onclick="openOrderDetail()">View</button></td></tr>
+              <tr><td><input type="checkbox" class="table-checkbox"></td><td class="td-primary">#RS-1039</td><td>Vikram Desai</td><td>1 item</td><td class="td-primary">₹980</td><td><span class="badge badge-error">Refunded</span></td><td><span class="badge badge-error"><span class="badge-dot"></span>Returned</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 21</td><td><button class="btn btn-secondary btn-sm" onclick="openOrderDetail()">View</button></td></tr>
+              <tr><td><input type="checkbox" class="table-checkbox"></td><td class="td-primary">#RS-1038</td><td>Meera Joseph</td><td>2 items</td><td class="td-primary">₹5,180</td><td><span class="badge badge-success">Paid</span></td><td><span class="badge badge-success"><span class="badge-dot"></span>Delivered</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 20</td><td><button class="btn btn-secondary btn-sm" onclick="openOrderDetail()">View</button></td></tr>
+            </tbody>
+          </table>
+          <div class="table-pagination">
+            <span class="pagination-info">Showing 1–5 of 47 orders</span>
+            <div class="pagination-btns"><div class="page-btn">‹</div><div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">›</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CUSTOMERS -->
+      <div id="panel-customers" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Customers</h1><p class="page-subtitle">Manage customer relationships and faith community</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="showToast('info','Export','Exporting customer list...')">Export</button></div>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="table-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Search customers…"></div>
+            <div class="filter-btn">Filter</div>
+          </div>
+          <table class="table">
+            <thead><tr><th>Customer</th><th>Orders</th><th>Spent</th><th>Location</th><th>Newsletter</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand-burgundy),var(--brand-gold));display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;">PS</div><div><div class="td-primary">Priya Sharma</div><div style="font-size:0.72rem;color:var(--text-muted);">priya@email.com</div></div></div></td><td>8</td><td class="td-primary">₹24,680</td><td>Mumbai</td><td><span class="badge badge-success">Subscribed</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jan 2024</td><td><button class="btn btn-secondary btn-sm">View Profile</button></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;">RM</div><div><div class="td-primary">Rahul Mehta</div><div style="font-size:0.72rem;color:var(--text-muted);">rahul@email.com</div></div></div></td><td>3</td><td class="td-primary">₹8,920</td><td>Delhi</td><td><span class="badge badge-muted">Unsubscribed</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Mar 2024</td><td><button class="btn btn-secondary btn-sm">View Profile</button></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--color-success),#86efac);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;">AK</div><div><div class="td-primary">Anjali Kumar</div><div style="font-size:0.72rem;color:var(--text-muted);">anjali@email.com</div></div></div></td><td>12</td><td class="td-primary">₹38,450</td><td>Bangalore</td><td><span class="badge badge-success">Subscribed</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Nov 2023</td><td><button class="btn btn-secondary btn-sm">View Profile</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ARTICLES / FAITH JOURNAL -->
+      <div id="panel-articles" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Faith Journal</h1><p class="page-subtitle">Manage articles, devotionals, and scripture content</p></div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm">View on Website →</button>
+            <button class="btn btn-primary btn-sm" onclick="openArticleEditor()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New Article
+            </button>
+          </div>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="table-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Search articles…"></div>
+            <div class="filter-btn">Category</div>
+            <div class="filter-btn">Status</div>
+          </div>
+          <table class="table">
+            <thead><tr><th>Article</th><th>Author</th><th>Category</th><th>Views</th><th>Status</th><th>Published</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><div><div class="td-primary">Romans 13: Put on the Armor of Light</div><div style="font-size:0.72rem;color:var(--text-muted);">A deep dive into spiritual warfare and daily living</div></div></td><td>Pastor James</td><td><span class="badge badge-burgundy">Devotional</span></td><td>1,240</td><td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 15</td><td><button class="btn btn-secondary btn-sm" onclick="openArticleEditor()">Edit</button></td></tr>
+              <tr><td><div><div class="td-primary">Faith That Moves Mountains</div><div style="font-size:0.72rem;color:var(--text-muted);">Mark 11:23 and the power of unwavering belief</div></div></td><td>Editor</td><td><span class="badge badge-gold">Scripture</span></td><td>892</td><td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 8</td><td><button class="btn btn-secondary btn-sm" onclick="openArticleEditor()">Edit</button></td></tr>
+              <tr><td><div><div class="td-primary">Grace Collection: The Story Behind the Design</div><div style="font-size:0.72rem;color:var(--text-muted);">How each piece is rooted in scripture</div></div></td><td>Admin</td><td><span class="badge badge-info">Brand Story</span></td><td>—</td><td><span class="badge badge-muted"><span class="badge-dot"></span>Draft</span></td><td style="color:var(--text-muted);font-size:0.78rem;">—</td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openArticleEditor()">Edit</button><button class="btn btn-primary btn-sm" onclick="showToast('success','Published','Article is now live')">Publish</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div id="panel-analytics" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Analytics</h1><p class="page-subtitle">Deep insights into your store performance</p></div>
+          <div class="page-actions">
+            <div class="tabs"><div class="tab active">7 Days</div><div class="tab">30 Days</div><div class="tab">12 Months</div></div>
+            <button class="btn btn-secondary btn-sm">Export Report</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom:var(--space-6);">
+          <div class="stat-card"><div class="stat-card-accent accent-burgundy"></div><div class="stat-header"><span class="stat-label">Total Revenue</span></div><div class="stat-value">₹4.2L</div><div class="stat-change up">↑ +23.1%</div></div>
+          <div class="stat-card"><div class="stat-card-accent accent-success"></div><div class="stat-header"><span class="stat-label">Total Visitors</span></div><div class="stat-value">18,420</div><div class="stat-change up">↑ +12.4%</div></div>
+          <div class="stat-card"><div class="stat-card-accent accent-gold"></div><div class="stat-header"><span class="stat-label">Avg Order Value</span></div><div class="stat-value">₹2,840</div><div class="stat-change up">↑ +5.2%</div></div>
+          <div class="stat-card"><div class="stat-card-accent accent-info"></div><div class="stat-header"><span class="stat-label">Returning Customers</span></div><div class="stat-value">34.2%</div><div class="stat-change up">↑ +8.1%</div></div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="card">
+            <div class="card-header"><div><div class="card-title">Revenue Trend</div><div class="card-subtitle">Daily revenue for the period</div></div></div>
+            <div class="card-body">
+              <div class="chart-area">
+                <svg viewBox="0 0 500 160" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="aGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#670000" stop-opacity="0.5"/>
+                      <stop offset="100%" stop-color="#670000" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0,130 C30,120 60,90 100,80 S150,50 200,60 S250,40 300,30 S380,20 420,25 S470,15 500,10" fill="url(#aGrad)"/>
+                  <path d="M0,130 C30,120 60,90 100,80 S150,50 200,60 S250,40 300,30 S380,20 420,25 S470,15 500,10" fill="none" stroke="#670000" stroke-width="2.5"/>
+                  <path d="M0,140 C30,135 60,125 100,120 S150,110 200,115 S250,100 300,90 S380,85 420,88 S470,82 500,80" fill="none" stroke="#C09A6B" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+                </svg>
+              </div>
+              <div style="display:flex;gap:20px;margin-top:8px;">
+                <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;"><div style="width:12px;height:3px;background:#670000;border-radius:2px;"></div><span style="color:var(--text-muted);">Revenue</span></div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;"><div style="width:12px;height:3px;background:#C09A6B;border-radius:2px;"></div><span style="color:var(--text-muted);">Last Period</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Top Products</div></div>
+            <div style="padding:var(--space-5);">
+              <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Armor of Light Tee</span><span style="font-size:0.78rem;color:var(--text-muted);">₹1.2L</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:82%;background:var(--brand-burgundy);"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Child of God Tee (Black)</span><span style="font-size:0.78rem;color:var(--text-muted);">₹88K</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:60%;background:var(--brand-gold);"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Grace Hoodie</span><span style="font-size:0.78rem;color:var(--text-muted);">₹64K</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:44%;background:var(--color-info);"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">Faith Walk Cap</span><span style="font-size:0.78rem;color:var(--text-muted);">₹28K</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:20%;background:var(--color-success);"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-4);">
+          <div class="card-header"><div class="card-title">Traffic Sources</div></div>
+          <div class="traffic-bars">
+            <div class="traffic-item"><div class="traffic-meta"><span class="traffic-source">🔍 Organic Search</span><span class="traffic-count">7,734 visits · 42%</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:42%;background:var(--brand-burgundy);"></div></div></div>
+            <div class="traffic-item"><div class="traffic-meta"><span class="traffic-source">📸 Instagram</span><span class="traffic-count">5,157 visits · 28%</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:28%;background:var(--brand-gold);"></div></div></div>
+            <div class="traffic-item"><div class="traffic-meta"><span class="traffic-source">🔗 Direct</span><span class="traffic-count">3,315 visits · 18%</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:18%;background:var(--color-success);"></div></div></div>
+            <div class="traffic-item"><div class="traffic-meta"><span class="traffic-source">💬 WhatsApp</span><span class="traffic-count">2,210 visits · 12%</span></div><div class="traffic-bar-bg"><div class="traffic-bar-fill" style="width:12%;background:var(--color-info);"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEDIA LIBRARY -->
+      <div id="panel-media" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Media Library</h1><p class="page-subtitle">Manage your digital assets</p></div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm">New Folder</button>
+            <button class="btn btn-primary btn-sm" onclick="showToast('info','Upload','Select files to upload')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Files
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:var(--space-4);margin-bottom:var(--space-5);">
+          <div class="table-search" style="max-width:300px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Search media…"></div>
+          <div class="filter-btn">All Types</div>
+          <div class="filter-btn">All Folders</div>
+          <div style="margin-left:auto;display:flex;gap:8px;"><div class="filter-btn">Grid</div><div class="filter-btn">List</div></div>
+        </div>
+
+        <div class="upload-zone" style="margin-bottom:var(--space-5);" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event)">
+          <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <div class="upload-title">Drop files here or click to upload</div>
+          <div class="upload-sub">PNG, JPG, WebP, MP4 · Max 50MB per file</div>
+        </div>
+
+        <div class="media-grid">
+          <div class="media-item selected" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">🖼️</div>
+            <div class="media-info"><div class="media-name">hero2.png</div><div class="media-meta">1.2 MB · 1920×1080</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+          <div class="media-item" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">🖼️</div>
+            <div class="media-info"><div class="media-name">hero3.png</div><div class="media-meta">1.4 MB · 1920×1080</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+          <div class="media-item" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">🖼️</div>
+            <div class="media-info"><div class="media-name">hero4.png</div><div class="media-meta">1.1 MB · 1920×1080</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+          <div class="media-item" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">🏷️</div>
+            <div class="media-info"><div class="media-name">logo.png</div><div class="media-meta">24 KB · 400×200</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+          <div class="media-item" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">🖼️</div>
+            <div class="media-info"><div class="media-name">product-01.jpg</div><div class="media-meta">850 KB · 800×1000</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+          <div class="media-item" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">🖼️</div>
+            <div class="media-info"><div class="media-name">product-02.jpg</div><div class="media-meta">920 KB · 800×1000</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+          <div class="media-item" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">🎬</div>
+            <div class="media-info"><div class="media-name">lookbook.mp4</div><div class="media-meta">28 MB · 1080p</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+          <div class="media-item" onclick="toggleMediaSelect(this)">
+            <div class="media-thumb">📄</div>
+            <div class="media-info"><div class="media-name">brand-kit.pdf</div><div class="media-meta">4.2 MB</div></div>
+            <div class="media-select-badge">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOMEPAGE BUILDER -->
+      <div id="panel-homepage" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Homepage Builder</h1><p class="page-subtitle">Drag sections to rearrange. Toggle to show/hide.</p></div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm">Preview</button>
+            <button class="btn btn-primary btn-sm" onclick="showToast('success','Published!','Homepage updated on the live website')">Publish Changes</button>
+          </div>
+        </div>
+        <div class="builder-layout" style="margin:-32px;height:calc(100vh - 160px);">
+          <div class="builder-sections-panel">
+            <div class="builder-panel-header">Sections</div>
+            <div class="builder-section-list">
+              <div class="builder-section-item active">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">🦸 Hero Slideshow</span>
+                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="builder-section-item">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">📢 Announcement Bar</span>
+                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="builder-section-item">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">🛡️ Trust Strip</span>
+                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="builder-section-item">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">📖 Brand Statement</span>
+                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="builder-section-item">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">🛍️ Featured Products</span>
+                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="builder-section-item">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">🙏 Community</span>
+                <div class="section-toggle" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="builder-section-item">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">📰 Faith Journal</span>
+                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+              <div class="builder-section-item">
+                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
+                <span class="section-name">✉️ Newsletter</span>
+                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+            <div style="padding:var(--space-4);border-top:1px solid var(--border-subtle);">
+              <button class="btn btn-secondary btn-sm" style="width:100%;" onclick="showToast('info','Section Added','New section created')">+ Add Section</button>
+            </div>
+          </div>
+          <div class="builder-preview">
+            <div class="builder-preview-toolbar">
+              <span style="font-size:0.8rem;color:var(--text-muted);">Preview</span>
+              <div class="viewport-btns">
+                <div class="viewport-btn active" title="Desktop">🖥️</div>
+                <div class="viewport-btn" title="Tablet">📱</div>
+                <div class="viewport-btn" title="Mobile">📲</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--color-success);"></div><span style="font-size:0.72rem;color:var(--text-muted);">Live on ruvenstudio.vercel.app</span></div>
+            </div>
+            <div class="builder-preview-frame">
+              <div style="width:100%;max-width:900px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);">
+                <div style="height:6px;background:var(--brand-burgundy);"></div>
+                <div style="padding:16px;background:#111;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-subtle);">
+                  <div style="display:flex;gap:6px;"><div style="width:10px;height:10px;border-radius:50%;background:#ef4444;"></div><div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;"></div><div style="width:10px;height:10px;border-radius:50%;background:#22c55e;"></div></div>
+                  <div style="flex:1;background:var(--bg-elevated);border-radius:4px;padding:4px 12px;font-size:0.72rem;color:var(--text-muted);">ruvenstudio.vercel.app</div>
+                </div>
+                <div style="padding:20px;min-height:400px;">
+                  <div style="height:160px;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(103,0,0,0.4),transparent);"></div>
+                    <div style="position:relative;text-align:center;"><div style="font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:8px;">Put on the Armor of Light</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.6);">Romans 13:12</div></div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+                    <div style="height:80px;background:var(--bg-elevated);border-radius:var(--radius-sm);"></div>
+                    <div style="height:80px;background:var(--bg-elevated);border-radius:var(--radius-sm);"></div>
+                    <div style="height:80px;background:var(--bg-elevated);border-radius:var(--radius-sm);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMMUNITY -->
+      <div id="panel-community" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Community</h1><p class="page-subtitle">Prayer requests, testimonials, and faith community management</p></div>
+          <div class="page-actions"><button class="btn btn-secondary btn-sm">Export</button></div>
+        </div>
+        <div class="tabs-underline">
+          <div class="tab-underline active" onclick="switchTab(this,'prayer')">🙏 Prayer Requests (5)</div>
+          <div class="tab-underline" onclick="switchTab(this,'testimonials')">❤️ Testimonials</div>
+          <div class="tab-underline" onclick="switchTab(this,'moderation')">🛡️ Moderation Queue</div>
+          <div class="tab-underline" onclick="switchTab(this,'partnerships')">⛪ Partnerships</div>
+        </div>
+        <div id="tab-prayer" class="section-panel active" style="display:block;">
+          <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+            <div class="card" style="border-left:3px solid var(--brand-burgundy);">
+              <div class="card-body" style="padding:var(--space-4) var(--space-5);">
+                <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-2);"><span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Healing for my mother</span><span class="badge badge-warning">Pending</span></div>
+                <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.6;">"Please pray for my mother's healing. She has been diagnosed with cancer and our family is trusting God for a miracle."</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--space-3);"><span style="font-size:0.72rem;color:var(--text-muted);">— Priya S. · Jun 23 · Public request</span><div style="display:flex;gap:8px;"><button class="btn btn-primary btn-sm" onclick="showToast('success','Approved','Prayer request published')">Approve</button><button class="btn btn-ghost btn-sm">Decline</button></div></div>
+              </div>
+            </div>
+            <div class="card" style="border-left:3px solid var(--color-success);">
+              <div class="card-body" style="padding:var(--space-4) var(--space-5);">
+                <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-2);"><span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Job guidance and provision</span><span class="badge badge-success">Published</span></div>
+                <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.6;">"Believing God for the right opportunity as I transition careers. Romans 8:28."</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--space-3);"><span style="font-size:0.72rem;color:var(--text-muted);">— Rahul M. · Jun 20 · 24 praying</span><div style="display:flex;gap:8px;"><button class="btn btn-ghost btn-sm">Archive</button></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MARKETING -->
+      <div id="panel-marketing" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Marketing</h1><p class="page-subtitle">Campaigns, discounts, and growth tools</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="showToast('info','Campaign','Creating new campaign...')">New Campaign</button></div>
+        </div>
+        <div class="grid-2" style="margin-bottom:var(--space-6);">
+          <div class="card" style="cursor:pointer;" onclick="navigate('discounts')">
+            <div class="card-body" style="display:flex;align-items:center;gap:var(--space-4);">
+              <div style="width:48px;height:48px;background:var(--brand-burgundy-glow);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🏷️</div>
+              <div><div class="card-title">Discounts & Coupons</div><div class="card-subtitle">3 active · ₹12,400 redeemed</div></div>
+              <div style="margin-left:auto;color:var(--text-muted);">→</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('info','Email','Opening email campaign builder...')">
+            <div class="card-body" style="display:flex;align-items:center;gap:var(--space-4);">
+              <div style="width:48px;height:48px;background:var(--brand-gold-dim);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📧</div>
+              <div><div class="card-title">Email Campaigns</div><div class="card-subtitle">1,240 subscribers · 48% open rate</div></div>
+              <div style="margin-left:auto;color:var(--text-muted);">→</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('info','Gift Cards','Gift card management coming soon')">
+            <div class="card-body" style="display:flex;align-items:center;gap:var(--space-4);">
+              <div style="width:48px;height:48px;background:var(--color-success-bg);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🎁</div>
+              <div><div class="card-title">Gift Cards</div><div class="card-subtitle">8 issued · ₹4,200 balance</div></div>
+              <div style="margin-left:auto;color:var(--text-muted);">→</div>
+            </div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('info','Referrals','Referral program coming soon')">
+            <div class="card-body" style="display:flex;align-items:center;gap:var(--space-4);">
+              <div style="width:48px;height:48px;background:var(--color-info-bg);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🔗</div>
+              <div><div class="card-title">Referral Program</div><div class="card-subtitle">42 referrals this month</div></div>
+              <div style="margin-left:auto;color:var(--text-muted);">→</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISCOUNTS -->
+      <div id="panel-discounts" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Discounts & Coupons</h1><p class="page-subtitle">Manage promotions and discount codes</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openDiscountModal()">Create Discount</button></div>
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Used</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-primary" style="font-family:var(--font-mono);">FAITH20</td><td>Percentage</td><td>20% off</td><td>34/100</td><td>Jul 31</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm">Edit</button><button class="btn btn-ghost btn-sm" onclick="showToast('success','Copied','Code copied to clipboard')">Copy</button></div></td></tr>
+              <tr><td class="td-primary" style="font-family:var(--font-mono);">ARMOR10</td><td>Percentage</td><td>10% off</td><td>12/50</td><td>Jun 30</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm">Edit</button><button class="btn btn-ghost btn-sm" onclick="showToast('success','Copied','Code copied to clipboard')">Copy</button></div></td></tr>
+              <tr><td class="td-primary" style="font-family:var(--font-mono);">FREESHIP</td><td>Free Shipping</td><td>₹0 shipping</td><td>89/∞</td><td>Dec 31</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm">Edit</button><button class="btn btn-ghost btn-sm">Copy</button></div></td></tr>
+              <tr><td class="td-primary" style="font-family:var(--font-mono);">CHRISTMAS25</td><td>Fixed</td><td>₹250 off</td><td>156/200</td><td>Expired</td><td><span class="badge badge-muted"><span class="badge-dot"></span>Expired</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm" onclick="showToast('info','Reactivated','Discount code reactivated')">Reactivate</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USERS & ROLES -->
+      <div id="panel-users" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Users &amp; Roles</h1><p class="page-subtitle">Manage team access and permissions</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openInviteModal()">Invite User</button></div>
+        </div>
+
+        <!-- Team -->
+        <div class="card" style="margin-bottom:var(--space-6);">
+          <div class="card-header"><div class="card-title">Team Members</div><span style="font-size:0.8rem;color:var(--text-muted);">4 members</span></div>
+          <table class="table">
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last Active</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand-burgundy),var(--brand-gold));display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">SA</div><span class="td-primary">Super Admin</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">admin@ruvenstudio.com</td><td><span class="badge badge-burgundy">Super Admin</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Just now</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td style="text-align:right;"><span style="font-size:0.75rem;color:var(--text-disabled);">You</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">JK</div><span class="td-primary">James Kumar</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">james@ruvenstudio.com</td><td><span class="badge badge-gold">Store Manager</span></td><td style="color:var(--text-muted);font-size:0.78rem;">2h ago</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm" onclick="showToast('info','Settings','User settings opened')">Manage</button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--color-success),#86efac);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">SP</div><span class="td-primary">Sarah Philip</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">sarah@ruvenstudio.com</td><td><span class="badge badge-info">Content Editor</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Yesterday</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm">Manage</button></div></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">MT</div><span class="td-primary">Mark Thomas</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">mark@ruvenstudio.com</td><td><span class="badge badge-muted">Community Manager</span></td><td style="color:var(--text-muted);font-size:0.78rem;">3d ago</td><td><span class="badge badge-muted"><span class="badge-dot"></span>Inactive</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm">Manage</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Roles -->
+        <h2 style="font-size:1rem;font-weight:700;margin-bottom:var(--space-4);">Role Permissions</h2>
+        <div class="role-grid">
+          <div class="role-card-full">
+            <div class="role-header"><div class="role-emoji">👑</div><div><div class="role-name-full">Super Admin</div><div class="role-desc">Full access to everything</div></div></div>
+            <div class="permission-list">
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage products</div>
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage orders</div>
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage users</div>
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>View analytics</div>
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Edit settings</div>
+            </div>
+          </div>
+          <div class="role-card-full">
+            <div class="role-header"><div class="role-emoji">🛍️</div><div><div class="role-name-full">Store Manager</div><div class="role-desc">Manage catalog &amp; orders</div></div></div>
+            <div class="permission-list">
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage products</div>
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage orders</div>
+              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage users</div>
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>View analytics</div>
+              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Edit settings</div>
+            </div>
+          </div>
+          <div class="role-card-full">
+            <div class="role-header"><div class="role-emoji">✍️</div><div><div class="role-name-full">Content Editor</div><div class="role-desc">Manage content &amp; media</div></div></div>
+            <div class="permission-list">
+              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage products</div>
+              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage orders</div>
+              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage users</div>
+              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Edit articles &amp; media</div>
+              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Edit settings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="panel-settings" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Settings</h1><p class="page-subtitle">Configure your store and admin panel</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="showToast('success','Saved','Settings saved successfully')">Save Changes</button></div>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:var(--space-6);">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div class="nav-item active" style="border-radius:var(--radius-sm);" onclick="switchSettingsTab(this,'general')"><span style="font-size:0.85rem;color:var(--text-primary);">General</span></div>
+            <div class="nav-item" style="border-radius:var(--radius-sm);" onclick="switchSettingsTab(this,'brand')"><span style="font-size:0.85rem;color:var(--text-secondary);">Brand</span></div>
+            <div class="nav-item" style="border-radius:var(--radius-sm);" onclick="switchSettingsTab(this,'payments')"><span style="font-size:0.85rem;color:var(--text-secondary);">Payments</span></div>
+            <div class="nav-item" style="border-radius:var(--radius-sm);" onclick="switchSettingsTab(this,'shipping')"><span style="font-size:0.85rem;color:var(--text-secondary);">Shipping</span></div>
+            <div class="nav-item" style="border-radius:var(--radius-sm);" onclick="switchSettingsTab(this,'seo')"><span style="font-size:0.85rem;color:var(--text-secondary);">SEO</span></div>
+            <div class="nav-item" style="border-radius:var(--radius-sm);" onclick="switchSettingsTab(this,'api')"><span style="font-size:0.85rem;color:var(--text-secondary);">API Keys</span></div>
+            <div class="nav-item" style="border-radius:var(--radius-sm);" onclick="switchSettingsTab(this,'security')"><span style="font-size:0.85rem;color:var(--text-secondary);">Security</span></div>
+          </div>
+          <div>
+            <div id="settings-general" class="card settings-content" style="display:block;">
+              <div class="card-header"><div class="card-title">General Settings</div></div>
+              <div class="card-body">
+                <div class="form-group"><label class="label">Store Name</label><input type="text" class="input" value="Ruven Studio"></div>
+                <div class="form-group"><label class="label">Store Description</label><textarea class="textarea" style="min-height:80px;">Faith-inspired streetwear rooted in scripture. Armor of Light collection.</textarea></div>
+                <div class="form-row">
+                  <div class="form-group"><label class="label">Contact Email</label><input type="email" class="input" value="hello@ruvenstudio.com"></div>
+                  <div class="form-group"><label class="label">Contact Phone</label><input type="tel" class="input" value="+91 98765 43210"></div>
+                </div>
+                <div class="form-group"><label class="label">Currency</label><select class="select"><option>INR — Indian Rupee (₹)</option><option>USD — US Dollar ($)</option></select></div>
+                <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Maintenance Mode</div><div class="toggle-description">Show a maintenance page to customers</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+              </div>
+            </div>
+            <div id="settings-brand" class="card settings-content" style="display:none;">
+              <div class="card-header"><div class="card-title">Brand Settings</div></div>
+              <div class="card-body">
+                <div class="form-group"><label class="label">Logo</label><div class="upload-zone" style="padding:20px;"><div class="upload-title">Upload Logo</div><div class="upload-sub">SVG, PNG · Max 2MB</div></div></div>
+                <div class="form-group"><label class="label">Primary Color</label><div class="color-swatch-group"><div class="color-swatch selected" style="background:#670000;" title="#670000"></div><div class="color-swatch" style="background:#C09A6B;" title="#C09A6B"></div><div class="color-swatch" style="background:#1C1C1C;" title="#1C1C1C"></div><div class="color-swatch" style="background:#5B6B5A;" title="#5B6B5A"></div><input type="color" value="#670000" style="width:32px;height:32px;border-radius:var(--radius-sm);border:1px solid var(--border-normal);padding:0;cursor:pointer;"></div></div>
+                <div class="form-group"><label class="label">Font Family</label><select class="select"><option>DM Sans (Current)</option><option>Inter</option><option>Playfair Display</option></select></div>
+              </div>
+            </div>
+            <div id="settings-api" class="card settings-content" style="display:none;">
+              <div class="card-header"><div class="card-title">API Keys</div><button class="btn btn-primary btn-sm" onclick="showToast('success','Generated','New API key created')">Generate Key</button></div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="label">Live API Key</label>
+                  <div style="display:flex;gap:8px;"><input type="text" class="input" value="rs_live_••••••••••••••••••••••••" readonly style="font-family:var(--font-mono);font-size:0.8rem;"><button class="btn btn-secondary btn-sm" onclick="showToast('success','Copied','API key copied')">Copy</button></div>
+                </div>
+                <div class="form-group">
+                  <label class="label">Webhook URL</label>
+                  <input type="url" class="input" value="https://ruvenstudio.vercel.app/api/webhook" style="font-family:var(--font-mono);font-size:0.8rem;">
+                </div>
+                <div class="form-group">
+                  <label class="label">Razorpay Key ID</label>
+                  <input type="text" class="input" value="rzp_live_••••••••••••" style="font-family:var(--font-mono);font-size:0.8rem;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VERSES -->
+      <div id="panel-verses" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Verse Library</h1><p class="page-subtitle">Scripture references used across products and content</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openVerseModal()">Add Verse</button></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-4);">
+          <div class="card" style="border-left:3px solid var(--brand-burgundy);">
+            <div class="card-body">
+              <div style="font-size:1rem;font-style:italic;color:var(--text-primary);line-height:1.6;margin-bottom:var(--space-3);">"The night is nearly over; the day is almost here. So let us put aside the deeds of darkness and put on the armor of light."</div>
+              <div style="font-size:0.78rem;font-weight:700;color:var(--brand-gold);">— Romans 13:12</div>
+              <div style="display:flex;gap:6px;margin-top:var(--space-3);"><span class="badge badge-burgundy">Hero Section</span><span class="badge badge-muted">Armor Tee</span></div>
+            </div>
+          </div>
+          <div class="card" style="border-left:3px solid var(--brand-gold);">
+            <div class="card-body">
+              <div style="font-size:1rem;font-style:italic;color:var(--text-primary);line-height:1.6;margin-bottom:var(--space-3);">"I can do all things through Christ who strengthens me."</div>
+              <div style="font-size:0.78rem;font-weight:700;color:var(--brand-gold);">— Philippians 4:13</div>
+              <div style="display:flex;gap:6px;margin-top:var(--space-3);"><span class="badge badge-gold">Faith Journal</span></div>
+            </div>
+          </div>
+          <div class="card" style="border-left:3px solid var(--color-success);">
+            <div class="card-body">
+              <div style="font-size:1rem;font-style:italic;color:var(--text-primary);line-height:1.6;margin-bottom:var(--space-3);">"For we are God's handiwork, created in Christ Jesus to do good works."</div>
+              <div style="font-size:0.78rem;font-weight:700;color:var(--brand-gold);">— Ephesians 2:10</div>
+              <div style="display:flex;gap:6px;margin-top:var(--space-3);"><span class="badge badge-muted">Homepage</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEWSLETTER -->
+      <div id="panel-newsletter" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Newsletter</h1><p class="page-subtitle">Email subscriber management and campaigns</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="showToast('info','Campaign','Opening campaign editor...')">New Campaign</button></div>
+        </div>
+        <div class="stats-grid" style="margin-bottom:var(--space-6);">
+          <div class="stat-card"><div class="stat-card-accent accent-success"></div><div class="stat-header"><span class="stat-label">Subscribers</span></div><div class="stat-value">1,240</div><div class="stat-change up">↑ +48 this week</div></div>
+          <div class="stat-card"><div class="stat-card-accent accent-gold"></div><div class="stat-header"><span class="stat-label">Open Rate</span></div><div class="stat-value">48.2%</div><div class="stat-change up">↑ Industry avg: 21%</div></div>
+          <div class="stat-card"><div class="stat-card-accent accent-info"></div><div class="stat-header"><span class="stat-label">Click Rate</span></div><div class="stat-value">12.4%</div><div class="stat-change up">↑ Above average</div></div>
+          <div class="stat-card"><div class="stat-card-accent accent-burgundy"></div><div class="stat-header"><span class="stat-label">Unsubscribes</span></div><div class="stat-value">3</div><div class="stat-change neutral">This month</div></div>
+        </div>
+        <div class="table-container">
+          <div class="card-header" style="padding:var(--space-4) var(--space-5);"><div class="card-title">Recent Campaigns</div></div>
+          <table class="table">
+            <thead><tr><th>Campaign</th><th>Sent</th><th>Open Rate</th><th>Click Rate</th><th>Revenue</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="td-primary">Armor of Light Collection Launch</td><td>1,180</td><td>52%</td><td>18%</td><td>₹28,400</td><td><span class="badge badge-success"><span class="badge-dot"></span>Sent</span></td></tr>
+              <tr><td class="td-primary">New Arrivals — June Drop</td><td>1,200</td><td>44%</td><td>11%</td><td>₹14,200</td><td><span class="badge badge-success"><span class="badge-dot"></span>Sent</span></td></tr>
+              <tr><td class="td-primary">Romans 13 Devotional</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="badge badge-warning">Scheduled</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- COLLECTIONS -->
+      <div id="panel-collections" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Collections</h1><p class="page-subtitle">Organise products into curated collections</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="showToast('info','New Collection','Opening collection editor...')">New Collection</button></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-4);">
+          <div class="card" style="cursor:pointer;" onclick="showToast('info','Collection','Opening collection editor...')">
+            <div style="height:120px;background:linear-gradient(135deg,#670000,#8E1B1B);border-radius:var(--radius-md) var(--radius-md) 0 0;display:flex;align-items:center;justify-content:center;font-size:2rem;">⚔️</div>
+            <div class="card-body"><div class="card-title">Armor of Light</div><div class="card-subtitle">8 products · Featured</div><div style="display:flex;gap:6px;margin-top:8px;"><span class="badge badge-success"><span class="badge-dot"></span>Published</span><span class="badge badge-gold">Featured</span></div></div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('info','Collection','Opening collection editor...')">
+            <div style="height:120px;background:linear-gradient(135deg,#5B6B5A,#3d4d3c);border-radius:var(--radius-md) var(--radius-md) 0 0;display:flex;align-items:center;justify-content:center;font-size:2rem;">🌿</div>
+            <div class="card-body"><div class="card-title">Faith Essentials</div><div class="card-subtitle">12 products</div><div style="display:flex;gap:6px;margin-top:8px;"><span class="badge badge-success"><span class="badge-dot"></span>Published</span></div></div>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="showToast('info','Collection','Opening collection editor...')">
+            <div style="height:120px;background:linear-gradient(135deg,#C09A6B,#a07a4b);border-radius:var(--radius-md) var(--radius-md) 0 0;display:flex;align-items:center;justify-content:center;font-size:2rem;">🎽</div>
+            <div class="card-body"><div class="card-title">New Arrivals</div><div class="card-subtitle">4 products</div><div style="display:flex;gap:6px;margin-top:8px;"><span class="badge badge-muted"><span class="badge-dot"></span>Draft</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAVIGATION -->
+      <div id="panel-navigation" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Navigation</h1><p class="page-subtitle">Manage site menus and navigation structure</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="showToast('success','Saved','Navigation updated on live site')">Save &amp; Publish</button></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Main Navigation</div><button class="btn btn-ghost btn-sm" onclick="showToast('info','Added','New menu item added')">+ Add Item</button></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+                <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);"><span style="color:var(--text-muted);cursor:grab;">⋮⋮</span><span style="flex:1;font-size:0.85rem;font-weight:500;color:var(--text-primary);">Home</span><input type="text" class="input" value="/" style="width:120px;font-size:0.78rem;padding:4px 8px;"></div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);"><span style="color:var(--text-muted);cursor:grab;">⋮⋮</span><span style="flex:1;font-size:0.85rem;font-weight:500;color:var(--text-primary);">Shop</span><input type="text" class="input" value="#shop" style="width:120px;font-size:0.78rem;padding:4px 8px;"></div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);"><span style="color:var(--text-muted);cursor:grab;">⋮⋮</span><span style="flex:1;font-size:0.85rem;font-weight:500;color:var(--text-primary);">Faith Journal</span><input type="text" class="input" value="#journal" style="width:120px;font-size:0.78rem;padding:4px 8px;"></div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);"><span style="color:var(--text-muted);cursor:grab;">⋮⋮</span><span style="flex:1;font-size:0.85rem;font-weight:500;color:var(--text-primary);">Community</span><input type="text" class="input" value="#community" style="width:120px;font-size:0.78rem;padding:4px 8px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Footer Navigation</div><button class="btn btn-ghost btn-sm" onclick="showToast('info','Added','Footer link added')">+ Add Link</button></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+                <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);"><span style="flex:1;font-size:0.85rem;font-weight:500;color:var(--text-primary);">Size Guide</span><input type="text" class="input" value="#faq" style="width:120px;font-size:0.78rem;padding:4px 8px;"></div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);"><span style="flex:1;font-size:0.85rem;font-weight:500;color:var(--text-primary);">Privacy Policy</span><input type="text" class="input" value="/privacy" style="width:120px;font-size:0.78rem;padding:4px 8px;"></div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);"><span style="flex:1;font-size:0.85rem;font-weight:500;color:var(--text-primary);">Returns</span><input type="text" class="input" value="#faq" style="width:120px;font-size:0.78rem;padding:4px 8px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div id="panel-reviews" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Reviews</h1><p class="page-subtitle">Customer reviews and testimonials management</p></div>
+          <div class="page-actions"><div class="filter-btn">Filter</div></div>
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead><tr><th>Customer</th><th>Product</th><th>Rating</th><th>Review</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-primary">Priya S.</td><td>Armor of Light Tee</td><td>⭐⭐⭐⭐⭐</td><td style="max-width:220px;white-space:normal;font-size:0.78rem;color:var(--text-muted);">"Amazing quality. This tee means so much to me spiritually."</td><td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td><td><button class="btn btn-ghost btn-sm">Archive</button></td></tr>
+              <tr><td class="td-primary">Rahul M.</td><td>Child of God Tee</td><td>⭐⭐⭐⭐⭐</td><td style="max-width:220px;white-space:normal;font-size:0.78rem;color:var(--text-muted);">"Love the weight and the message. My church loved it."</td><td><span class="badge badge-warning">Pending</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-primary btn-sm" onclick="showToast('success','Approved','Review published')">Approve</button><button class="btn btn-ghost btn-sm">Decline</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AUDIT LOGS -->
+      <div id="panel-audit" class="section-panel">
+        <div class="page-header">
+          <div class="page-title-group"><h1 class="page-title">Audit Logs</h1><p class="page-subtitle">Full audit trail of all admin actions</p></div>
+          <div class="page-actions"><button class="btn btn-secondary btn-sm" onclick="showToast('info','Export','Audit log exported')">Export CSV</button></div>
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Resource</th><th>IP</th></tr></thead>
+            <tbody>
+              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 01:42:00</td><td class="td-primary">Super Admin</td><td><span class="badge badge-success">PUBLISH</span></td><td>Product: Armor of Light Tee</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">203.0.113.1</td></tr>
+              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 01:38:12</td><td class="td-primary">James Kumar</td><td><span class="badge badge-info">UPDATE</span></td><td>Order: #RS-1042</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">198.51.100.42</td></tr>
+              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 01:22:05</td><td class="td-primary">Sarah Philip</td><td><span class="badge badge-gold">CREATE</span></td><td>Article: Romans 13 Devotional</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">192.0.2.55</td></tr>
+              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 00:55:01</td><td class="td-primary">Super Admin</td><td><span class="badge badge-error">DELETE</span></td><td>Coupon: EXPIRED2025</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">203.0.113.1</td></tr>
+            </tbody>
+          </table>
+          <div class="table-pagination"><span class="pagination-info">Showing 1–4 of 128 log entries</span><div class="pagination-btns"><div class="page-btn">‹</div><div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">›</div></div></div>
+        </div>
+      </div>
+
+    </div><!-- .admin-content -->
+  </div><!-- .admin-main -->
+</div><!-- #admin-app -->
+
+<!-- ============================================================
+     MODALS
+     ============================================================ -->
+
+<!-- Product Editor Modal -->
+<div id="modal-product" class="modal-overlay">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:32px;height:32px;background:var(--brand-burgundy-glow);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1rem;">📦</div>
+        <div>
+          <div class="modal-title">New Product</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--text-muted);margin-top:2px;"><div class="autosave-dot saving"></div>Autosaving…</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm">Save Draft</button>
+        <button class="btn btn-primary btn-sm" onclick="closeModal('modal-product');showToast('success','Published!','Product is now live on the website')">Publish</button>
+        <div class="modal-close" onclick="closeModal('modal-product')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      </div>
+    </div>
+    <div class="modal-body" style="max-height:80vh;overflow-y:auto;">
+      <div class="product-editor">
+        <div class="product-editor-main">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Basic Information</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="label">Product Name</label><input type="text" class="input" placeholder="e.g. Armor of Light Tee — White"></div>
+              <div class="form-row">
+                <div class="form-group"><label class="label">Slug</label><input type="text" class="input" placeholder="armor-of-light-tee-white"></div>
+                <div class="form-group"><label class="label">Collection</label><select class="select"><option>Faith Essentials</option><option>Armor Collection</option><option>New Arrivals</option></select></div>
+              </div>
+              <div class="form-group"><label class="label">Short Description</label><textarea class="textarea" style="min-height:80px;" placeholder="A brief product description (shown on cards)…"></textarea></div>
+              <div class="form-group"><label class="label">Long Description / Story</label><textarea class="textarea" placeholder="Tell the story behind this design and its spiritual meaning…"></textarea></div>
+              <div class="form-group">
+                <label class="label">Bible Verse</label>
+                <input type="text" class="input" placeholder="e.g. Romans 13:12" style="margin-bottom:8px;">
+                <textarea class="textarea" style="min-height:60px;" placeholder="Paste the full verse text here…"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Pricing &amp; Inventory</div></div>
+            <div class="card-body">
+              <div class="form-row cols-3">
+                <div class="form-group"><label class="label">Price (₹)</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" class="input" placeholder="2890"></div></div>
+                <div class="form-group"><label class="label">Compare Price</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" class="input" placeholder="3500"></div></div>
+                <div class="form-group"><label class="label">Cost Price</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" class="input" placeholder="1200"></div></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="label">SKU</label><input type="text" class="input" placeholder="RS-001"></div>
+                <div class="form-group"><label class="label">Barcode / ISBN</label><input type="text" class="input" placeholder="8901234567890"></div>
+              </div>
+              <div class="form-group"><label class="label">Inventory Count</label><input type="number" class="input" placeholder="50"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Variants</div><button class="btn btn-secondary btn-sm" onclick="showToast('info','Variant','Adding variant option...')">Add Option</button></div>
+            <div class="card-body">
+              <div class="form-group"><label class="label">Sizes</label><div class="variant-tags"><span class="variant-tag">XS <button>×</button></span><span class="variant-tag">S <button>×</button></span><span class="variant-tag">M <button>×</button></span><span class="variant-tag">L <button>×</button></span><span class="variant-tag">XL <button>×</button></span><button class="btn btn-ghost btn-sm" onclick="showToast('info','Size','Adding new size')">+ Add</button></div></div>
+              <div class="form-group"><label class="label">Colors</label><div class="variant-tags"><span class="variant-tag">⚪ White <button>×</button></span><span class="variant-tag">🖤 Black <button>×</button></span><button class="btn btn-ghost btn-sm">+ Add</button></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Product Images</div></div>
+            <div class="card-body">
+              <div class="upload-zone" style="padding:20px;">
+                <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                <div class="upload-title">Drop images here</div>
+                <div class="upload-sub">PNG, JPG, WebP · Min 800×1000px</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="product-editor-sidebar">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Status</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="label">Visibility</label><select class="select"><option>Draft</option><option>Published</option><option>Archived</option></select></div>
+              <div class="form-group"><label class="label">Publish Date</label><input type="datetime-local" class="input"></div>
+              <div class="toggle-row" style="margin-top:8px;"><div class="toggle-info"><div class="toggle-label">Featured Product</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+            </div>
+          </div>
+          <div class="ai-panel">
+            <div class="ai-panel-header">
+              <div class="ai-logo">✨</div>
+              <div class="ai-title">AI Assistant</div>
+              <span class="ai-badge">BETA</span>
+            </div>
+            <div class="ai-actions">
+              <button class="ai-action-btn" onclick="runAI('desc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Generate Description</button>
+              <button class="ai-action-btn" onclick="runAI('seo')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>SEO Suggestions</button>
+              <button class="ai-action-btn" onclick="runAI('verse')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Suggest Verse</button>
+              <button class="ai-action-btn" onclick="runAI('alt')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Generate Alt Text</button>
+            </div>
+            <div class="ai-output" id="ai-output"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">SEO</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="label">Meta Title</label><input type="text" class="input" placeholder="Armor of Light Tee | Ruven Studio"></div>
+              <div class="form-group"><label class="label">Meta Description</label><textarea class="textarea" style="min-height:60px;" placeholder="Premium faith streetwear…"></textarea></div>
+              <div class="form-group"><label class="label">Tags</label><input type="text" class="input" placeholder="faith, streetwear, christian, tshirt"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Article Editor Modal -->
+<div id="modal-article" class="modal-overlay">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:32px;height:32px;background:var(--brand-gold-dim);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1rem;">✍️</div>
+        <div>
+          <div class="modal-title">Article Editor</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--text-muted);margin-top:2px;"><div class="autosave-dot"></div>Saved 2 seconds ago</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm">Preview</button>
+        <button class="btn btn-secondary btn-sm">Schedule</button>
+        <button class="btn btn-primary btn-sm" onclick="closeModal('modal-article');showToast('success','Published!','Article is now live on the Faith Journal')">Publish</button>
+        <div class="modal-close" onclick="closeModal('modal-article')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      </div>
+    </div>
+    <div class="modal-body" style="max-height:80vh;overflow-y:auto;">
+      <div class="editor-wrapper">
+        <div class="editor-main">
+          <div class="editor-toolbar">
+            <div class="editor-tool active" title="Bold"><b>B</b></div>
+            <div class="editor-tool" title="Italic"><i>I</i></div>
+            <div class="editor-tool" title="Underline"><u>U</u></div>
+            <div class="editor-tool-sep"></div>
+            <div class="editor-tool" title="Heading 1">H1</div>
+            <div class="editor-tool" title="Heading 2">H2</div>
+            <div class="editor-tool-sep"></div>
+            <div class="editor-tool" title="Image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+            <div class="editor-tool" title="Quote">❝</div>
+            <div class="editor-tool active" title="Bible Verse">✝</div>
+            <div class="editor-tool" title="Link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+            <div class="editor-tool-sep"></div>
+            <div class="editor-tool" title="Embed Product">📦</div>
+            <div class="editor-tool" title="Embed YouTube">▶</div>
+          </div>
+          <div class="editor-body">
+            <textarea class="editor-title-input" placeholder="Article title…" rows="1" style="height:auto;overflow:hidden;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+            <div class="block-list">
+              <div class="block-item">
+                <textarea class="block-content block-heading" placeholder="Write a heading…" rows="1" style="height:auto;overflow:hidden;font-size:1.4rem;font-weight:700;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">The Night Is Far Gone</textarea>
+              </div>
+              <div class="block-item">
+                <textarea class="block-content" rows="3" placeholder="Write your paragraph…" style="height:auto;overflow:hidden;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">Romans 13:12 opens with a striking declaration: "The night is nearly over; the day is almost here." Paul writes this to the church in Rome, reminding them of the urgency of their spiritual calling.</textarea>
+              </div>
+              <div class="block-item">
+                <div class="block-verse" contenteditable="true">"Let us put aside the deeds of darkness and put on the armor of light." — Romans 13:12</div>
+              </div>
+              <div class="block-item">
+                <textarea class="block-content" rows="3" placeholder="Continue writing…" style="height:auto;overflow:hidden;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">In our modern context, this verse speaks powerfully to the cultural moment we find ourselves in. The armor of light is not merely metaphorical—it is a daily choice to clothe ourselves in righteousness.</textarea>
+              </div>
+            </div>
+            <div class="add-block-trigger" style="margin-top:16px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Click to add a block…
+            </div>
+          </div>
+        </div>
+        <div class="editor-sidebar">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Publish Settings</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="label">Status</label><select class="select"><option>Draft</option><option>Published</option><option>Scheduled</option></select></div>
+              <div class="form-group"><label class="label">Category</label><select class="select"><option>Devotional</option><option>Scripture Study</option><option>Brand Story</option><option>Community</option></select></div>
+              <div class="form-group"><label class="label">Author</label><select class="select"><option>Super Admin</option><option>Pastor James</option><option>Sarah Philip</option></select></div>
+              <div class="form-group"><label class="label">Tags</label><input type="text" class="input" placeholder="romans, faith, armor"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Featured Image</div></div>
+            <div class="card-body">
+              <div class="upload-zone" style="padding:16px;">
+                <div class="upload-icon" style="width:36px;height:36px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                <div class="upload-title" style="font-size:0.82rem;">Add Image</div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-panel">
+            <div class="ai-panel-header"><div class="ai-logo">✨</div><div class="ai-title">AI Writing</div><span class="ai-badge">BETA</span></div>
+            <div class="ai-actions">
+              <button class="ai-action-btn" onclick="runAI('rewrite')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>Rewrite Article</button>
+              <button class="ai-action-btn" onclick="runAI('verse')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Suggest Verse</button>
+              <button class="ai-action-btn" onclick="runAI('seo')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>SEO &amp; Meta Tags</button>
+            </div>
+            <div class="ai-output" id="ai-output-article"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div id="modal-order" class="modal-overlay">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div><div class="modal-title">Order #RS-1042</div><div style="font-size:0.75rem;color:var(--text-muted);">Placed Jun 23, 2026 · ₹2,890</div></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm" onclick="showToast('info','Invoice','Generating invoice PDF...')">Invoice</button>
+        <button class="btn btn-primary btn-sm" onclick="showToast('success','Fulfilled','Order marked as shipped')">Mark Shipped</button>
+        <div class="modal-close" onclick="closeModal('modal-order')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2" style="margin-bottom:var(--space-5);">
+        <div><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:8px;">Customer</div><div style="font-size:0.9rem;font-weight:600;color:var(--text-primary);">Priya Sharma</div><div style="font-size:0.8rem;color:var(--text-muted);">priya@email.com · +91 98765 43210</div></div>
+        <div><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:8px;">Shipping Address</div><div style="font-size:0.85rem;color:var(--text-primary);">42, Faith Street<br>Mumbai, MH 400001<br>India</div></div>
+      </div>
+      <div style="background:var(--bg-elevated);border-radius:var(--radius-md);padding:var(--space-4);margin-bottom:var(--space-5);">
+        <div style="display:flex;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid var(--border-subtle);">
+          <div style="display:flex;gap:12px;align-items:center;"><div style="width:40px;height:40px;background:var(--bg-overlay);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">👕</div><div><div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Armor of Light Tee</div><div style="font-size:0.72rem;color:var(--text-muted);">White · M · SKU: RS-001</div></div></div>
+          <div style="text-align:right;"><div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">₹2,890</div><div style="font-size:0.72rem;color:var(--text-muted);">Qty: 1</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding-top:var(--space-3);font-size:0.85rem;color:var(--text-muted);">
+          <span>Subtotal</span><span>₹2,890</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--text-muted);margin-top:4px;">
+          <span>Shipping</span><span style="color:var(--color-success);">Free</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-top:var(--space-3);padding-top:var(--space-3);border-top:1px solid var(--border-subtle);">
+          <span>Total</span><span>₹2,890</span>
+        </div>
+      </div>
+      <div><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:var(--space-4);">Order Timeline</div>
+      <div class="order-timeline">
+        <div class="timeline-event completed"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Order Placed</div><div class="timeline-time">Jun 23, 2026 · 1:42 AM</div></div></div>
+        <div class="timeline-event current"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Payment Confirmed — ₹2,890 via Razorpay</div><div class="timeline-time">Jun 23, 2026 · 1:43 AM</div></div></div>
+        <div class="timeline-event"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Awaiting Fulfilment</div><div class="timeline-time">Pending</div></div></div>
+        <div class="timeline-event"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Shipped</div><div class="timeline-time">—</div></div></div>
+        <div class="timeline-event"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-title">Delivered</div><div class="timeline-time">—</div></div></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- New Item Modal -->
+<div id="modal-new" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Create New</div><div class="modal-close" onclick="closeModal('modal-new')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+        <div class="quick-action" onclick="closeModal('modal-new');navigate('products');setTimeout(()=>openProductEditor(),200)" style="background:var(--bg-elevated);">
+          <div class="qa-icon" style="background:var(--brand-burgundy-glow);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-burgundy-light)" stroke-width="2" style="width:20px;height:20px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg></div>
+          <span class="qa-label">Product</span>
+        </div>
+        <div class="quick-action" onclick="closeModal('modal-new');navigate('articles');setTimeout(()=>openArticleEditor(),200)" style="background:var(--bg-elevated);">
+          <div class="qa-icon" style="background:var(--brand-gold-dim);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-gold)" stroke-width="2" style="width:20px;height:20px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+          <span class="qa-label">Article</span>
+        </div>
+        <div class="quick-action" onclick="closeModal('modal-new');navigate('collections');showToast('info','Collection','Opening collection editor...')" style="background:var(--bg-elevated);">
+          <div class="qa-icon" style="background:var(--color-info-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--color-info)" stroke-width="2" style="width:20px;height:20px;"><path d="M3 3h6l2 3h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg></div>
+          <span class="qa-label">Collection</span>
+        </div>
+        <div class="quick-action" onclick="closeModal('modal-new');navigate('discounts');openDiscountModal()" style="background:var(--bg-elevated);">
+          <div class="qa-icon" style="background:var(--color-success-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2" style="width:20px;height:20px;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+          <span class="qa-label">Discount</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Discount Modal -->
+<div id="modal-discount" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Create Discount Code</div><div class="modal-close" onclick="closeModal('modal-discount')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="label">Discount Code</label><input type="text" class="input" placeholder="e.g. FAITH20" style="font-family:var(--font-mono);text-transform:uppercase;"></div>
+      <div class="form-group"><label class="label">Discount Type</label><div class="radio-group"><div class="radio-option selected" onclick="selectRadio(this)">% Percentage</div><div class="radio-option" onclick="selectRadio(this)">₹ Fixed Amount</div><div class="radio-option" onclick="selectRadio(this)">🚚 Free Shipping</div></div></div>
+      <div class="form-group"><label class="label">Value</label><input type="number" class="input" placeholder="20"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="label">Usage Limit</label><input type="number" class="input" placeholder="100"></div>
+        <div class="form-group"><label class="label">Expires</label><input type="date" class="input"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-discount')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-discount');showToast('success','Discount Created','FAITH20 is now active')">Create Discount</button>
+    </div>
+  </div>
+</div>
+
+<!-- Invite User Modal -->
+<div id="modal-invite" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Invite Team Member</div><div class="modal-close" onclick="closeModal('modal-invite')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="label">Email Address</label><input type="email" class="input" placeholder="colleague@ruvenstudio.com"></div>
+      <div class="form-group"><label class="label">Role</label><select class="select"><option>Store Manager</option><option>Product Manager</option><option>Content Editor</option><option>Marketing Manager</option><option>Customer Support</option><option>Community Manager</option></select></div>
+      <div class="form-group"><label class="label">Personal Message <span class="label-optional">(optional)</span></label><textarea class="textarea" style="min-height:80px;" placeholder="Welcome to the Ruven Studio team!"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-invite')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-invite');showToast('success','Invite Sent','An invitation email has been sent')">Send Invite</button>
+    </div>
+  </div>
+</div>
+
+<!-- Verse Modal -->
+<div id="modal-verse" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Add Bible Verse</div><div class="modal-close" onclick="closeModal('modal-verse')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="label">Reference</label><input type="text" class="input" placeholder="e.g. Romans 13:12"></div>
+      <div class="form-group"><label class="label">Verse Text</label><textarea class="textarea" placeholder="Full verse text…"></textarea></div>
+      <div class="form-group"><label class="label">Used In <span class="label-optional">(optional)</span></label><input type="text" class="input" placeholder="e.g. Hero Section, Armor Tee"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-verse')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-verse');showToast('success','Verse Added','Saved to the Verse Library')">Add Verse</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     CMD PALETTE
+     ============================================================ -->
+<div id="cmd-overlay" class="cmd-overlay" onclick="closeCmdPalette(event)">
+  <div class="cmd-palette">
+    <div class="cmd-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="cmd-input" id="cmd-input" placeholder="Search or jump to…" oninput="filterCmdResults(this.value)" onkeydown="handleCmdKey(event)">
+      <kbd class="cmd-esc-badge">ESC</kbd>
+    </div>
+    <div class="cmd-results" id="cmd-results">
+      <div class="cmd-group">
+        <div class="cmd-group-label">Navigation</div>
+        <div class="cmd-item active" onclick="cmdNavigate('dashboard')" data-search="dashboard home">
+          <div class="cmd-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+          <div><div class="cmd-item-label">Dashboard</div></div>
+        </div>
+        <div class="cmd-item" onclick="cmdNavigate('products')" data-search="products catalog items">
+          <div class="cmd-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg></div>
+          <div><div class="cmd-item-label">Products</div></div>
+        </div>
+        <div class="cmd-item" onclick="cmdNavigate('orders')" data-search="orders fulfillment">
+          <div class="cmd-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M9 11l3 3L22 4"/></svg></div>
+          <div><div class="cmd-item-label">Orders</div><div class="cmd-item-sub">12 pending</div></div>
+        </div>
+        <div class="cmd-item" onclick="cmdNavigate('analytics')" data-search="analytics reports revenue">
+          <div class="cmd-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div><div class="cmd-item-label">Analytics</div></div>
+        </div>
+      </div>
+      <div class="cmd-group">
+        <div class="cmd-group-label">Quick Actions</div>
+        <div class="cmd-item" onclick="closeCmdPalette();navigate('products');setTimeout(()=>openProductEditor(),200)" data-search="new product create add">
+          <div class="cmd-item-icon">📦</div>
+          <div><div class="cmd-item-label">New Product</div></div>
+          <div class="cmd-item-kbd"><kbd>N</kbd><kbd>P</kbd></div>
+        </div>
+        <div class="cmd-item" onclick="closeCmdPalette();navigate('articles');setTimeout(()=>openArticleEditor(),200)" data-search="new article write create journal">
+          <div class="cmd-item-icon">✍️</div>
+          <div><div class="cmd-item-label">New Article</div></div>
+          <div class="cmd-item-kbd"><kbd>N</kbd><kbd>A</kbd></div>
+        </div>
+        <div class="cmd-item" onclick="closeCmdPalette();openDiscountModal()" data-search="discount coupon create">
+          <div class="cmd-item-icon">🏷️</div>
+          <div><div class="cmd-item-label">Create Discount</div></div>
+        </div>
+        <div class="cmd-item" onclick="closeCmdPalette();logout()" data-search="logout sign out">
+          <div class="cmd-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
+          <div><div class="cmd-item-label">Logout</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="cmd-footer">
+      <div class="cmd-hint"><kbd>↑</kbd><kbd>↓</kbd> Navigate</div>
+      <div class="cmd-hint"><kbd>↵</kbd> Select</div>
+      <div class="cmd-hint"><kbd>ESC</kbd> Close</div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS PANEL -->
+<div id="notif-panel" class="notif-panel">
+  <div class="notif-header">
+    <span class="notif-title">Notifications</span>
+    <span class="notif-count">5 new</span>
+  </div>
+  <div class="notif-list">
+    <div class="notif-item unread" onclick="navigate('orders');toggleNotifications()">
+      <div class="notif-icon" style="background:var(--color-info-bg);">🛍️</div>
+      <div class="notif-content"><div class="notif-text"><strong>New Order</strong> — #RS-1042 from Priya Sharma · ₹2,890</div><div class="notif-time">2 minutes ago</div></div>
+      <div class="notif-unread-dot"></div>
+    </div>
+    <div class="notif-item unread" onclick="navigate('products');toggleNotifications()">
+      <div class="notif-icon" style="background:var(--color-error-bg);">⚠️</div>
+      <div class="notif-content"><div class="notif-text"><strong>Low Stock Alert</strong> — Armor of Light Tee (White/M) has 3 units left</div><div class="notif-time">14 minutes ago</div></div>
+      <div class="notif-unread-dot"></div>
+    </div>
+    <div class="notif-item unread" onclick="navigate('community');toggleNotifications()">
+      <div class="notif-icon" style="background:var(--brand-burgundy-glow);">🙏</div>
+      <div class="notif-content"><div class="notif-text"><strong>New Prayer Request</strong> — Awaiting review from Priya S.</div><div class="notif-time">1 hour ago</div></div>
+      <div class="notif-unread-dot"></div>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:var(--color-success-bg);">✅</div>
+      <div class="notif-content"><div class="notif-text"><strong>Article Published</strong> — "Romans 13: Armor of Light" is now live</div><div class="notif-time">3 hours ago</div></div>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:var(--brand-gold-dim);">⭐</div>
+      <div class="notif-content"><div class="notif-text"><strong>New Review</strong> — Rahul M. left a 5-star review</div><div class="notif-time">5 hours ago</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>
