@@ -273,7 +273,9 @@ let state = {
   loyaltyPoints: parseInt(localStorage.getItem("ruven_loyalty_points")) || 250,
   currentCoupon: 0,
   giftWrap: false,
-  currentOrderTrackingId: "RV-2026-89104"
+  currentOrderTrackingId: "RV-2026-89104",
+  customerIsLoggedIn: sessionStorage.getItem("ruven_customer_logged_in") === "true",
+  customerUser: JSON.parse(sessionStorage.getItem("ruven_customer_user")) || null
 };
 
 // 3. INITIALIZATION
@@ -3821,11 +3823,150 @@ function renderTrackingPage() {
 }
 
 // 5. CUSTOMER ACCOUNT DASHBOARD RENDERER
+function renderLoginForm() {
+  const container = document.getElementById("customer-login-view");
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="account-login-card" style="max-width: 440px; margin: 60px auto; padding: 40px var(--spacing-md); background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: var(--border-radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center;">
+      <div style="width: 50px; height: 50px; background: var(--color-brand-burgundy); color: var(--color-white); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; margin-bottom: var(--spacing-sm); font-family: var(--font-sans);">R</div>
+      <h2 style="font-family: var(--font-editorial); font-style: italic; font-size: 1.8rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 8px;">Ruven Studio Account</h2>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 24px;">Sign in to access your profile settings, order history, and rewards.</p>
+      
+      <form id="front-login-form" style="display: flex; flex-direction: column; gap: var(--spacing-sm); text-align: left;">
+        <div class="contact-form-group">
+          <label style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--color-text-muted); margin-bottom: 6px; display: block;">Email Address</label>
+          <input type="email" id="front-login-email" class="contact-input" required placeholder="customer@example.com" style="width: 100%; padding: 12px; border: 1px solid var(--color-border); background: var(--color-white); font-size: 0.85rem;">
+        </div>
+        
+        <div id="front-password-group" style="display: none; margin-top: 8px;">
+          <label style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--color-text-muted); margin-bottom: 6px; display: block;">Administrator Password</label>
+          <input type="password" id="front-login-password" class="contact-input" placeholder="Enter admin password" style="width: 100%; padding: 12px; border: 1px solid var(--color-border); background: var(--color-white); font-size: 0.85rem;">
+        </div>
+
+        <div id="front-login-error" style="display: none; color: var(--color-brand-burgundy); font-size: 0.8rem; margin-top: 8px; font-weight: 700;"></div>
+
+        <button type="submit" id="front-login-submit" class="cta-button cta-button-primary" style="padding: 14px; font-size: 0.8rem; font-weight: 700; width: 100%; text-transform: uppercase; margin-top: 12px; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; border: none;">
+          Continue
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 8px;">
+          Ruven Studio Staff or Administrator?
+        </p>
+        <a href="/admin/index.html" class="cta-button nav-trigger" style="display: inline-block; padding: 10px 20px; font-size: 0.75rem; border: 1px solid var(--color-brand-burgundy); color: var(--color-brand-burgundy); background: none; font-weight: 700; text-transform: uppercase; text-decoration: none;">
+          Go to Admin Portal →
+        </a>
+      </div>
+    </div>
+  `;
+
+  const form = document.getElementById("front-login-form");
+  const emailInput = document.getElementById("front-login-email");
+  const passwordInput = document.getElementById("front-login-password");
+  const passwordGroup = document.getElementById("front-password-group");
+  const submitBtn = document.getElementById("front-login-submit");
+  const errorBox = document.getElementById("front-login-error");
+
+  if (!form || !emailInput || !passwordInput || !passwordGroup || !submitBtn || !errorBox) return;
+
+  const updateFormState = () => {
+    const email = emailInput.value.trim().toLowerCase();
+    const isAdmin = ["samuel@ruvenstudio.in", "admin@ruvenstudio.com", "admin@ruvenstudio.in"].includes(email);
+    if (isAdmin) {
+      passwordGroup.style.display = "block";
+      passwordInput.required = true;
+      submitBtn.textContent = "Sign In as Admin";
+    } else {
+      passwordGroup.style.display = "none";
+      passwordInput.required = false;
+      submitBtn.textContent = "Continue";
+    }
+  };
+
+  emailInput.addEventListener("input", updateFormState);
+  emailInput.addEventListener("change", updateFormState);
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    errorBox.style.display = "none";
+    
+    const email = emailInput.value.trim().toLowerCase();
+    const isAdmin = ["samuel@ruvenstudio.in", "admin@ruvenstudio.com", "admin@ruvenstudio.in"].includes(email);
+
+    if (isAdmin) {
+      const password = passwordInput.value.trim();
+      if (password === "Ruven@2026") {
+        sessionStorage.setItem("rs_admin_auth", "true");
+        sessionStorage.setItem("rs_admin_user", JSON.stringify({
+          name: email.includes("samuel") ? "Samuel Ruven" : "Super Admin",
+          email: email,
+          role: "super-admin",
+          initials: email.includes("samuel") ? "SR" : "SA"
+        }));
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "Opening Admin Portal...";
+        
+        showToast("Access granted. Opening Admin Portal...");
+        setTimeout(() => {
+          window.location.href = "/admin/index.html";
+        }, 1000);
+      } else {
+        errorBox.textContent = "❌ Incorrect admin password. (Hint: Ruven@2026)";
+        errorBox.style.display = "block";
+      }
+    } else {
+      // Normal Customer login
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "Signing in...";
+
+      setTimeout(() => {
+        state.customerIsLoggedIn = true;
+        state.customerUser = {
+          firstName: email.split("@")[0].charAt(0).toUpperCase() + email.split("@")[0].slice(1),
+          lastName: "Customer",
+          email: email,
+          phone: "+91 99999 99999"
+        };
+        sessionStorage.setItem("ruven_customer_logged_in", "true");
+        sessionStorage.setItem("ruven_customer_user", JSON.stringify(state.customerUser));
+
+        showToast("Signed in successfully.");
+        renderAccountPage();
+      }, 800);
+    }
+  });
+}
+
 function renderAccountPage() {
+  const loginView = document.getElementById("customer-login-view");
+  const dashboardView = document.getElementById("customer-dashboard-view");
   const panelTarget = document.getElementById("account-panels-target");
   const tabBtns = document.querySelectorAll(".account-nav-tab-btn");
 
-  if (!panelTarget) return;
+  if (!panelTarget || !loginView || !dashboardView) return;
+
+  if (!state.customerIsLoggedIn) {
+    loginView.style.display = "block";
+    dashboardView.style.display = "none";
+    renderLoginForm();
+    return;
+  }
+
+  loginView.style.display = "none";
+  dashboardView.style.display = "grid";
+
+  // Update user profile details in sidebar if user is set
+  if (state.customerUser) {
+    const avatarEl = document.getElementById("account-profile-avatar-char");
+    const nameEl = document.getElementById("account-profile-display-name");
+    const emailEl = document.getElementById("account-profile-display-email");
+    if (avatarEl) avatarEl.textContent = state.customerUser.firstName.charAt(0).toUpperCase();
+    if (nameEl) nameEl.textContent = `${state.customerUser.firstName} ${state.customerUser.lastName}`;
+    if (emailEl) emailEl.textContent = state.customerUser.email;
+  }
 
   // Active state styling
   tabBtns.forEach(btn => {
@@ -4312,6 +4453,7 @@ function renderAccountPage() {
   renderActivePanel();
 
   tabBtns.forEach(btn => {
+    if (btn.id === "customer-logout-btn") return;
     const clone = btn.cloneNode(true);
     btn.parentNode.replaceChild(clone, btn);
     clone.addEventListener("click", () => {
@@ -4319,6 +4461,20 @@ function renderAccountPage() {
       renderAccountPage();
     });
   });
+
+  const logoutBtn = document.getElementById("customer-logout-btn");
+  if (logoutBtn) {
+    const clone = logoutBtn.cloneNode(true);
+    logoutBtn.parentNode.replaceChild(clone, logoutBtn);
+    clone.addEventListener("click", () => {
+      state.customerIsLoggedIn = false;
+      state.customerUser = null;
+      sessionStorage.removeItem("ruven_customer_logged_in");
+      sessionStorage.removeItem("ruven_customer_user");
+      showToast("Signed out successfully.");
+      renderAccountPage();
+    });
+  }
 
   if (window.lucide) window.lucide.createIcons();
 }

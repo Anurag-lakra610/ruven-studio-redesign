@@ -1393,8 +1393,12 @@
 
     <!-- 12. CUSTOMER ACCOUNT VIEW -->
     <section id="account-view" class="view-section">
-      <div class="pdp-wrapper-container" style="padding-top: var(--spacing-md);">
-        <div class="account-grid-layout">
+      <div class="pdp-wrapper-container" id="account-view-container" style="padding-top: var(--spacing-md);">
+        <!-- Login Container -->
+        <div id="customer-login-view" style="display: none; width: 100%;"></div>
+
+        <!-- Dashboard Container -->
+        <div id="customer-dashboard-view" class="account-grid-layout">
           <!-- Sidebar Navigation -->
           <div class="account-sidebar-nav">
             <div class="account-profile-summary">
@@ -1404,13 +1408,14 @@
                 <p id="account-profile-display-email" style="font-size: 0.75rem; color: var(--color-text-muted);">samuel@ruvenstudio.in</p>
               </div>
             </div>
-            <div class="account-nav-tabs" style="display: flex; flex-direction: column; gap: var(--spacing-xs); margin-top: var(--spacing-md);">
+            <div class="account-nav-tabs" id="account-nav-tabs-container" style="display: flex; flex-direction: column; gap: var(--spacing-xs); margin-top: var(--spacing-md);">
               <button class="account-nav-tab-btn active" data-tab="profile" style="padding: 10px 14px; border: 1px solid var(--color-border); background: var(--color-white); text-align: left; font-size: 0.8rem; font-weight:700; border-radius: var(--border-radius-sm); display: flex; align-items: center; gap: 8px; cursor: pointer;"><i data-lucide="user" style="width: 14px;"></i> Profile Settings</button>
               <button class="account-nav-tab-btn" data-tab="orders" style="padding: 10px 14px; border: 1px solid transparent; background: none; text-align: left; font-size: 0.8rem; font-weight:700; display: flex; align-items: center; gap: 8px; cursor: pointer;"><i data-lucide="package" style="width: 14px;"></i> Order History</button>
               <button class="account-nav-tab-btn" data-tab="wishlist" style="padding: 10px 14px; border: 1px solid transparent; background: none; text-align: left; font-size: 0.8rem; font-weight:700; display: flex; align-items: center; gap: 8px; cursor: pointer;"><i data-lucide="heart" style="width: 14px;"></i> Wishlist Manager</button>
               <button class="account-nav-tab-btn" data-tab="addresses" style="padding: 10px 14px; border: 1px solid transparent; background: none; text-align: left; font-size: 0.8rem; font-weight:700; display: flex; align-items: center; gap: 8px; cursor: pointer;"><i data-lucide="map-pin" style="width: 14px;"></i> Saved Addresses</button>
               <button class="account-nav-tab-btn" data-tab="returns" style="padding: 10px 14px; border: 1px solid transparent; background: none; text-align: left; font-size: 0.8rem; font-weight:700; display: flex; align-items: center; gap: 8px; cursor: pointer;"><i data-lucide="refresh-cw" style="width: 14px;"></i> Returns & Exchanges</button>
               <button class="account-nav-tab-btn" data-tab="loyalty" style="padding: 10px 14px; border: 1px solid transparent; background: none; text-align: left; font-size: 0.8rem; font-weight:700; display: flex; align-items: center; gap: 8px; cursor: pointer;"><i data-lucide="award" style="width: 14px;"></i> Loyalty Rewards</button>
+              <button class="account-nav-tab-btn" id="customer-logout-btn" style="padding: 10px 14px; border: 1px solid transparent; background: none; text-align: left; font-size: 0.8rem; font-weight:700; display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--color-brand-burgundy);"><i data-lucide="log-out" style="width: 14px;"></i> Sign Out</button>
             </div>
           </div>
           
