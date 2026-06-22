@@ -157,97 +157,385 @@
         </div>
       </div>
 
-      <!-- Trust Strip (Immediately below Hero, no products) -->
-      <div class="trust-strip">
-        <div class="trust-item">
-          <i data-lucide="star" class="trust-icon star-active"></i>
-          <span class="trust-text">★★★★★ Trusted by Faith Communities</span>
-        </div>
-        <div class="trust-divider"></div>
-        <div class="trust-item">
-          <i data-lucide="info" class="trust-icon"></i>
-          <span class="trust-text">Premium Cotton</span>
-        </div>
-        <div class="trust-divider"></div>
-        <div class="trust-item">
-          <i data-lucide="map-pin" class="trust-icon"></i>
-          <span class="trust-text">Designed in India</span>
-        </div>
-        <div class="trust-divider"></div>
-        <div class="trust-item">
-          <i data-lucide="package" class="trust-icon"></i>
-          <span class="trust-text">Limited Drops</span>
-        </div>
-        <div class="trust-divider"></div>
-        <div class="trust-item">
-          <i data-lucide="lock" class="trust-icon"></i>
-          <span class="trust-text">Secure Checkout</span>
-        </div>
-        <div class="trust-divider"></div>
-        <div class="trust-item">
-          <i data-lucide="truck" class="trust-icon"></i>
-          <span class="trust-text">Free Shipping over ₹1999</span>
+      <!-- SECTION 1: Trust Strip -->
+      <div class="trust-strip-v2">
+        <div class="trust-strip-container">
+          <div class="trust-item-v2">
+            <i data-lucide="shirt" class="trust-icon-v2"></i>
+            <span class="trust-text-v2">Premium Fabric</span>
+          </div>
+          <div class="trust-item-v2">
+            <i data-lucide="sparkles" class="trust-icon-v2"></i>
+            <span class="trust-text-v2">Faith Inspired</span>
+          </div>
+          <div class="trust-item-v2">
+            <i data-lucide="shield-check" class="trust-icon-v2"></i>
+            <span class="trust-text-v2">Secure Checkout</span>
+          </div>
+          <div class="trust-item-v2">
+            <i data-lucide="truck" class="trust-icon-v2"></i>
+            <span class="trust-text-v2">Fast Shipping</span>
+          </div>
+          <div class="trust-item-v2">
+            <i data-lucide="compass" class="trust-icon-v2"></i>
+            <span class="trust-text-v2">Designed with Purpose</span>
+          </div>
+          <div class="trust-item-v2">
+            <i data-lucide="activity" class="trust-icon-v2"></i>
+            <span class="trust-text-v2">Made for Everyday Wear</span>
+          </div>
         </div>
       </div>
 
-      <!-- Featured Brand Statement Section (Immediately below Trust strip) -->
-      <div class="brand-statement-section" id="brand-statement-section">
-        <div class="brand-statement-grid">
-          <div class="brand-statement-left">
-            <h2 class="statement-headline">We believe clothing should remind people who they are in Christ.</h2>
-            <p class="statement-body">
-              At Ruven Studio, we construct premium, oversized garments that serve as starting points for faith-filled conversations. We do not design standard merchandise. We select heavy-weight French Terry fabrics, implement hand-pulled screen printing, and pair every drop with scriptures that remind you of God's love and protection.
+      <!-- SECTION 2: Our Mission (Editorial Storytelling) -->
+      <section class="editorial-mission section-padding-lg" id="brand-statement-section">
+        <div class="editorial-mission-grid">
+          <div class="mission-text-col">
+            <span class="section-subtitle-lowercase">our purpose</span>
+            <h2 class="editorial-headline-large">Formed in Faith.<br>Tailored for Purpose.</h2>
+            <p class="mission-paragraph">
+              Ruven Studio is an independent Christian lifestyle label creating heavy-weight apparel designed to start quiet, meaningful conversations. We construct each garment to serve as a visual bridge, allowing you to carry your faith with elegance and confidence in modern creative environments.
             </p>
-            <div class="statement-verse-box">
-              <p class="statement-verse-quote">"The light shines in the darkness, and the darkness has not overcome it."</p>
-              <p class="statement-verse-ref">John 1:5</p>
+            <div class="mission-quote-box">
+              <span class="quote-sign">“</span>
+              <p class="mission-quote-text">We don't create clothing to conform; we design to transform.</p>
+              <p class="mission-quote-author">— The Ruven Collective</p>
+            </div>
+            <div class="mission-verse-accent">
+              <p class="mission-verse-quote">"Do not be conformed to this world, but be transformed by the renewal of your mind..."</p>
+              <p class="mission-verse-ref">Romans 12:2</p>
             </div>
           </div>
-          <div class="brand-statement-right">
-            <div class="statement-image-container">
-              <img src="/brand_story_lifestyle.png" alt="Ruven Studio craftsmanship and storytelling" class="statement-img">
+          <div class="mission-image-col">
+            <div class="mission-image-wrap reveal-on-scroll">
+              <img src="/brand_story_lifestyle.png" alt="Ruven Studio Craftsmanship and Story" class="mission-img">
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- New Collection Highlight -->
-      <div class="section-padding">
-        <div class="section-header">
+      <!-- SECTION 3: Featured Collection Campaign -->
+      <section class="featured-campaign section-padding-lg">
+        <div class="campaign-header">
           <div>
-            <p class="section-subtitle">New Release</p>
-            <h2 class="section-title">The Armor & Protection Collection</h2>
+            <span class="section-subtitle-lowercase">editorial drop 01</span>
+            <h2 class="editorial-title-v2">The Armor & Protection Campaign</h2>
           </div>
-          <a href="#shop" class="cta-button cta-button-secondary nav-trigger" data-view="shop" data-filter="new-arrivals">View All</a>
+          <p class="campaign-description">
+            A meticulous collection representing strength and spiritual integrity in a chaotic world. Styled with Scandinavian minimalism and heavyweight textures.
+          </p>
         </div>
-        <div class="product-grid" id="new-arrivals-grid">
-          <!-- Populated Dynamically via JS -->
-        </div>
-      </div>
+        
+        <div class="campaign-grid">
+          <!-- Left Hero Campaign Card (Armor of Light Tee) -->
+          <article class="campaign-hero-card product-card reveal-on-scroll" data-id="tee-romans-13-12">
+            <div class="campaign-hero-img-wrap">
+              <img src="/oversized_tee_product.png" alt="Armor of Light Heavyweight Tee" class="campaign-hero-img">
+              <span class="campaign-tag-badge">New Release</span>
+              <button class="wishlist-btn" data-id="tee-romans-13-12" aria-label="Add to wishlist">
+                <i data-lucide="heart"></i>
+              </button>
+            </div>
+            <div class="campaign-hero-info">
+              <div class="campaign-info-meta">
+                <span class="campaign-verse-tag">Romans 13:12</span>
+                <span class="campaign-category-tag">Oversized Tee</span>
+              </div>
+              <h3 class="campaign-hero-title">Armor of Light Heavyweight Tee</h3>
+              <p class="campaign-hero-desc">
+                240 GSM organic combed cotton, styled in a custom boxy oversized cut. Featuring a clean, linear shield design signifying spiritual defense.
+              </p>
+              <div class="campaign-actions">
+                <span class="campaign-price">₹1999 <span class="price-original">₹2499</span></span>
+                <!-- Sizes Selector inside Campaign Card for Quick Add -->
+                <div class="size-selector-v2">
+                  <button class="size-btn" data-size="S">S</button>
+                  <button class="size-btn" data-size="M">M</button>
+                  <button class="size-btn" data-size="L">L</button>
+                  <button class="size-btn" data-size="XL">XL</button>
+                </div>
+              </div>
+            </div>
+          </article>
 
-      <!-- Marquee Bible Verse Banner -->
-      <div class="featured-verse-section section-padding">
-        <span class="verse-mark">“</span>
-        <blockquote class="bible-verse">
-          Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.
-        </blockquote>
-        <p class="bible-reference">Romans 12:2</p>
-        <span class="verse-mark verse-mark-end">”</span>
-      </div>
-
-      <!-- Best Sellers Section -->
-      <div class="section-padding">
-        <div class="section-header">
-          <div>
-            <p class="section-subtitle">Faith-Inspired Streetwear</p>
-            <h2 class="section-title">Ruven Studio Best Sellers</h2>
+          <!-- Right supporting column -->
+          <div class="campaign-side-col">
+            <article class="campaign-supporting-card product-card reveal-on-scroll" data-id="hoodie-romans-12-2">
+              <div class="supporting-img-wrap">
+                <img src="/faith_hoodie_product.png" alt="Renewal of Mind French Terry Hoodie" class="supporting-img">
+                <span class="campaign-tag-badge">Best Seller</span>
+                <button class="wishlist-btn" data-id="hoodie-romans-12-2" aria-label="Add to wishlist">
+                  <i data-lucide="heart"></i>
+                </button>
+              </div>
+              <div class="supporting-info">
+                <span class="campaign-verse-tag">Romans 12:2</span>
+                <h4 class="supporting-title">Renewal of Mind French Terry Hoodie</h4>
+                <p class="supporting-price">₹3499</p>
+                <div class="size-selector-v2" style="margin-top: var(--spacing-xs);">
+                  <button class="size-btn" data-size="M">M</button>
+                  <button class="size-btn" data-size="L">L</button>
+                  <button class="size-btn" data-size="XL">XL</button>
+                </div>
+              </div>
+            </article>
+            
+            <div class="campaign-editorial-statement reveal-on-scroll">
+              <h3>Every Thread Tells a Story</h3>
+              <p>
+                Our graphics are not simple illustrations. They are screen-printed conversations waiting to happen, serving as reminders of mental renewal, clarity, and protection in God.
+              </p>
+              <a href="#shop" class="editorial-text-link nav-trigger" data-view="shop">Browse All Apparel →</a>
+            </div>
           </div>
-          <a href="#shop" class="cta-button cta-button-secondary nav-trigger" data-view="shop" data-filter="best-sellers">View All</a>
         </div>
-        <div class="product-grid" id="best-sellers-grid">
-          <!-- Populated Dynamically via JS -->
+      </section>
+
+      <!-- SECTION 4: Immersive Lifestyle Campaign -->
+      <section class="lifestyle-immersive-campaign">
+        <div class="immersive-bg-wrap">
+          <img src="/hero_lifestyle.png" alt="Ruven Studio Lifestyle Movement" class="immersive-bg-img">
         </div>
-      </div>
+        <div class="immersive-overlay-v2"></div>
+        <div class="immersive-content">
+          <span class="immersive-subtitle">lifestyle campaign</span>
+          <h2 class="immersive-statement">Faith Is Meant To Be Lived.<br>Not Hidden.</h2>
+          <p class="immersive-subtext">Designed in India to carry the message of light. Our premium minimal streetwear helps you start the conversations that matter.</p>
+          <a href="#shop" class="immersive-cta-link nav-trigger" data-view="shop" data-filter="all">Explore the Lookbook</a>
+        </div>
+      </section>
+
+      <!-- SECTION 5: Bible Verse Highlight -->
+      <section class="scripture-highlight section-padding-lg">
+        <div class="scripture-container reveal-on-scroll">
+          <div class="scripture-vector">
+            <!-- Sleek minimalist cross / ray graphic (inline SVG) -->
+            <svg viewBox="0 0 100 100" class="scripture-svg-graphic" aria-hidden="true">
+              <path d="M50,10 L50,90 M20,35 L80,35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"></path>
+              <circle cx="50" cy="35" r="22" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" fill="none" opacity="0.25"></circle>
+            </svg>
+          </div>
+          <span class="verse-label-accent">scripture focus</span>
+          <blockquote class="modern-bible-verse">
+            "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect."
+          </blockquote>
+          <p class="modern-bible-reference">Romans 12:2</p>
+          
+          <div class="verse-connection-box">
+            <h4>Why This Verse Matters</h4>
+            <p>
+              In a generation driven by noise, social pressure, and anxiety, this verse is a sanctuary. It reminds us that our true identity is found in renewal and divine transformation, rather than mimicking temporary worldly patterns. This scriptural theme forms the creative core of our Heavyweight Hoodie collection.
+            </p>
+            <a href="#shop" class="verse-connect-link nav-trigger" data-view="shop" data-filter="hoodies">Explore Mind Renewal Drops</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6: Best Sellers (Asymmetrical Editorial Layout) -->
+      <section class="best-sellers-editorial section-padding-lg">
+        <div class="best-sellers-header">
+          <span class="section-subtitle-lowercase">essential drops</span>
+          <h2 class="editorial-title-v2">Ruven Studio Best Sellers</h2>
+        </div>
+
+        <div class="best-sellers-layout">
+          <!-- Hero Best Seller (Left, taking up larger space) -->
+          <article class="product-card best-seller-hero-card reveal-on-scroll" data-id="hoodie-romans-12-2">
+            <div class="best-seller-hero-grid">
+              <div class="best-seller-hero-img-side">
+                <img src="/faith_hoodie_product.png" alt="Renewal of Mind French Terry Hoodie" class="best-seller-hero-img">
+                <button class="wishlist-btn" data-id="hoodie-romans-12-2" aria-label="Add to wishlist">
+                  <i data-lucide="heart"></i>
+                </button>
+                <span class="badge-tag">Best Seller</span>
+              </div>
+              <div class="best-seller-hero-info-side">
+                <span class="best-seller-verse-ref">Romans 12:2</span>
+                <h3 class="best-seller-title">Renewal of Mind French Terry Hoodie</h3>
+                <p class="best-seller-price">₹3499 <span class="price-original">₹4299</span></p>
+                
+                <p class="best-seller-fabric-summary">
+                  Fabric: 380 GSM ultra-heavy combed French Terry. Loop-back lining, double-lined drawstring-free hood. Crafted to represent comfortable, mindful living.
+                </p>
+                
+                <div class="best-seller-verse-preview">
+                  <p class="verse-quote-short">"Do not conform... but be transformed."</p>
+                </div>
+                
+                <!-- Quick add sizes selector -->
+                <div class="best-seller-quick-add">
+                  <span class="quick-add-label">Quick Add Size</span>
+                  <div class="size-selector-v2">
+                    <button class="size-btn" data-size="M">M</button>
+                    <button class="size-btn" data-size="L">L</button>
+                    <button class="size-btn" data-size="XL">XL</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Supporting Best Seller (Right, smaller vertical card) -->
+          <article class="product-card best-seller-side-card reveal-on-scroll" data-id="tee-romans-13-12">
+            <button class="wishlist-btn" data-id="tee-romans-13-12" aria-label="Add to wishlist">
+              <i data-lucide="heart"></i>
+            </button>
+            <div class="best-seller-side-img-wrap">
+              <img src="/oversized_tee_product.png" alt="Armor of Light Heavyweight Tee" class="best-seller-side-img">
+              <span class="badge-tag">New Drop</span>
+            </div>
+            <div class="best-seller-side-info">
+              <span class="best-seller-verse-ref">Romans 13:12</span>
+              <h3 class="best-seller-title">Armor of Light Heavyweight Tee</h3>
+              <p class="best-seller-price">₹1999</p>
+              
+              <!-- Quick add sizes selector -->
+              <div class="best-seller-quick-add-mini">
+                <div class="size-selector-v2">
+                  <button class="size-btn" data-size="S">S</button>
+                  <button class="size-btn" data-size="M">M</button>
+                  <button class="size-btn" data-size="L">L</button>
+                  <button class="size-btn" data-size="XL">XL</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- SECTION 7: Why Choose Ruven -->
+      <section class="why-ruven section-padding-lg">
+        <div class="why-ruven-header">
+          <span class="section-subtitle-lowercase">crafted for conversation</span>
+          <h2 class="editorial-title-v2">The Anatomy of Ruven Studio</h2>
+        </div>
+        <div class="why-ruven-grid">
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon-wrap">
+              <i data-lucide="message-square"></i>
+            </div>
+            <h4>Designed to Start Conversations</h4>
+            <p>Every graphic acts as an intentional conversation starter, creating direct opportunities to share faith and hope.</p>
+          </div>
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon-wrap">
+              <i data-lucide="shirt"></i>
+            </div>
+            <h4>Premium Heavyweight Cotton</h4>
+            <p>Tailored in 240 GSM T-shirts and 380 GSM loopback French Terry hoodies. Durable, dense, and built to last.</p>
+          </div>
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon-wrap">
+              <i data-lucide="feather"></i>
+            </div>
+            <h4>Faith Inspired Graphics</h4>
+            <p>Original, minimalist scriptural symbols screen-printed carefully with absolute precision.</p>
+          </div>
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon-wrap">
+              <i data-lucide="calendar"></i>
+            </div>
+            <h4>Limited Edition Collections</h4>
+            <p>Released in small, calculated runs to maintain design integrity and reduce environmental manufacturing waste.</p>
+          </div>
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon-wrap">
+              <i data-lucide="heart"></i>
+            </div>
+            <h4>Ethically Produced</h4>
+            <p>Independently manufactured in clean, safe facilities in India supporting local creative tailors.</p>
+          </div>
+          <div class="feature-card reveal-on-scroll">
+            <div class="feature-icon-wrap">
+              <i data-lucide="activity"></i>
+            </div>
+            <h4>Built for Everyday Wear</h4>
+            <p>Featuring pre-shrunk structures, double-stitched details, and timeless cuts for modern comfort.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 8: Community Stories -->
+      <section class="community-testimonials section-padding-lg">
+        <div class="testimonials-header">
+          <span class="section-subtitle-lowercase">united in faith</span>
+          <h2 class="editorial-title-v2">Shared Reflections</h2>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testimonial-card reveal-on-scroll">
+            <div class="testimonial-rating">★★★★★</div>
+            <p class="testimonial-quote">"The Armor of Light tee has opened so many doors. Friends at college ask what the shield represents, allowing me to share my faith journey naturally."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar-initials" style="background-color: var(--color-brand-burgundy); color: var(--color-white);">D</div>
+              <div class="author-details">
+                <span class="author-name">David S.</span>
+                <span class="author-loc">Bengaluru • College Ministry</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card reveal-on-scroll">
+            <div class="testimonial-rating">★★★★★</div>
+            <p class="testimonial-quote">"The comfort of the loopback French Terry is outstanding, but the reminder of mental renewal on the chest serves as a quiet anchor of peace during my days."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar-initials" style="background-color: var(--color-brand-gold); color: var(--color-text-primary);">P</div>
+              <div class="author-details">
+                <span class="author-name">Priya M.</span>
+                <span class="author-loc">Mumbai • Creative Director</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card reveal-on-scroll">
+            <div class="testimonial-rating">★★★★★</div>
+            <p class="testimonial-quote">"Perfect boxy fit. I wear my Ruven Studio tees to fellowships and study circles. It always sparks conversations about walk of faith and identity in Christ."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar-initials" style="background-color: var(--color-border); color: var(--color-text-primary);">R</div>
+              <div class="author-details">
+                <span class="author-name">Rahul K.</span>
+                <span class="author-loc">New Delhi • Student Leader</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 9: Asymmetrical Instagram Social Wall -->
+      <section class="instagram-gallery section-padding-lg">
+        <div class="instagram-header">
+          <span class="section-subtitle-lowercase">fellowship studio</span>
+          <h2 class="editorial-title-v2">Shared on Instagram</h2>
+          <a href="https://instagram.com/ruven.studio" target="_blank" rel="noopener noreferrer" class="instagram-handle">@ruven.studio</a>
+        </div>
+        <div class="instagram-asymmetric-grid">
+          <div class="instagram-grid-item item-1 reveal-on-scroll">
+            <img src="/brand_story_lifestyle.png" alt="Ruven Studio lookbook styling">
+            <div class="instagram-overlay">
+              <i data-lucide="instagram"></i>
+              <span>View Post</span>
+            </div>
+          </div>
+          <div class="instagram-grid-item item-2 reveal-on-scroll">
+            <img src="/hero_lifestyle.png" alt="Youth sharing scripture in streetwear">
+            <div class="instagram-overlay">
+              <i data-lucide="instagram"></i>
+              <span>View Post</span>
+            </div>
+          </div>
+          <div class="instagram-grid-item item-3 reveal-on-scroll">
+            <img src="/oversized_tee_product.png" alt="Heavyweight screen print detail">
+            <div class="instagram-overlay">
+              <i data-lucide="instagram"></i>
+              <span>View Post</span>
+            </div>
+          </div>
+          <div class="instagram-grid-item item-4 reveal-on-scroll">
+            <img src="/faith_hoodie_product.png" alt="Embroidered branch detailing on French Terry">
+            <div class="instagram-overlay">
+              <i data-lucide="instagram"></i>
+              <span>View Post</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </section>
 
@@ -423,27 +711,48 @@
   </div>
 
   <!-- ==========================================================================
-       Newsletter Signup & Footer
+       SECTION 10: Newsletter & Footer Redesign
        ========================================================================== -->
-  <section class="newsletter-section section-padding">
-    <p class="section-subtitle" style="color: var(--color-brand-gold);">Faith, Stories, and Studio Drops</p>
-    <h2>Subscribe to the Studio Newsletter</h2>
-    <p>Sign up to receive reflections on scripture, design diary insights, and priority access to limited collections.</p>
-    <form class="newsletter-form" id="newsletter-form">
-      <input type="email" placeholder="Your Email Address" required>
-      <button type="submit">Subscribe</button>
-    </form>
+  <section class="newsletter-section-v2 section-padding-lg" id="newsletter-section">
+    <div class="newsletter-container reveal-on-scroll">
+      <span class="newsletter-subtitle">studio invitation</span>
+      <h2>Join a Community That Wears Its Faith.</h2>
+      <p class="newsletter-description">
+        Ruven Studio is more than apparel. It is a fellowship. Subscribe to receive monthly reflections on scripture, behind-the-scenes design diary insights, and exclusive early access to our limited batches.
+      </p>
+      
+      <form class="newsletter-form-v2" id="newsletter-form">
+        <div class="newsletter-input-group">
+          <input type="email" placeholder="Enter your email address" aria-label="Email Address" required>
+          <button type="submit" class="newsletter-submit-btn">Subscribe →</button>
+        </div>
+      </form>
+      
+      <div class="newsletter-benefits">
+        <span class="benefit-tag"><i data-lucide="check" style="width: 12px; height: 12px;"></i> Early Access</span>
+        <span class="benefit-tag"><i data-lucide="check" style="width: 12px; height: 12px;"></i> Scriptural Devotionals</span>
+        <span class="benefit-tag"><i data-lucide="check" style="width: 12px; height: 12px;"></i> Limited Drops</span>
+      </div>
+    </div>
   </section>
 
-  <footer class="footer">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="#home" class="brand-logo nav-trigger" data-view="home" style="margin-bottom: var(--spacing-sm); display: inline-block; background-color: var(--color-white); padding: var(--spacing-xs) var(--spacing-md); border-radius: var(--border-radius-sm); width: max-content;">
+  <footer class="footer-v2">
+    <div class="footer-grid-v2">
+      <div class="footer-brand-v2">
+        <a href="#home" class="brand-logo nav-trigger" data-view="home" style="margin-bottom: var(--spacing-md); display: inline-block; background-color: var(--color-white); padding: var(--spacing-xs) var(--spacing-md); border-radius: var(--border-radius-sm); width: max-content;">
           <img src="/logo.png" alt="Ruven Studio Label Logo" style="height: 38px; width: auto; object-fit: contain;">
         </a>
-        <p>An independent Christian lifestyle fashion label crafting limited pieces that reflect a journey of self-discovery through God and transformation into His purpose.</p>
+        <p class="footer-statement-v2">
+          An independent Christian lifestyle fashion label crafting heavy-weight apparel designed to start quiet, meaningful conversations about faith, renewal, and identity.
+        </p>
+        <div class="footer-social-row">
+          <a href="https://instagram.com/ruven.studio" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+          <a href="#" aria-label="WhatsApp Group"><i data-lucide="message-circle"></i></a>
+          <a href="#" aria-label="Pinterest"><i data-lucide="chrome"></i></a>
+        </div>
       </div>
-      <div class="footer-links-col">
+      
+      <div class="footer-links-col-v2">
         <h4>Studio Collections</h4>
         <ul>
           <li><a href="#shop" class="nav-trigger filter-trigger" data-view="shop" data-filter="oversized-tees">Oversized T-Shirts</a></li>
@@ -452,28 +761,33 @@
           <li><a href="#shop" class="nav-trigger filter-trigger" data-view="shop" data-filter="best-sellers">Best Sellers</a></li>
         </ul>
       </div>
-      <div class="footer-links-col">
-        <h4>Community</h4>
+      
+      <div class="footer-links-col-v2">
+        <h4>Fellowship & Mission</h4>
         <ul>
           <li><a href="#community" class="nav-trigger" data-view="community">The Prayer Wall</a></li>
           <li><a href="#community" class="nav-trigger" data-view="community">Weekly Faith Devotionals</a></li>
-          <li><a href="#home" class="nav-trigger scroll-to" data-view="home" data-target="brand-story-section">Our Core Mission</a></li>
+          <li><a href="#home" class="nav-trigger scroll-to" data-view="home" data-target="brand-statement-section">Our Mission Statement</a></li>
+          <li><a href="#community" class="nav-trigger" data-view="community">Campus Ministries</a></li>
         </ul>
       </div>
-      <div class="footer-links-col">
-        <h4>Support & Help</h4>
+      
+      <div class="footer-links-col-v2">
+        <h4>Client Services</h4>
         <ul>
           <li><a href="#home" class="nav-trigger scroll-to" data-view="home" data-target="faq-section">Sizing Guidelines</a></li>
-          <li><a href="#home" class="nav-trigger scroll-to" data-view="home" data-target="faq-section">Sustainable 7-Day Exchange</a></li>
-          <li><a href="#home" class="nav-trigger scroll-to" data-view="home" data-target="faq-section">Pan-India Support</a></li>
+          <li><a href="#home" class="nav-trigger scroll-to" data-view="home" data-target="faq-section">7-Day Exchanges</a></li>
+          <li><a href="#home" class="nav-trigger scroll-to" data-view="home" data-target="faq-section">Support & Contact</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
         </ul>
       </div>
     </div>
     
-    <div class="footer-bottom">
+    <div class="footer-bottom-v2">
       <p>&copy; 2026 Ruven Studio. Crafted with purpose in India.</p>
-      <div class="footer-bottom-links">
+      <div class="footer-bottom-links-v2">
         <a href="#privacy">Privacy Policy</a>
+        <span class="footer-separator">•</span>
         <a href="#terms">Terms of Service</a>
       </div>
     </div>

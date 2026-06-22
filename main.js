@@ -92,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupAnnouncementBar();
   setupSearchModal();
   setupHeroParallax();
+  setupScrollReveal();
   
   // Render Dynamic Sections
   renderHomepageGrids();
@@ -221,20 +222,22 @@ function closeMobileMenu() {
 
 // 5. RENDER SHOP & HOMEPAGE PRODUCT GRIDS
 function renderHomepageGrids() {
-  const newGrid = document.getElementById("new-arrivals-grid");
-  const bestGrid = document.getElementById("best-sellers-grid");
+  // Update wishlist states on all homepage buttons dynamically
+  document.querySelectorAll(".wishlist-btn").forEach(btn => {
+    const pid = btn.getAttribute("data-id");
+    const isWishlisted = state.wishlist.includes(pid);
+    if (isWishlisted) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+    const child = btn.querySelector("svg") || btn.querySelector("i");
+    if (child) {
+      child.style.fill = isWishlisted ? "currentColor" : "none";
+    }
+  });
   
-  if (newGrid) {
-    newGrid.innerHTML = PRODUCTS.map(product => createProductCardMarkup(product)).join("");
-  }
-  
-  if (bestGrid) {
-    // Reverse products just to change visual layout on best sellers
-    const reversed = [...PRODUCTS].reverse();
-    bestGrid.innerHTML = reversed.map(product => createProductCardMarkup(product)).join("");
-  }
-  
-  // Re-create icons for new elements
+  // Re-create icons for elements
   if (window.lucide) {
     window.lucide.createIcons();
   }
@@ -1041,4 +1044,23 @@ function setupSearchModal() {
 // 13. HERO PARALLAX MOUSE INTERACTION (Disabled to keep image still)
 function setupHeroParallax() {
   // Parallax removed so the image behaves still
+}
+
+// 14. SCROLL REVEAL MICRO-INTERACTION
+function setupScrollReveal() {
+  const revealElements = document.querySelectorAll(".reveal-on-scroll");
+  
+  const revealOnScroll = () => {
+    const triggerBottom = window.innerHeight * 0.9;
+    revealElements.forEach(el => {
+      const boxTop = el.getBoundingClientRect().top;
+      if (boxTop < triggerBottom) {
+        el.classList.add("active");
+      }
+    });
+  };
+  
+  window.addEventListener("scroll", revealOnScroll);
+  // Run once on load
+  revealOnScroll();
 }
