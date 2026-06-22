@@ -458,7 +458,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 1.8rem;
 }
 
 .nav-action-btn {
