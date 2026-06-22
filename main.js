@@ -72,7 +72,20 @@ let state = {
   cart: JSON.parse(localStorage.getItem("ruven_cart")) || [],
   wishlist: JSON.parse(localStorage.getItem("ruven_wishlist")) || [],
   prayers: JSON.parse(localStorage.getItem("ruven_prayers")) || INITIAL_PRAYERS,
-  currentProductDetail: PRODUCTS[0].id
+  currentProductDetail: PRODUCTS[0].id,
+  
+  // Phase 4 PLP State
+  filters: {
+    size: [],
+    price: [],
+    tag: [],
+    theme: [],
+    availability: false,
+    search: "",
+    category: "all"
+  },
+  compareList: [],
+  recentlyViewed: JSON.parse(localStorage.getItem("ruven_recently_viewed")) || []
 };
 
 // 3. INITIALIZATION
@@ -246,73 +259,234 @@ function renderHomepageGrids() {
 
 function renderShopGrid() {
   const shopGrid = document.getElementById("shop-products-grid");
-  const catFilterVal = document.getElementById("category-filter")?.value || "all";
-  const sortVal = document.getElementById("sort-select")?.value || "featured";
-  
   if (!shopGrid) return;
   
-  // Filter
+  // 1. FILTERING
   let filtered = [...PRODUCTS];
-  if (catFilterVal === "oversized-tees") {
-    filtered = PRODUCTS.filter(p => p.category === "oversized-tees");
-  } else if (catFilterVal === "hoodies") {
-    filtered = PRODUCTS.filter(p => p.category === "hoodies");
-  } else if (catFilterVal === "new-arrivals") {
-    filtered = PRODUCTS.filter(p => p.tag === "New Release");
-  } else if (catFilterVal === "best-sellers") {
-    filtered = PRODUCTS.filter(p => p.tag === "Best Seller");
-  }
   
-  // Sort
+  // Category tabs switcher
+  const cat = state.filters.category;
+  if (cat === "oversized-tees") {
+    filtered = PRODUCTS.filter(p => p.category === "oversized-tees");
+  } else if (cat === "hoodies") {
+    filtered = PRODUCTS.filter(p => p.category === "hoodies");
+  } else if (cat === "new-arrivals") {
+    filtered = PRODUCTS.filter(p => p.tag === "New Release");
+  } else if (cat === "best-sellers") {
+    filtered = PRODUCTS.filter(p => p.tag === "Best Seller");
+  } else if (cat === "recently-viewed") {
+    filtered = state.recentlyViewed.map(pid => PRODUCTS.find(p => p.id === pid)).filter(Boolean);
+  }
+
+  // Size filters
+  if (state.filters.size.length > 0) {
+    filtered = filtered.filter(p => p.sizes.some(s => state.filters.size.includes(s)));
+  }
+
+  // Price filters
+  if (state.filters.price.length > 0) {
+    filtered = filtered.filter(p => {
+      return state.filters.price.some(range => {
+        if (range === "under-2000") return p.price < 2000;
+        if (range === "2000-3000") return p.price >= 2000 && p.price <= 3000;
+        if (range === "over-3000") return p.price > 3000;
+        return false;
+      });
+    });
+  }
+
+  // Tag filters
+  if (state.filters.tag.length > 0) {
+    filtered = filtered.filter(p => state.filters.tag.includes(p.tag));
+  }
+
+  // Theme filters
+  if (state.filters.theme.length > 0) {
+    filtered = filtered.filter(p => {
+      return state.filters.theme.some(theme => {
+        if (theme === "Armor & Protection") return p.verseRef.includes("Romans 13:12");
+        if (theme === "Mind Renewal") return p.verseRef.includes("Romans 12:2");
+        return false;
+      });
+    });
+  }
+
+  // Availability filters
+  if (state.filters.availability) {
+    filtered = filtered.filter(p => p.sizes.length > 0); // Mock all products in-stock in this demo
+  }
+
+  // Search input filter
+  const query = state.filters.search.trim().toLowerCase();
+  if (query) {
+    filtered = filtered.filter(p => 
+      p.title.toLowerCase().includes(query) ||
+      p.verseRef.toLowerCase().includes(query) ||
+      p.verseQuote.toLowerCase().includes(query) ||
+      p.designStory.toLowerCase().includes(query) ||
+      p.fabricDetails.toLowerCase().includes(query)
+    );
+  }
+
+  // 2. SORTING
+  const sortVal = document.getElementById("plp-sort-select")?.value || "featured";
   if (sortVal === "price-low") {
     filtered.sort((a, b) => a.price - b.price);
   } else if (sortVal === "price-high") {
     filtered.sort((a, b) => b.price - a.price);
+  } else if (sortVal === "newest") {
+    filtered.sort((a, b) => (b.tag === "New Release" ? 1 : 0) - (a.tag === "New Release" ? 1 : 0));
+  } else if (sortVal === "best-selling") {
+    filtered.sort((a, b) => (b.tag === "Best Seller" ? 1 : 0) - (a.tag === "Best Seller" ? 1 : 0));
+  } else if (sortVal === "most-loved") {
+    filtered.sort((a, b) => (state.wishlist.includes(b.id) ? 1 : 0) - (state.wishlist.includes(a.id) ? 1 : 0));
   }
-  
-  // Update Items Count Text
+
+  // 3. UPDATE COUNT AND BADGES
   const countEl = document.getElementById("shop-items-count");
   if (countEl) {
     countEl.textContent = `Showing ${filtered.length} premium product${filtered.length !== 1 ? 's' : ''}`;
   }
+
+  const activeFilters = [];
+  state.filters.size.forEach(s => activeFilters.push({ type: 'size', val: s, label: `Size: ${s}` }));
+  state.filters.price.forEach(p => {
+    let lbl = "Price";
+    if (p === "under-2000") lbl = "Under ₹2,000";
+    if (p === "2000-3000") lbl = "₹2,000 - ₹3,000";
+    if (p === "over-3000") lbl = "Over ₹3,000";
+    activeFilters.push({ type: 'price', val: p, label: lbl });
+  });
+  state.filters.tag.forEach(t => activeFilters.push({ type: 'tag', val: t, label: t }));
+  state.filters.theme.forEach(th => activeFilters.push({ type: 'theme', val: th, label: th }));
+  if (state.filters.availability) activeFilters.push({ type: 'availability', val: 'in-stock', label: 'In Stock' });
+  if (query) activeFilters.push({ type: 'search', val: query, label: `Search: "${query}"` });
+
+  const activeFiltersRow = document.getElementById("active-filters-row");
+  const clearFiltersBtn = document.getElementById("plp-clear-filters-btn");
+  const clearFiltersBtnMobile = document.getElementById("mobile-filter-clear-all-btn");
+  const badgeCountEl = document.getElementById("filter-badge-count");
   
-  // Render
-  shopGrid.innerHTML = filtered.map(product => createProductCardMarkup(product)).join("");
+  if (badgeCountEl) {
+    badgeCountEl.textContent = activeFilters.length;
+    badgeCountEl.style.display = activeFilters.length > 0 ? "inline-flex" : "none";
+  }
+
+  if (activeFiltersRow) {
+    if (activeFilters.length === 0) {
+      activeFiltersRow.innerHTML = "";
+      if (clearFiltersBtn) clearFiltersBtn.style.display = "none";
+      if (clearFiltersBtnMobile) clearFiltersBtnMobile.style.display = "none";
+    } else {
+      if (clearFiltersBtn) clearFiltersBtn.style.display = "block";
+      if (clearFiltersBtnMobile) clearFiltersBtnMobile.style.display = "block";
+      activeFiltersRow.innerHTML = activeFilters.map(f => `
+        <span class="filter-tag-bubble">
+          ${f.label}
+          <button class="remove-filter-bubble-btn" data-filter-type="${f.type}" data-value="${f.val}" aria-label="Remove filter">
+            <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+          </button>
+        </span>
+      `).join("");
+      
+      activeFiltersRow.querySelectorAll(".remove-filter-bubble-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const type = btn.getAttribute("data-filter-type");
+          const val = btn.getAttribute("data-value");
+          removeFilterValue(type, val);
+        });
+      });
+    }
+  }
+
+  // 4. RENDERING PRODUCT GRID
+  if (filtered.length === 0) {
+    shopGrid.innerHTML = `
+      <div class="plp-empty-state">
+        <i data-lucide="help-circle" class="plp-empty-illustration" style="width: 48px; height: 48px;"></i>
+        <h3>No Drops Found</h3>
+        <p>No matching garments correspond to your active filters. Try broadening your keywords or resetting filters.</p>
+        <button class="cta-button cta-button-primary" id="plp-empty-reset-btn" style="padding: 0.6rem 2rem; font-size: 0.75rem;">Reset All Filters</button>
+      </div>
+    `;
+    document.getElementById("plp-empty-reset-btn")?.addEventListener("click", clearAllFilters);
+  } else {
+    let html = "";
+    filtered.forEach((product, idx) => {
+      const isHero = (idx === 0 && filtered.length > 1); // Let first card span larger on desktop if desired
+      html += createProductCardMarkup(product, isHero);
+      
+      // Insert Editorial break banner after index 1 (i.e. after 2 products)
+      if (idx === 1) {
+        html += `
+          <div class="plp-editorial-banner-item reveal-on-scroll active">
+            <div class="plp-editorial-banner-img-wrap">
+              <img src="/brand_story_lifestyle.png" alt="Ruven Screen Printing Process">
+            </div>
+            <div class="plp-editorial-banner-content">
+              <span class="section-subtitle-lowercase">studio craftsmanship</span>
+              <h3>The Hand-Pulled Screen Ministry</h3>
+              <p>
+                Every drop is screen-printed by hand in limited batches. We select heavy organic fabrics to build garments that serve as visual testimonies for years.
+              </p>
+              <a href="#home" class="editorial-text-link nav-trigger" data-view="home" data-target="brand-statement-section">Learn Our Process</a>
+            </div>
+          </div>
+        `;
+      }
+    });
+    shopGrid.innerHTML = html;
+  }
+
   if (window.lucide) {
     window.lucide.createIcons();
   }
   attachCardEvents();
 }
 
-function createProductCardMarkup(product) {
+function createProductCardMarkup(product, isHero = false) {
   const isWishlisted = state.wishlist.includes(product.id);
-  const badgeHtml = product.tag ? `<span class="badge-tag">${product.tag}</span>` : "";
-  const sizeListHtml = product.sizes.map(size => `<button class="size-btn" data-size="${size}">${size}</button>`).join("");
+  const isCompared = state.compareList.includes(product.id);
+  const secondaryImage = product.id === "tee-romans-13-12" ? "/brand_story_lifestyle.png" : "/hero_lifestyle.png";
+  const badges = [];
+  if (product.tag) {
+    badges.push(`<span class="plp-card-badge">${product.tag}</span>`);
+  }
+  if (product.id === "hoodie-romans-12-2") {
+    badges.push(`<span class="plp-card-badge fav-badge">Favorite</span>`);
+  }
   
   return `
-    <article class="product-card" data-id="${product.id}">
-      ${badgeHtml}
+    <article class="product-card ${isHero ? 'hero-card' : ''}" data-id="${product.id}">
+      <div class="plp-card-badge-container">
+        ${badges.join("")}
+      </div>
       <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${product.id}" aria-label="Add to wishlist">
         <i data-lucide="heart" style="fill: ${isWishlisted ? 'currentColor' : 'none'};"></i>
       </button>
-      <div class="product-image-container">
-        <img src="${product.image}" alt="${product.title}">
+      <div class="plp-card-media">
+        <img src="${product.image}" alt="${product.title}" class="plp-card-img-primary">
+        <img src="${secondaryImage}" alt="${product.title} lifestyle view" class="plp-card-img-secondary">
         
-        <!-- Quick Add size flyout on hover -->
-        <div class="quick-add-overlay">
-          <span style="font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--color-text-muted); text-align: center; display: block; margin-bottom: var(--spacing-2xs);">Quick Add Size</span>
-          <div class="size-selector">
-            ${sizeListHtml}
-          </div>
+        <!-- Hover actions overlay -->
+        <div class="plp-card-action-overlay">
+          <button class="plp-card-quick-add-btn" data-id="${product.id}">Quick Add Fit</button>
         </div>
       </div>
-      <div class="product-info">
-        <span class="product-verse-preview">${product.verseRef}</span>
-        <h3 class="product-title">${product.title}</h3>
-        <p class="product-price">
-          ₹${product.price}
-          <span class="price-original">₹${product.originalPrice}</span>
-        </p>
+      <div class="plp-card-info">
+        <div class="plp-card-meta">
+          <span class="plp-card-verse-ref">${product.verseRef}</span>
+          <button class="plp-card-compare-btn ${isCompared ? 'active' : ''}" data-id="${product.id}">
+            <i data-lucide="columns" style="width: 12px; height: 12px;"></i>
+            <span>${isCompared ? 'Comparing' : 'Compare'}</span>
+          </button>
+        </div>
+        <h3 class="plp-card-title">${product.title}</h3>
+        <p class="plp-card-hover-verse">"${product.verseQuote.substring(0, 70)}..."</p>
+        <div class="plp-card-price-row">
+          <span class="plp-card-price">₹${product.price} <span class="price-original">₹${product.originalPrice}</span></span>
+          <span style="font-size: 0.72rem; color: var(--color-text-muted); font-weight: 500;">Sizes: ${product.sizes.join(", ")}</span>
+        </div>
       </div>
     </article>
   `;
@@ -329,23 +503,31 @@ function attachCardEvents() {
     });
   });
 
-  // Size buttons quick add clicks
-  document.querySelectorAll(".size-btn").forEach(btn => {
+  // Compare clicks
+  document.querySelectorAll(".plp-card-compare-btn").forEach(btn => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       e.preventDefault();
-      const card = btn.closest(".product-card");
-      const pid = card.getAttribute("data-id");
-      const size = btn.getAttribute("data-size");
-      addToCart(pid, size, 1);
+      const pid = btn.getAttribute("data-id");
+      toggleCompare(pid);
+    });
+  });
+
+  // Quick Add clicks
+  document.querySelectorAll(".plp-card-quick-add-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const pid = btn.getAttribute("data-id");
+      openQuickAdd(pid);
     });
   });
 
   // Card clicks (Open Details)
-  document.querySelectorAll(".product-card").forEach(card => {
+  document.querySelectorAll(".plp-layout .product-card").forEach(card => {
     card.addEventListener("click", (e) => {
-      // Ignore click if it was size button or wishlist heart
-      if (e.target.closest(".wishlist-btn") || e.target.closest(".size-btn")) return;
+      // Ignore click if it was size button or wishlist heart or compare
+      if (e.target.closest(".wishlist-btn") || e.target.closest(".plp-card-quick-add-btn") || e.target.closest(".plp-card-compare-btn")) return;
       
       const pid = card.getAttribute("data-id");
       state.currentProductDetail = pid;
@@ -355,15 +537,450 @@ function attachCardEvents() {
 }
 
 function setupProductPageListeners() {
-  const catFilter = document.getElementById("category-filter");
-  const sortSelect = document.getElementById("sort-select");
+  // 1. Category Switch Tabs
+  document.querySelectorAll(".plp-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".plp-tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      
+      const cat = btn.getAttribute("data-category");
+      state.filters.category = cat;
+      updateHeroContent(cat);
+      renderShopGrid();
+    });
+  });
+
+  // 2. Collection Search
+  const searchInput = document.getElementById("plp-collection-search");
+  const searchClear = document.getElementById("plp-search-clear");
   
-  if (catFilter) {
-    catFilter.addEventListener("change", renderShopGrid);
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value;
+      state.filters.search = q;
+      if (searchClear) searchClear.style.display = q.length > 0 ? "block" : "none";
+      renderShopGrid();
+    });
   }
-  if (sortSelect) {
-    sortSelect.addEventListener("change", renderShopGrid);
+  
+  if (searchClear) {
+    searchClear.addEventListener("click", () => {
+      searchInput.value = "";
+      state.filters.search = "";
+      searchClear.style.display = "none";
+      renderShopGrid();
+    });
   }
+
+  // 3. Popular Suggestion Tags
+  document.querySelectorAll(".plp-suggest-tag").forEach(tag => {
+    tag.addEventListener("click", () => {
+      const val = tag.textContent;
+      if (searchInput) {
+        searchInput.value = val;
+        state.filters.search = val;
+        if (searchClear) searchClear.style.display = "block";
+        renderShopGrid();
+      }
+    });
+  });
+
+  // 4. Desktop Sidebar Checkboxes
+  document.querySelectorAll(".plp-sidebar-filters .plp-filter-checkbox").forEach(box => {
+    box.addEventListener("change", () => {
+      const type = box.getAttribute("data-filter-type");
+      const val = box.getAttribute("data-value");
+      
+      if (type === "availability") {
+        state.filters.availability = box.checked;
+      } else {
+        if (box.checked) {
+          if (!state.filters[type].includes(val)) state.filters[type].push(val);
+        } else {
+          state.filters[type] = state.filters[type].filter(v => v !== val);
+        }
+      }
+      renderShopGrid();
+      syncFilterCheckboxStates();
+    });
+  });
+
+  // 5. Desktop Sidebar Size buttons
+  document.querySelectorAll(".plp-sidebar-filters .plp-size-filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const val = btn.getAttribute("data-value");
+      const type = "size";
+      btn.classList.toggle("active");
+      
+      if (btn.classList.contains("active")) {
+        if (!state.filters[type].includes(val)) state.filters[type].push(val);
+      } else {
+        state.filters[type] = state.filters[type].filter(v => v !== val);
+      }
+      renderShopGrid();
+      syncFilterCheckboxStates();
+    });
+  });
+
+  // 6. Sidebar Clear All Filters Btn
+  document.getElementById("plp-clear-filters-btn")?.addEventListener("click", clearAllFilters);
+  document.getElementById("mobile-filter-clear-all-btn")?.addEventListener("click", clearAllFilters);
+
+  // 7. Sort Dropdown
+  document.getElementById("plp-sort-select")?.addEventListener("change", renderShopGrid);
+
+  // 8. Mobile Filter Bottom Sheet Toggle
+  const mobileToggle = document.getElementById("mobile-filter-toggle-btn");
+  const mobileClose = document.getElementById("mobile-filter-close-btn");
+  const mobileDrawer = document.getElementById("mobile-filter-drawer");
+  const backdrop = document.getElementById("backdrop-overlay");
+  const mobileApply = document.getElementById("mobile-filter-apply-btn");
+  
+  if (mobileToggle && mobileDrawer) {
+    mobileToggle.addEventListener("click", () => {
+      mobileDrawer.classList.add("active");
+      if (backdrop) backdrop.classList.add("active");
+    });
+  }
+
+  const closeMobileDrawer = () => {
+    if (mobileDrawer) mobileDrawer.classList.remove("active");
+    if (backdrop) backdrop.classList.remove("active");
+  };
+
+  if (mobileClose) mobileClose.addEventListener("click", closeMobileDrawer);
+  if (backdrop) backdrop.addEventListener("click", closeMobileDrawer);
+
+  // 9. Mobile Bottom Sheet Checkboxes
+  document.querySelectorAll(".plp-bottom-sheet-filters .plp-filter-checkbox-mobile").forEach(box => {
+    box.addEventListener("change", () => {
+      const type = box.getAttribute("data-filter-type");
+      const val = box.getAttribute("data-value");
+      
+      if (box.checked) {
+        if (!state.filters[type].includes(val)) state.filters[type].push(val);
+      } else {
+        state.filters[type] = state.filters[type].filter(v => v !== val);
+      }
+    });
+  });
+
+  // 10. Mobile Bottom Sheet Sizes buttons
+  document.querySelectorAll(".plp-bottom-sheet-filters .plp-size-filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const val = btn.getAttribute("data-value");
+      const type = "size";
+      btn.classList.toggle("active");
+      
+      if (btn.classList.contains("active")) {
+        if (!state.filters[type].includes(val)) state.filters[type].push(val);
+      } else {
+        state.filters[type] = state.filters[type].filter(v => v !== val);
+      }
+    });
+  });
+
+  // Apply Mobile Filters
+  if (mobileApply) {
+    mobileApply.addEventListener("click", () => {
+      renderShopGrid();
+      syncFilterCheckboxStates();
+      closeMobileDrawer();
+    });
+  }
+
+  // 11. Compare Close & Clear Btn
+  document.getElementById("compare-close-btn")?.addEventListener("click", () => {
+    document.getElementById("compare-drawer").classList.remove("active");
+  });
+  document.getElementById("compare-clear-btn")?.addEventListener("click", () => {
+    state.compareList = [];
+    renderCompareDrawer();
+    renderShopGrid();
+  });
+
+  // 12. Quick Add Close
+  document.getElementById("quick-add-close-btn")?.addEventListener("click", () => {
+    closeDrawer("quick-add");
+  });
+}
+
+function toggleCompare(pid) {
+  const idx = state.compareList.indexOf(pid);
+  if (idx > -1) {
+    state.compareList.splice(idx, 1);
+  } else {
+    if (state.compareList.length >= 2) {
+      alert("You can compare up to 2 products at a time!");
+      return;
+    }
+    state.compareList.push(pid);
+  }
+  renderCompareDrawer();
+  renderShopGrid();
+}
+
+function renderCompareDrawer() {
+  const drawer = document.getElementById("compare-drawer");
+  const grid = document.getElementById("compare-content-grid");
+  const countVal = document.getElementById("compare-count-val");
+  
+  if (!drawer || !grid) return;
+  
+  const count = state.compareList.length;
+  if (countVal) countVal.textContent = count;
+  
+  if (count === 0) {
+    drawer.classList.remove("active");
+    return;
+  }
+  
+  drawer.classList.add("active");
+  
+  const selectedProds = state.compareList.map(pid => PRODUCTS.find(p => p.id === pid)).filter(Boolean);
+  
+  let headerRowHtml = `<th>Specification</th>`;
+  let designRowHtml = `<td><strong>Design Symbol</strong></td>`;
+  let verseRowHtml = `<td><strong>Scripture Verse</strong></td>`;
+  let fabricRowHtml = `<td><strong>Material & Fabric</strong></td>`;
+  let fitRowHtml = `<td><strong>Fit & Structure</strong></td>`;
+  let priceRowHtml = `<td><strong>Price</strong></td>`;
+  let purposeRowHtml = `<td><strong>Visual Purpose</strong></td>`;
+  
+  selectedProds.forEach(p => {
+    headerRowHtml += `
+      <td>
+        <div class="compare-card-col">
+          <img src="${p.image}" alt="${p.title}">
+          <div>
+            <h4>${p.title}</h4>
+            <button class="compare-remove-item-btn" data-id="${p.id}">Remove</button>
+          </div>
+        </div>
+      </td>
+    `;
+    designRowHtml += `<td>${p.id === 'tee-romans-13-12' ? 'Linear Shield Symbol' : 'Embroidered Olive Branch'}</td>`;
+    verseRowHtml += `<td><em>${p.verseRef}</em>: "${p.verseQuote}"</td>`;
+    fabricRowHtml += `<td>${p.fabricDetails.substring(0, 60)}...</td>`;
+    fitRowHtml += `<td>${p.id === 'tee-romans-13-12' ? 'Oversized Boxy Cut, 240 GSM' : 'Ultra-heavy Combed French Terry, 380 GSM'}</td>`;
+    priceRowHtml += `<td>₹${p.price}</td>`;
+    purposeRowHtml += `<td>${p.verseMeaning.substring(0, 60)}...</td>`;
+  });
+  
+  grid.innerHTML = `
+    <table class="plp-compare-table">
+      <thead>
+        <tr>${headerRowHtml}</tr>
+      </thead>
+      <tbody>
+        <tr>${designRowHtml}</tr>
+        <tr>${verseRowHtml}</tr>
+        <tr>${fabricRowHtml}</tr>
+        <tr>${fitRowHtml}</tr>
+        <tr>${priceRowHtml}</tr>
+        <tr>${purposeRowHtml}</tr>
+      </tbody>
+    </table>
+  `;
+  
+  grid.querySelectorAll(".compare-remove-item-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      toggleCompare(btn.getAttribute("data-id"));
+    });
+  });
+}
+
+function openQuickAdd(pid) {
+  const drawer = document.getElementById("quick-add-drawer");
+  const wrapper = document.getElementById("quick-add-content-wrapper");
+  
+  if (!drawer || !wrapper) return;
+  
+  const product = PRODUCTS.find(p => p.id === pid);
+  if (!product) return;
+  
+  const sizesHtml = product.sizes.map((size, idx) => `
+    <button class="quick-add-size-btn ${idx === 0 ? 'selected' : ''}" data-size="${size}">${size}</button>
+  `).join("");
+  
+  wrapper.innerHTML = `
+    <div class="quick-add-prod-summary">
+      <img src="${product.image}" alt="${product.title}">
+      <div class="quick-add-prod-details">
+        <h4>${product.title}</h4>
+        <p>₹${product.price}</p>
+        <span style="font-size: 0.72rem; color: var(--color-text-muted); font-weight: 500;">${product.verseRef}</span>
+      </div>
+    </div>
+    
+    <div class="quick-add-size-select-group">
+      <h5>Select Fit Size</h5>
+      <div class="quick-add-sizes-row">
+        ${sizesHtml}
+      </div>
+    </div>
+    
+    <div class="quick-add-qty-group">
+      <h5>Quantity</h5>
+      <div class="quick-add-qty-selector">
+        <button class="quick-add-qty-btn" id="qa-minus"><i data-lucide="minus" style="width: 14px;"></i></button>
+        <input type="number" class="quick-add-qty-input" id="qa-qty" value="1" min="1" readonly>
+        <button class="quick-add-qty-btn" id="qa-plus"><i data-lucide="plus" style="width: 14px;"></i></button>
+      </div>
+    </div>
+    
+    <button class="cta-button cta-button-primary" id="qa-submit-btn" style="margin-top: var(--spacing-sm); width: 100%;">Add to Studio Bag</button>
+  `;
+  
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+  
+  const sizeBtns = wrapper.querySelectorAll(".quick-add-size-btn");
+  sizeBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      sizeBtns.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    });
+  });
+  
+  const minus = wrapper.querySelector("#qa-minus");
+  const plus = wrapper.querySelector("#qa-plus");
+  const qtyInput = wrapper.querySelector("#qa-qty");
+  
+  minus.addEventListener("click", () => {
+    let val = parseInt(qtyInput.value);
+    if (val > 1) qtyInput.value = val - 1;
+  });
+  
+  plus.addEventListener("click", () => {
+    let val = parseInt(qtyInput.value);
+    qtyInput.value = val + 1;
+  });
+  
+  wrapper.querySelector("#qa-submit-btn").addEventListener("click", () => {
+    const selectedSize = wrapper.querySelector(".quick-add-size-btn.selected").getAttribute("data-size");
+    const qty = parseInt(qtyInput.value);
+    addToCart(product.id, selectedSize, qty);
+    
+    closeDrawer("quick-add");
+    openDrawer("cart");
+  });
+  
+  openDrawer("quick-add");
+}
+
+function updateHeroContent(category) {
+  const titleEl = document.getElementById("shop-collection-title");
+  const descEl = document.getElementById("shop-collection-desc");
+  const breadcrumbCurrent = document.getElementById("breadcrumb-current");
+  
+  if (!titleEl || !descEl) return;
+  
+  let title = "Oversized Faith Collection";
+  let desc = "Minimal clothing inspired by scripture and designed to spark conversations about Christ. Made from organic heavyweight cotton.";
+  let breadcrumb = "All Drops";
+  
+  switch(category) {
+    case "oversized-tees":
+      title = "The Boxy Heavyweight Tees";
+      desc = "Crafted in India using heavy 240 GSM organic cotton, featuring clean visual symbols of scripture.";
+      breadcrumb = "Oversized Tees";
+      break;
+    case "hoodies":
+      title = "The French Terry Hoodies";
+      desc = "Ultra-heavy 380 GSM combed cotton fabrics, styled loopback for premium warmth, peace, and mental renewal.";
+      breadcrumb = "Streetwear Hoodies";
+      break;
+    case "new-arrivals":
+      title = "The Armor Drop Releases";
+      desc = "Explore our latest releases representing spiritual defense, protection, and walk of light.";
+      breadcrumb = "New Arrivals";
+      break;
+    case "best-sellers":
+      title = "The Fellowship Favorites";
+      desc = "Our most loved conversation starters worn across faith communities and creative circles.";
+      breadcrumb = "Best Sellers";
+      break;
+    case "recently-viewed":
+      title = "Your Viewed Reflections";
+      desc = "Review the drops you recently explored during your search for identity and purpose.";
+      breadcrumb = "Recently Viewed";
+      break;
+  }
+  
+  titleEl.textContent = title;
+  descEl.textContent = desc;
+  if (breadcrumbCurrent) breadcrumbCurrent.textContent = breadcrumb;
+}
+
+function removeFilterValue(type, val) {
+  if (type === "availability") {
+    state.filters.availability = false;
+  } else if (type === "search") {
+    state.filters.search = "";
+    const searchInput = document.getElementById("plp-collection-search");
+    if (searchInput) searchInput.value = "";
+    const searchClear = document.getElementById("plp-search-clear");
+    if (searchClear) searchClear.style.display = "none";
+  } else {
+    state.filters[type] = state.filters[type].filter(v => v !== val);
+  }
+  renderShopGrid();
+  syncFilterCheckboxStates();
+}
+
+function clearAllFilters() {
+  state.filters.size = [];
+  state.filters.price = [];
+  state.filters.tag = [];
+  state.filters.theme = [];
+  state.filters.availability = false;
+  state.filters.search = "";
+  
+  const searchInput = document.getElementById("plp-collection-search");
+  if (searchInput) searchInput.value = "";
+  const searchClear = document.getElementById("plp-search-clear");
+  if (searchClear) searchClear.style.display = "none";
+  
+  renderShopGrid();
+  syncFilterCheckboxStates();
+}
+
+function syncFilterCheckboxStates() {
+  document.querySelectorAll(".plp-sidebar-filters .plp-filter-checkbox").forEach(box => {
+    const type = box.getAttribute("data-filter-type");
+    const val = box.getAttribute("data-value");
+    if (type === "availability") {
+      box.checked = state.filters.availability;
+    } else {
+      box.checked = state.filters[type].includes(val);
+    }
+  });
+
+  document.querySelectorAll(".plp-sidebar-filters .plp-size-filter-btn").forEach(btn => {
+    const val = btn.getAttribute("data-value");
+    if (state.filters.size.includes(val)) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+
+  document.querySelectorAll(".plp-bottom-sheet-filters .plp-filter-checkbox-mobile").forEach(box => {
+    const type = box.getAttribute("data-filter-type");
+    const val = box.getAttribute("data-value");
+    box.checked = state.filters[type].includes(val);
+  });
+
+  document.querySelectorAll(".plp-bottom-sheet-filters .plp-size-filter-btn").forEach(btn => {
+    const val = btn.getAttribute("data-value");
+    if (state.filters.size.includes(val)) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
 }
 
 // 6. PRODUCT DETAILS PAGE RENDERING & ZOOM
@@ -373,6 +990,19 @@ function renderProductDetailPage() {
   
   const product = PRODUCTS.find(p => p.id === state.currentProductDetail);
   if (!product) return;
+  
+  // Track recently viewed products
+  if (!state.recentlyViewed.includes(product.id)) {
+    state.recentlyViewed.unshift(product.id);
+    if (state.recentlyViewed.length > 6) {
+      state.recentlyViewed.pop();
+    }
+    localStorage.setItem("ruven_recently_viewed", JSON.stringify(state.recentlyViewed));
+  } else {
+    state.recentlyViewed = state.recentlyViewed.filter(id => id !== product.id);
+    state.recentlyViewed.unshift(product.id);
+    localStorage.setItem("ruven_recently_viewed", JSON.stringify(state.recentlyViewed));
+  }
   
   const sizesHtml = product.sizes.map((size, idx) => `
     <button class="details-size-btn ${idx === 0 ? 'selected' : ''}" data-size="${size}">${size}</button>

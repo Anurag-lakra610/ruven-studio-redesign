@@ -541,31 +541,275 @@
 
     <!-- 2. SHOP / COLLECTION VIEW -->
     <section id="shop-view" class="view-section">
-      <div class="section-padding shop-page">
-        <div class="shop-toolbar">
-          <div>
-            <h1 class="editorial-title" style="font-size: 2.5rem;" id="shop-collection-title">All Apparel</h1>
-            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;" id="shop-items-count">Showing 2 premium products</p>
-          </div>
-          <div class="filter-group">
-            <select id="category-filter" class="filter-select">
-              <option value="all">All Drops</option>
-              <option value="oversized-tees">Oversized Tees</option>
-              <option value="hoodies">Streetwear Hoodies</option>
-            </select>
-            <select id="sort-select" class="filter-select">
-              <option value="featured">Featured Releases</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-            </select>
+      <!-- Collection Hero Section -->
+      <div class="plp-collection-hero">
+        <div class="plp-hero-bg-wrap">
+          <img src="/hero_lifestyle.png" alt="Ruven Studio Collection Banner" class="plp-hero-bg-img">
+        </div>
+        <div class="plp-hero-overlay"></div>
+        <div class="plp-hero-content">
+          <nav class="plp-breadcrumbs" aria-label="Breadcrumb">
+            <a href="#home" class="nav-trigger" data-view="home">Home</a>
+            <span class="plp-breadcrumb-sep">/</span>
+            <a href="#shop" class="nav-trigger" data-view="shop">Collections</a>
+            <span class="plp-breadcrumb-sep">/</span>
+            <span id="breadcrumb-current">All Drops</span>
+          </nav>
+          <h1 class="plp-collection-title" id="shop-collection-title">Oversized Faith Collection</h1>
+          <p class="plp-collection-desc" id="shop-collection-desc">
+            Minimal clothing inspired by scripture and designed to spark conversations about Christ. Made from organic heavyweight cotton.
+          </p>
+          <div class="plp-hero-verse-box">
+            <p class="plp-hero-verse-quote">"Do not be conformed to this world, but be transformed by the renewal of your mind..."</p>
+            <p class="plp-hero-verse-ref">Romans 12:2</p>
           </div>
         </div>
-        
-        <div class="product-grid" id="shop-products-grid">
-          <!-- Populated Dynamically via JS -->
+      </div>
+
+      <!-- Collection Navigation Tabs -->
+      <div class="plp-nav-container">
+        <div class="plp-nav-tabs">
+          <button class="plp-tab-btn active" data-category="all">All Drops</button>
+          <button class="plp-tab-btn" data-category="oversized-tees">Oversized Tees</button>
+          <button class="plp-tab-btn" data-category="hoodies">Streetwear Hoodies</button>
+          <button class="plp-tab-btn" data-category="new-arrivals">New Arrivals</button>
+          <button class="plp-tab-btn" data-category="best-sellers">Best Sellers</button>
+          <button class="plp-tab-btn" data-category="recently-viewed">Recently Viewed</button>
+        </div>
+      </div>
+
+      <div class="section-padding shop-page-v2">
+        <!-- Collection Search Bar & Mobile Filter Trigger -->
+        <div class="plp-search-toolbar">
+          <div class="plp-search-container">
+            <i data-lucide="search" class="plp-search-icon"></i>
+            <input type="text" id="plp-collection-search" placeholder="Search oversized tees, hoodies, verses..." autocomplete="off">
+            <button id="plp-search-clear" aria-label="Clear Search" style="display: none;"><i data-lucide="x"></i></button>
+          </div>
+          <div class="plp-search-suggestions">
+            <span class="plp-suggest-label">Popular:</span>
+            <button class="plp-suggest-tag">tee</button>
+            <button class="plp-suggest-tag">hoodie</button>
+            <button class="plp-suggest-tag">armor</button>
+            <button class="plp-suggest-tag">renewal</button>
+          </div>
+        </div>
+
+        <!-- Toolbar: Item count and Sorting -->
+        <div class="plp-toolbar">
+          <div>
+            <p class="plp-items-count" id="shop-items-count">Showing 2 premium products</p>
+            <!-- Active filter tags will render here dynamically -->
+            <div class="plp-active-filters-row" id="active-filters-row"></div>
+          </div>
+          
+          <div class="plp-toolbar-actions">
+            <!-- Mobile Filter Trigger -->
+            <button class="plp-mobile-filter-btn" id="mobile-filter-toggle-btn">
+              <i data-lucide="sliders"></i>
+              <span>Filters</span>
+              <span class="plp-filter-badge" id="filter-badge-count" style="display: none;">0</span>
+            </button>
+            
+            <div class="plp-sort-wrapper">
+              <label for="plp-sort-select" class="plp-sort-label">Sort By:</label>
+              <select id="plp-sort-select" class="plp-sort-dropdown">
+                <option value="featured">Featured Releases</option>
+                <option value="newest">Newest Drops</option>
+                <option value="best-selling">Best Selling</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="most-loved">Most Loved</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Shopping Section: Sidebar + Product Grid -->
+        <div class="plp-layout">
+          <!-- Desktop Sticky Sidebar Filters -->
+          <aside class="plp-sidebar-filters">
+            <div class="plp-filter-header">
+              <h3>Filter Shop</h3>
+              <button class="plp-clear-all-btn" id="plp-clear-filters-btn" style="display: none;">Clear All</button>
+            </div>
+            
+            <!-- Size Filter -->
+            <div class="plp-filter-group-item">
+              <h4 class="plp-filter-title">Available Sizes</h4>
+              <div class="plp-filter-options size-grid-filter">
+                <button class="plp-size-filter-btn" data-filter-type="size" data-value="S">S</button>
+                <button class="plp-size-filter-btn" data-filter-type="size" data-value="M">M</button>
+                <button class="plp-size-filter-btn" data-filter-type="size" data-value="L">L</button>
+                <button class="plp-size-filter-btn" data-filter-type="size" data-value="XL">XL</button>
+              </div>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="plp-filter-group-item">
+              <h4 class="plp-filter-title">Price Range</h4>
+              <div class="plp-filter-options list-filter">
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="price" data-value="under-2000">
+                  <span>Under ₹2,000</span>
+                </label>
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="price" data-value="2000-3000">
+                  <span>₹2,000 - ₹3,000</span>
+                </label>
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="price" data-value="over-3000">
+                  <span>Over ₹3,000</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Tag / Badge Filter -->
+            <div class="plp-filter-group-item">
+              <h4 class="plp-filter-title">Collection Tags</h4>
+              <div class="plp-filter-options list-filter">
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="tag" data-value="New Release">
+                  <span>New Arrivals</span>
+                </label>
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="tag" data-value="Best Seller">
+                  <span>Best Sellers</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Verse Theme Filter -->
+            <div class="plp-filter-group-item">
+              <h4 class="plp-filter-title">Verse Theme</h4>
+              <div class="plp-filter-options list-filter">
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="theme" data-value="Armor & Protection">
+                  <span>Armor & Protection</span>
+                </label>
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="theme" data-value="Mind Renewal">
+                  <span>Mind Renewal</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Availability Filter -->
+            <div class="plp-filter-group-item">
+              <h4 class="plp-filter-title">Availability</h4>
+              <div class="plp-filter-options list-filter">
+                <label class="plp-checkbox-label">
+                  <input type="checkbox" class="plp-filter-checkbox" data-filter-type="availability" data-value="in-stock">
+                  <span>In Stock Only</span>
+                </label>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Grid -->
+          <div class="plp-grid-container">
+            <div class="product-grid-v2" id="shop-products-grid">
+              <!-- Populated Dynamically via JS -->
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- Mobile Bottom Sheet Filters Modal -->
+    <div class="plp-bottom-sheet-filters" id="mobile-filter-drawer">
+      <div class="plp-bottom-sheet-header">
+        <h3>Filters</h3>
+        <button class="plp-close-bottom-sheet-btn" id="mobile-filter-close-btn" aria-label="Close filters"><i data-lucide="x"></i></button>
+      </div>
+      <div class="plp-bottom-sheet-content">
+        <!-- Replicated Filter Options for Mobile -->
+        <div class="plp-bottom-sheet-section">
+          <h4>Sizes</h4>
+          <div class="plp-filter-options size-grid-filter">
+            <button class="plp-size-filter-btn" data-filter-type="size" data-value="S">S</button>
+            <button class="plp-size-filter-btn" data-filter-type="size" data-value="M">M</button>
+            <button class="plp-size-filter-btn" data-filter-type="size" data-value="L">L</button>
+            <button class="plp-size-filter-btn" data-filter-type="size" data-value="XL">XL</button>
+          </div>
+        </div>
+        <div class="plp-bottom-sheet-section">
+          <h4>Price</h4>
+          <div class="plp-filter-options list-filter">
+            <label class="plp-checkbox-label">
+              <input type="checkbox" class="plp-filter-checkbox-mobile" data-filter-type="price" data-value="under-2000">
+              <span>Under ₹2,000</span>
+            </label>
+            <label class="plp-checkbox-label">
+              <input type="checkbox" class="plp-filter-checkbox-mobile" data-filter-type="price" data-value="2000-3000">
+              <span>₹2,000 - ₹3,000</span>
+            </label>
+            <label class="plp-checkbox-label">
+              <input type="checkbox" class="plp-filter-checkbox-mobile" data-filter-type="price" data-value="over-3000">
+              <span>Over ₹3,000</span>
+            </label>
+          </div>
+        </div>
+        <div class="plp-bottom-sheet-section">
+          <h4>Tags</h4>
+          <div class="plp-filter-options list-filter">
+            <label class="plp-checkbox-label">
+              <input type="checkbox" class="plp-filter-checkbox-mobile" data-filter-type="tag" data-value="New Release">
+              <span>New Arrivals</span>
+            </label>
+            <label class="plp-checkbox-label">
+              <input type="checkbox" class="plp-filter-checkbox-mobile" data-filter-type="tag" data-value="Best Seller">
+              <span>Best Sellers</span>
+            </label>
+          </div>
+        </div>
+        <div class="plp-bottom-sheet-section">
+          <h4>Verse Theme</h4>
+          <div class="plp-filter-options list-filter">
+            <label class="plp-checkbox-label">
+              <input type="checkbox" class="plp-filter-checkbox-mobile" data-filter-type="theme" data-value="Armor & Protection">
+              <span>Armor & Protection</span>
+            </label>
+            <label class="plp-checkbox-label">
+              <input type="checkbox" class="plp-filter-checkbox-mobile" data-filter-type="theme" data-value="Mind Renewal">
+              <span>Mind Renewal</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="plp-bottom-sheet-footer">
+        <button class="cta-button cta-button-secondary" id="mobile-filter-clear-all-btn" style="padding: 0.6rem 1.2rem; font-size: 0.8rem;">Clear All</button>
+        <button class="cta-button cta-button-primary" id="mobile-filter-apply-btn" style="padding: 0.6rem 1.8rem; font-size: 0.8rem; flex-grow: 1;">Apply Filters</button>
+      </div>
+    </div>
+
+    <!-- Product Compare Bottom Drawer -->
+    <div class="plp-compare-drawer" id="compare-drawer">
+      <div class="plp-compare-header">
+        <div class="plp-compare-title-row">
+          <i data-lucide="columns" style="width: 18px; color: var(--color-brand-burgundy);"></i>
+          <h3>Compare Products (<span id="compare-count-val">0</span>/2)</h3>
+        </div>
+        <div class="plp-compare-actions">
+          <button class="plp-compare-clear-btn" id="compare-clear-btn">Clear All</button>
+          <button class="plp-compare-close-btn" id="compare-close-btn" aria-label="Close Compare Drawer"><i data-lucide="x"></i></button>
+        </div>
+      </div>
+      <div class="plp-compare-content" id="compare-content-grid">
+        <!-- Renders Comparison Table Dynamically -->
+      </div>
+    </div>
+
+    <!-- Quick Add Drawer (Slide out from Right) -->
+    <div class="drawer plp-quick-add-drawer" id="quick-add-drawer">
+      <div class="drawer-header">
+        <h3>Quick Add Fit</h3>
+        <button class="drawer-close-btn" id="quick-add-close-btn" aria-label="Close drawer"><i data-lucide="x"></i></button>
+      </div>
+      <div class="drawer-content plp-quick-add-content" id="quick-add-content-wrapper">
+        <!-- Populated Dynamically via JS (Image Left, Size/Qty Right) -->
+      </div>
+    </div>
 
     <!-- 3. PRODUCT DETAILS VIEW -->
     <section id="product-view" class="view-section">
