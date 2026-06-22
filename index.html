@@ -230,9 +230,24 @@
       <!-- Hero Banner (Phase 2 Full Viewport Editorial Layout) -->
       <div class="hero">
         <div class="hero-bg" id="hero-bg-parallax">
-          <img src="/hero2.png" alt="Ruven Studio young creative streetwear lookbook" class="hero-img">
+          <div class="hero-slide active">
+            <img src="/hero2.png" alt="Ruven Studio young creative streetwear lookbook" class="hero-img" loading="eager" decoding="sync">
+          </div>
+          <div class="hero-slide">
+            <img src="/hero3.png" alt="Ruven Studio street lifestyle editorial lookbook" class="hero-img" loading="eager" decoding="sync">
+          </div>
+          <div class="hero-slide">
+            <img src="/hero.png" alt="Ruven Studio faith lifestyle label apparel" class="hero-img" loading="lazy" decoding="async">
+          </div>
         </div>
         <div class="hero-overlay"></div>
+        
+        <!-- Slideshow Indicators (Sleek horizontal lines) -->
+        <div class="hero-indicators">
+          <button class="indicator-dot active" data-slide="0" aria-label="Slide 1"></button>
+          <button class="indicator-dot" data-slide="1" aria-label="Slide 2"></button>
+          <button class="indicator-dot" data-slide="2" aria-label="Slide 3"></button>
+        </div>
         <div class="hero-grain"></div>
         
         <!-- Animated Background Blurred Shapes -->

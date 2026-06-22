@@ -294,6 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSearchModal();
   setupHeroParallax();
   setupScrollReveal();
+  setupHeroSlideshow();
   
   // Render Dynamic Sections
   renderHomepageGrids();
@@ -2720,6 +2721,64 @@ function setupSearchModal() {
 // 13. HERO PARALLAX MOUSE INTERACTION (Disabled to keep image still)
 function setupHeroParallax() {
   // Parallax removed so the image behaves still
+}
+
+// 13b. HERO SLIDESHOW INTERACTION (Editorial Fade with Line Indicators)
+function setupHeroSlideshow() {
+  const slides = document.querySelectorAll(".hero-slide");
+  const indicators = document.querySelectorAll(".indicator-dot");
+  if (slides.length <= 1) return;
+
+  let currentSlide = 0;
+  let slideInterval;
+  const slideDuration = 5000; // 5 seconds per slide
+
+  function showSlide(index) {
+    // Remove active class from current slide and indicator
+    slides[currentSlide].classList.remove("active");
+    if (indicators[currentSlide]) {
+      indicators[currentSlide].classList.remove("active");
+    }
+
+    // Set new slide index
+    currentSlide = (index + slides.length) % slides.length;
+
+    // Add active class to new slide and indicator
+    slides[currentSlide].classList.add("active");
+    if (indicators[currentSlide]) {
+      indicators[currentSlide].classList.add("active");
+      
+      // Force CSS reflow on indicators to restart the progress animation
+      const activeIndicator = indicators[currentSlide];
+      activeIndicator.style.animation = 'none';
+      activeIndicator.offsetHeight; // trigger reflow
+      activeIndicator.style.animation = null;
+    }
+  }
+
+  function startSlideshow() {
+    stopSlideshow();
+    slideInterval = setInterval(() => {
+      showSlide(currentSlide + 1);
+    }, slideDuration);
+  }
+
+  function stopSlideshow() {
+    if (slideInterval) {
+      clearInterval(slideInterval);
+    }
+  }
+
+  // Attach click events to indicators
+  indicators.forEach((indicator, idx) => {
+    indicator.addEventListener("click", () => {
+      showSlide(idx);
+      startSlideshow(); // Reset timer after manual click
+    });
+  });
+
+  // Start the autoplay slideshow
+  startSlideshow();
 }
 
 // 14. SCROLL REVEAL MICRO-INTERACTION
