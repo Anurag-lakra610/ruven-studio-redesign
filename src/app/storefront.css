@@ -333,7 +333,11 @@ h1, h2, h3, h4, h5, h6 {
 .announcement-track {
   display: flex;
   width: max-content;
-  animation: announcementMarquee 28s linear infinite;
+  animation: announcementMarquee 20s linear infinite;
+}
+
+.announcement-bar:hover .announcement-track {
+  animation-play-state: paused;
 }
 
 .announcement-content {
@@ -364,7 +368,7 @@ h1, h2, h3, h4, h5, h6 {
     transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-25%, 0, 0);
   }
 }
 
