@@ -156,97 +156,152 @@
     </div>
 
     <nav class="sidebar-nav">
-      <div class="nav-section-label">Main</div>
-      <div class="nav-item active" onclick="navigate('dashboard')" title="Dashboard">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        <span class="nav-label">Dashboard</span>
+      <!-- Overview -->
+      <div class="nav-group expanded">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span class="nav-label">Overview</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item active" onclick="navigate('dashboard')" title="Dashboard">
+            <span class="nav-label">Dashboard</span>
+          </div>
+        </div>
       </div>
 
-      <div class="nav-section-label">Catalog</div>
-      <div class="nav-item" onclick="navigate('products')" title="Products">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        <span class="nav-label">Products</span>
-      </div>
-      <div class="nav-item" onclick="navigate('collections')" title="Collections">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h6l2 3h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg>
-        <span class="nav-label">Collections</span>
-      </div>
-      <div class="nav-item" onclick="navigate('media')" title="Media Library">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <span class="nav-label">Media Library</span>
-      </div>
-
-      <div class="nav-section-label">Commerce</div>
-      <div class="nav-item" onclick="navigate('orders')" title="Orders">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <span class="nav-label">Orders</span>
-        <span class="nav-badge">12</span>
-      </div>
-      <div class="nav-item" onclick="navigate('customers')" title="Customers">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span class="nav-label">Customers</span>
-      </div>
-      <div class="nav-item" onclick="navigate('discounts')" title="Discounts">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        <span class="nav-label">Discounts</span>
+      <!-- Commerce -->
+      <div class="nav-group expanded">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="nav-label">Commerce</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item" onclick="navigate('products')" title="Products">
+            <span class="nav-label">Products</span>
+          </div>
+          <div class="nav-item" onclick="navigate('collections')" title="Collections">
+            <span class="nav-label">Collections</span>
+          </div>
+          <div class="nav-item" onclick="navigate('orders')" title="Orders">
+            <span class="nav-label">Orders</span>
+            <span class="nav-badge" id="sidebar-order-badge">12</span>
+          </div>
+          <div class="nav-item" onclick="navigate('customers')" title="Customers">
+            <span class="nav-label">Customers</span>
+          </div>
+        </div>
       </div>
 
-      <div class="nav-section-label">Content</div>
-      <div class="nav-item" onclick="navigate('articles')" title="Articles">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span class="nav-label">Faith Journal</span>
-        <span class="nav-badge">3</span>
-      </div>
-      <div class="nav-item" onclick="navigate('verses')" title="Verse Library">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        <span class="nav-label">Verse Library</span>
-      </div>
-      <div class="nav-item" onclick="navigate('homepage')" title="Homepage Builder">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span class="nav-label">Homepage Builder</span>
-      </div>
-      <div class="nav-item" onclick="navigate('navigation')" title="Navigation">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        <span class="nav-label">Navigation</span>
-      </div>
-
-      <div class="nav-section-label">Community</div>
-      <div class="nav-item" onclick="navigate('community')" title="Community">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span class="nav-label">Community</span>
-        <span class="nav-badge">5</span>
-      </div>
-      <div class="nav-item" onclick="navigate('reviews')" title="Reviews">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <span class="nav-label">Reviews</span>
+      <!-- Content -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span class="nav-label">Content</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item" onclick="navigate('articles')" title="Faith Journal">
+            <span class="nav-label">Faith Journal</span>
+            <span class="nav-badge" id="sidebar-article-badge">3</span>
+          </div>
+          <div class="nav-item" onclick="navigate('verses')" title="Verse Library">
+            <span class="nav-label">Verse Library</span>
+          </div>
+          <div class="nav-item" onclick="navigate('media')" title="Media Library">
+            <span class="nav-label">Media Library</span>
+          </div>
+          <div class="nav-item" onclick="navigate('homepage')" title="Homepage Builder">
+            <span class="nav-label">Homepage Builder</span>
+          </div>
+          <div class="nav-item" onclick="navigate('navigation')" title="Navigation">
+            <span class="nav-label">Navigation</span>
+          </div>
+        </div>
       </div>
 
-      <div class="nav-section-label">Growth</div>
-      <div class="nav-item" onclick="navigate('marketing')" title="Marketing">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        <span class="nav-label">Marketing</span>
-      </div>
-      <div class="nav-item" onclick="navigate('analytics')" title="Analytics">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        <span class="nav-label">Analytics</span>
-      </div>
-      <div class="nav-item" onclick="navigate('newsletter')" title="Newsletter">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-        <span class="nav-label">Newsletter</span>
+      <!-- Community -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="nav-label">Community</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item" onclick="navigate('community')" title="Prayer Requests">
+            <span class="nav-label">Prayer Requests</span>
+            <span class="nav-badge">5</span>
+          </div>
+        </div>
       </div>
 
-      <div class="nav-section-label">Settings</div>
-      <div class="nav-item" onclick="navigate('users')" title="Users & Roles">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span class="nav-label">Users &amp; Roles</span>
+      <!-- Marketing -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="nav-label">Marketing</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item" onclick="navigate('marketing')" title="Marketing Campaigns">
+            <span class="nav-label">Campaigns</span>
+          </div>
+          <div class="nav-item" onclick="navigate('discounts')" title="Discounts">
+            <span class="nav-label">Discounts</span>
+          </div>
+          <div class="nav-item" onclick="navigate('reviews')" title="Reviews">
+            <span class="nav-label">Reviews</span>
+          </div>
+          <div class="nav-item" onclick="navigate('newsletter')" title="Newsletter">
+            <span class="nav-label">Newsletter</span>
+          </div>
+        </div>
       </div>
-      <div class="nav-item" onclick="navigate('settings')" title="Settings">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="nav-label">Settings</span>
+
+      <!-- Analytics -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span class="nav-label">Analytics</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item" onclick="navigate('analytics')" title="Analytics">
+            <span class="nav-label">Reports</span>
+          </div>
+        </div>
       </div>
-      <div class="nav-item" onclick="navigate('audit')" title="Audit Logs">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <span class="nav-label">Audit Logs</span>
+
+      <!-- Team -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="nav-label">Team</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item" onclick="navigate('users')" title="Users & Roles">
+            <span class="nav-label">Users &amp; Roles</span>
+          </div>
+          <div class="nav-item" onclick="navigate('audit')" title="Activity Logs">
+            <span class="nav-label">Activity Logs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleNavGroup(this)">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="nav-label">Settings</span>
+          <svg class="nav-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <div class="nav-item" onclick="navigate('settings')" title="System Settings">
+            <span class="nav-label">System Settings</span>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -269,8 +324,9 @@
       <div class="header-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </div>
-      <div class="header-breadcrumb">
-        <span id="header-section">Dashboard</span>
+      <div class="header-breadcrumb" style="display:flex;align-items:center;">
+        <span id="header-section" class="current">Dashboard</span>
+        <span id="header-clock" style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:2px 6px;border-radius:var(--radius-sm);margin-left:12px;font-weight:500;">08:20 AM</span>
       </div>
       <div class="header-search">
         <div class="search-trigger" onclick="openCmdPalette()">
@@ -280,9 +336,33 @@
         </div>
       </div>
       <div class="header-actions">
+        <!-- Role Simulator -->
+        <div class="header-role-selector" style="display:flex;align-items:center;gap:6px;margin-right:8px;">
+          <span style="font-size:0.75rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.02em;">Role:</span>
+          <select id="role-simulator" class="select" onchange="simulateRoleChange(this.value)" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:4px 8px;font-size:0.78rem;border-radius:var(--radius-sm);color:var(--text-primary);cursor:pointer;outline:none;font-weight:600;">
+            <option value="super-admin">Super Admin</option>
+            <option value="admin">Admin</option>
+            <option value="store-manager">Store Manager</option>
+            <option value="content-manager">Content Manager</option>
+            <option value="product-manager">Product Manager</option>
+            <option value="marketing-manager">Marketing Manager</option>
+            <option value="support">Customer Support</option>
+          </select>
+        </div>
+
+        <!-- Theme Picker -->
+        <div class="header-btn" onclick="toggleThemeMenu(event)" id="theme-btn" title="Toggle Theme" style="position:relative;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;" id="theme-icon-main"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <div id="theme-menu" class="theme-menu" style="display:none;position:absolute;top:100%;right:0;background:var(--bg-surface);border:1px solid var(--border-normal);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:100;min-width:110px;padding:4px;margin-top:6px;text-align:left;">
+            <div class="theme-menu-item" onclick="setTheme('light')" style="padding:6px 12px;font-size:0.8rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:8px;cursor:pointer;">☀️ Light</div>
+            <div class="theme-menu-item" onclick="setTheme('dark')" style="padding:6px 12px;font-size:0.8rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:8px;cursor:pointer;">🌙 Dark</div>
+            <div class="theme-menu-item" onclick="setTheme('system')" style="padding:6px 12px;font-size:0.8rem;border-radius:var(--radius-sm);display:flex;align-items:center;gap:8px;cursor:pointer;">💻 System</div>
+          </div>
+        </div>
+
         <div class="header-btn" onclick="openNotifications()" title="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <div class="notif-dot"></div>
+          <div id="header-notif-dot" class="notif-dot"></div>
         </div>
         <div class="header-btn" onclick="showToast('info','Help','Documentation is available at docs.ruvenstudio.com')" title="Help">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -321,7 +401,7 @@
         </div>
 
         <!-- KPI Stats -->
-        <div class="stats-grid">
+        <div id="dashboard-stats-grid" class="stats-grid">
           <div class="stat-card">
             <div class="stat-card-accent accent-burgundy"></div>
             <div class="stat-header">
@@ -586,7 +666,7 @@
             <p class="page-subtitle">Manage your product catalog</p>
           </div>
           <div class="page-actions">
-            <button class="btn btn-secondary btn-sm">Import CSV</button>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('info', 'Export', 'Product CSV exported successfully')">Export CSV</button>
             <button class="btn btn-primary btn-sm" onclick="openProductEditor()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Add Product
@@ -594,112 +674,66 @@
           </div>
         </div>
 
-        <!-- Stats Row -->
+        <!-- Dynamic Stats Row -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-bottom:var(--space-6);">
           <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
-            <div style="font-size:1.5rem;font-weight:800;color:var(--text-primary);">24</div>
+            <div id="prod-stat-total" style="font-size:1.5rem;font-weight:800;color:var(--text-primary);">0</div>
             <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Total Products</div>
           </div>
           <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
-            <div style="font-size:1.5rem;font-weight:800;color:var(--color-success);">18</div>
+            <div id="prod-stat-published" style="font-size:1.5rem;font-weight:800;color:var(--color-success);">0</div>
             <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Published</div>
           </div>
           <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
-            <div style="font-size:1.5rem;font-weight:800;color:var(--color-warning);">4</div>
+            <div id="prod-stat-draft" style="font-size:1.5rem;font-weight:800;color:var(--color-warning);">0</div>
             <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Draft</div>
           </div>
           <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-4);text-align:center;">
-            <div style="font-size:1.5rem;font-weight:800;color:var(--color-error);">2</div>
+            <div id="prod-stat-low" style="font-size:1.5rem;font-weight:800;color:var(--color-error);">0</div>
             <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Low Stock</div>
           </div>
         </div>
 
+        <!-- Bulk Actions Toolbar -->
+        <div id="products-bulk-toolbar" style="display:none;align-items:center;gap:12px;background:var(--bg-elevated);border:1px solid var(--brand-gold);padding:8px 16px;border-radius:var(--radius-lg);margin-bottom:16px;">
+          <span style="font-size:0.8rem;font-weight:600;color:var(--brand-gold);" id="bulk-select-count">0 items selected</span>
+          <button class="btn btn-secondary btn-sm" onclick="bulkUpdateProductStatus('published')">Bulk Publish</button>
+          <button class="btn btn-secondary btn-sm" onclick="bulkUpdateProductStatus('archived')">Bulk Archive</button>
+          <button class="btn btn-secondary btn-sm" onclick="promptBulkPriceUpdate()">Adjust Prices</button>
+          <button class="btn btn-secondary btn-sm" onclick="promptBulkRestock()">Restock Inventory</button>
+          <button class="btn btn-danger btn-sm" onclick="bulkDeleteProducts()">Delete Selected</button>
+        </div>
+
         <div class="table-container">
-          <div class="table-toolbar">
-            <div class="table-search">
+          <div class="table-toolbar" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-4);">
+            <div class="table-search" style="flex:1;max-width:280px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" placeholder="Search products…" oninput="filterTable(this,'products-table')">
+              <input type="text" placeholder="Search products…" oninput="filterProductsTable(this)">
             </div>
-            <div class="filter-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Filter</div>
-            <select class="filter-btn" style="border:none;cursor:pointer;outline:none;background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:6px 12px;border-radius:var(--radius-md);color:var(--text-secondary);font-size:0.8rem;">
-              <option>All Collections</option>
-              <option>Faith Essentials</option>
-              <option>Armor Collection</option>
-            </select>
-            <div style="margin-left:auto;display:flex;gap:8px;">
-              <span class="filter-btn">Sort: Newest</span>
+            <div class="tabs-underline" style="margin:0;border:none;">
+              <button class="tab-underline active" id="prod-tab-all" onclick="switchProductTab('all')">All Products</button>
+              <button class="tab-underline" id="prod-tab-published" onclick="switchProductTab('published')">Published</button>
+              <button class="tab-underline" id="prod-tab-draft" onclick="switchProductTab('draft')">Drafts</button>
+              <button class="tab-underline" id="prod-tab-archived" onclick="switchProductTab('archived')">Archived</button>
+              <button class="tab-underline" id="prod-tab-low" onclick="switchProductTab('low-stock')">Low Stock</button>
             </div>
           </div>
           <table class="table" id="products-table">
             <thead>
               <tr>
-                <th style="width:40px;"><input type="checkbox" class="table-checkbox" onchange="selectAll(this,'products-table')"></th>
+                <th style="width:40px;"><input type="checkbox" id="selectAllProducts" class="table-checkbox" onchange="toggleSelectAllProducts(this)"></th>
                 <th>Product</th>
                 <th>Collection</th>
                 <th>Price</th>
                 <th>Stock</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th style="text-align:right;">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox" class="table-checkbox"></td>
-                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">👕</div><div><div class="td-primary">Armor of Light Tee</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-001 · 3 variants</div></div></div></td>
-                <td>Faith Essentials</td>
-                <td class="td-primary">₹2,890</td>
-                <td><span style="color:var(--color-error);font-weight:600;">3</span></td>
-                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
-                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm" onclick="showToast('info','Viewing','Opening product preview')">View</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="table-checkbox"></td>
-                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">🖤</div><div><div class="td-primary">Child of God Tee (Black)</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-002 · 4 variants</div></div></div></td>
-                <td>Armor Collection</td>
-                <td class="td-primary">₹2,690</td>
-                <td><span style="color:var(--color-warning);font-weight:600;">7</span></td>
-                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
-                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm">View</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="table-checkbox"></td>
-                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">⚪</div><div><div class="td-primary">Child of God Tee (White)</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-003 · 4 variants</div></div></div></td>
-                <td>Faith Essentials</td>
-                <td class="td-primary">₹2,690</td>
-                <td>42</td>
-                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
-                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm">View</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="table-checkbox"></td>
-                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">🕊️</div><div><div class="td-primary">Grace Oversized Hoodie</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-004 · 3 variants</div></div></div></td>
-                <td>Armor Collection</td>
-                <td class="td-primary">₹4,490</td>
-                <td>15</td>
-                <td><span class="badge badge-muted"><span class="badge-dot"></span>Draft</span></td>
-                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-primary btn-sm" onclick="showToast('success','Published','Product is now live on the website')">Publish</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="table-checkbox"></td>
-                <td><div style="display:flex;align-items:center;gap:12px;"><div class="product-thumb">📿</div><div><div class="td-primary">Faith Walk Cap</div><div style="font-size:0.72rem;color:var(--text-muted);">SKU: RS-005 · 2 variants</div></div></div></td>
-                <td>Accessories</td>
-                <td class="td-primary">₹1,290</td>
-                <td>28</td>
-                <td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td>
-                <td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openProductEditor()">Edit</button><button class="btn btn-ghost btn-sm">View</button></div></td>
-              </tr>
+            <tbody id="products-table-body">
+              <!-- Dynamically generated -->
             </tbody>
           </table>
-          <div class="table-pagination">
-            <span class="pagination-info">Showing 1–5 of 24 products</span>
-            <div class="pagination-btns">
-              <div class="page-btn">‹</div>
-              <div class="page-btn active">1</div>
-              <div class="page-btn">2</div>
-              <div class="page-btn">3</div>
-              <div class="page-btn">›</div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -793,18 +827,40 @@
             </button>
           </div>
         </div>
-        <div class="table-container">
-          <div class="table-toolbar">
-            <div class="table-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Search articles…"></div>
-            <div class="filter-btn">Category</div>
-            <div class="filter-btn">Status</div>
+        <!-- Moderation Queue -->
+        <div id="articles-moderation-queue" class="card" style="margin-bottom:var(--space-6);border-color:rgba(103,0,0,0.2);display:none;">
+          <div class="card-header" style="background:var(--brand-burgundy-glow);border-bottom:1px solid rgba(103,0,0,0.15);">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.1rem;">🛡️</span>
+              <div>
+                <div class="card-title" style="color:var(--text-primary);font-size:0.875rem;">Editor Moderation Queue</div>
+                <div class="card-subtitle" style="color:var(--text-secondary);font-size:0.75rem;">Review and approve content submitted by editors and writers</div>
+              </div>
+            </div>
           </div>
-          <table class="table">
-            <thead><tr><th>Article</th><th>Author</th><th>Category</th><th>Views</th><th>Status</th><th>Published</th><th>Actions</th></tr></thead>
-            <tbody>
-              <tr><td><div><div class="td-primary">Romans 13: Put on the Armor of Light</div><div style="font-size:0.72rem;color:var(--text-muted);">A deep dive into spiritual warfare and daily living</div></div></td><td>Pastor James</td><td><span class="badge badge-burgundy">Devotional</span></td><td>1,240</td><td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 15</td><td><button class="btn btn-secondary btn-sm" onclick="openArticleEditor()">Edit</button></td></tr>
-              <tr><td><div><div class="td-primary">Faith That Moves Mountains</div><div style="font-size:0.72rem;color:var(--text-muted);">Mark 11:23 and the power of unwavering belief</div></div></td><td>Editor</td><td><span class="badge badge-gold">Scripture</span></td><td>892</td><td><span class="badge badge-success"><span class="badge-dot"></span>Published</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Jun 8</td><td><button class="btn btn-secondary btn-sm" onclick="openArticleEditor()">Edit</button></td></tr>
-              <tr><td><div><div class="td-primary">Grace Collection: The Story Behind the Design</div><div style="font-size:0.72rem;color:var(--text-muted);">How each piece is rooted in scripture</div></div></td><td>Admin</td><td><span class="badge badge-info">Brand Story</span></td><td>—</td><td><span class="badge badge-muted"><span class="badge-dot"></span>Draft</span></td><td style="color:var(--text-muted);font-size:0.78rem;">—</td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-secondary btn-sm" onclick="openArticleEditor()">Edit</button><button class="btn btn-primary btn-sm" onclick="showToast('success','Published','Article is now live')">Publish</button></div></td></tr>
+          <div style="padding:var(--space-4);" id="moderation-queue-list">
+            <!-- Items will be populated here -->
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-toolbar" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-4);">
+            <div class="table-search" style="flex:1;max-width:280px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" placeholder="Search articles…" oninput="filterArticlesTable(this)">
+            </div>
+            <div class="tabs-underline" style="margin:0;border:none;">
+              <button class="tab-underline active" id="art-tab-all" onclick="switchArticleTab('all')" style="padding:6px 12px;font-size:0.8rem;font-weight:600;">All</button>
+              <button class="tab-underline" id="art-tab-draft" onclick="switchArticleTab('draft')" style="padding:6px 12px;font-size:0.8rem;font-weight:600;">Drafts</button>
+              <button class="tab-underline" id="art-tab-review" onclick="switchArticleTab('review')" style="padding:6px 12px;font-size:0.8rem;font-weight:600;position:relative;">In Review <span class="nav-badge" id="article-review-count" style="margin-left:4px;background:var(--brand-burgundy);padding:1px 4px;font-size:0.6rem;display:none;">0</span></button>
+              <button class="tab-underline" id="art-tab-approved" onclick="switchArticleTab('approved')" style="padding:6px 12px;font-size:0.8rem;font-weight:600;">Approved</button>
+              <button class="tab-underline" id="art-tab-published" onclick="switchArticleTab('published')" style="padding:6px 12px;font-size:0.8rem;font-weight:600;">Published</button>
+            </div>
+          </div>
+          <table class="table" id="articles-table">
+            <thead><tr><th>Article</th><th>Author</th><th>Category</th><th>Views</th><th>Status</th><th>Published</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody id="articles-table-body">
+              <!-- Dynamically generated -->
             </tbody>
           </table>
         </div>
@@ -879,7 +935,7 @@
         <div class="page-header">
           <div class="page-title-group"><h1 class="page-title">Media Library</h1><p class="page-subtitle">Manage your digital assets</p></div>
           <div class="page-actions">
-            <button class="btn btn-secondary btn-sm">New Folder</button>
+            <button class="btn btn-secondary btn-sm" onclick="createMediaFolder()">New Folder</button>
             <button class="btn btn-primary btn-sm" onclick="showToast('info','Upload','Select files to upload')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               Upload Files
@@ -900,46 +956,44 @@
           <div class="upload-sub">PNG, JPG, WebP, MP4 · Max 50MB per file</div>
         </div>
 
-        <div class="media-grid">
-          <div class="media-item selected" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">🖼️</div>
-            <div class="media-info"><div class="media-name">hero2.png</div><div class="media-meta">1.2 MB · 1920×1080</div></div>
-            <div class="media-select-badge">✓</div>
+        <div id="media-breadcrumbs" style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;">
+          <!-- Breadcrumbs rendered dynamically -->
+        </div>
+
+        <div style="display:flex;gap:20px;align-items:flex-start;">
+          <div style="flex:1;">
+            <div id="media-grid-container" class="media-grid">
+              <!-- Dynamically generated folders and files -->
+            </div>
           </div>
-          <div class="media-item" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">🖼️</div>
-            <div class="media-info"><div class="media-name">hero3.png</div><div class="media-meta">1.4 MB · 1920×1080</div></div>
-            <div class="media-select-badge">✓</div>
-          </div>
-          <div class="media-item" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">🖼️</div>
-            <div class="media-info"><div class="media-name">hero4.png</div><div class="media-meta">1.1 MB · 1920×1080</div></div>
-            <div class="media-select-badge">✓</div>
-          </div>
-          <div class="media-item" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">🏷️</div>
-            <div class="media-info"><div class="media-name">logo.png</div><div class="media-meta">24 KB · 400×200</div></div>
-            <div class="media-select-badge">✓</div>
-          </div>
-          <div class="media-item" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">🖼️</div>
-            <div class="media-info"><div class="media-name">product-01.jpg</div><div class="media-meta">850 KB · 800×1000</div></div>
-            <div class="media-select-badge">✓</div>
-          </div>
-          <div class="media-item" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">🖼️</div>
-            <div class="media-info"><div class="media-name">product-02.jpg</div><div class="media-meta">920 KB · 800×1000</div></div>
-            <div class="media-select-badge">✓</div>
-          </div>
-          <div class="media-item" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">🎬</div>
-            <div class="media-info"><div class="media-name">lookbook.mp4</div><div class="media-meta">28 MB · 1080p</div></div>
-            <div class="media-select-badge">✓</div>
-          </div>
-          <div class="media-item" onclick="toggleMediaSelect(this)">
-            <div class="media-thumb">📄</div>
-            <div class="media-info"><div class="media-name">brand-kit.pdf</div><div class="media-meta">4.2 MB</div></div>
-            <div class="media-select-badge">✓</div>
+          <div id="media-detail-sidebar" class="card" style="width:320px;display:none;background:var(--bg-surface);border:1px solid var(--border-normal);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-md);">
+            <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-subtle);padding:10px 16px;">
+              <div class="card-title" style="font-size:0.85rem;">Asset Details</div>
+              <button class="btn btn-ghost btn-sm" onclick="closeMediaDetails()" style="font-size:1.2rem;padding:0;background:none;border:none;">&times;</button>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:16px;padding:16px;">
+              <div id="media-detail-preview" style="height:160px;background:var(--bg-elevated);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:3rem;">🖼️</div>
+              <div>
+                <label class="label" style="font-size:0.75rem;">Filename</label>
+                <div id="media-detail-name" style="font-weight:600;font-size:0.85rem;color:var(--text-primary);word-break:break-all;">file.png</div>
+              </div>
+              <div>
+                <label class="label" style="font-size:0.75rem;">Metadata</label>
+                <div id="media-detail-meta" style="font-size:0.78rem;color:var(--text-muted);">1.2 MB · 1920x1080</div>
+              </div>
+              <div>
+                <label class="label" style="font-size:0.75rem;">Alt Text</label>
+                <input type="text" id="media-detail-alt" class="input" placeholder="Describe this image..." oninput="updateMediaAltText(this.value)">
+              </div>
+              <div class="ai-panel" style="margin:0;padding:12px;">
+                <div class="ai-panel-header" style="display:flex;align-items:center;gap:6px;"><div class="ai-logo" style="font-size:0.9rem;">✨</div><div class="ai-title" style="font-size:0.75rem;font-weight:700;">AI Assistant</div></div>
+                <button class="ai-action-btn" onclick="generateMediaAltText()" style="width:100%;margin-top:8px;font-size:0.72rem;padding:6px 10px;display:flex;align-items:center;justify-content:center;gap:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Generate Alt Text</button>
+                <div id="media-ai-spinner" style="display:none;font-size:0.7rem;color:var(--brand-gold);margin-top:6px;text-align:center;">Analyzing image...</div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;">
+                <button class="btn btn-danger btn-sm" onclick="deleteMediaFile()">Delete Asset</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -956,79 +1010,32 @@
         <div class="builder-layout" style="margin:-32px;height:calc(100vh - 160px);">
           <div class="builder-sections-panel">
             <div class="builder-panel-header">Sections</div>
-            <div class="builder-section-list">
-              <div class="builder-section-item active">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">🦸 Hero Slideshow</span>
-                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="builder-section-item">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">📢 Announcement Bar</span>
-                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="builder-section-item">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">🛡️ Trust Strip</span>
-                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="builder-section-item">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">📖 Brand Statement</span>
-                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="builder-section-item">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">🛍️ Featured Products</span>
-                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="builder-section-item">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">🙏 Community</span>
-                <div class="section-toggle" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="builder-section-item">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">📰 Faith Journal</span>
-                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
-              <div class="builder-section-item">
-                <div class="section-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></div>
-                <span class="section-name">✉️ Newsletter</span>
-                <div class="section-toggle on" onclick="this.classList.toggle('on')"></div>
-              </div>
+            <div id="homepage-sections-container" class="builder-section-list">
+              <!-- Dynamically rendered -->
             </div>
             <div style="padding:var(--space-4);border-top:1px solid var(--border-subtle);">
-              <button class="btn btn-secondary btn-sm" style="width:100%;" onclick="showToast('info','Section Added','New section created')">+ Add Section</button>
+              <button class="btn btn-secondary btn-sm" style="width:100%;" onclick="addHomepageSection()">+ Add Section</button>
             </div>
           </div>
           <div class="builder-preview">
             <div class="builder-preview-toolbar">
               <span style="font-size:0.8rem;color:var(--text-muted);">Preview</span>
               <div class="viewport-btns">
-                <div class="viewport-btn active" title="Desktop">🖥️</div>
-                <div class="viewport-btn" title="Tablet">📱</div>
-                <div class="viewport-btn" title="Mobile">📲</div>
+                <div class="viewport-btn active" title="Desktop" onclick="setPreviewViewport('desktop')">🖥️</div>
+                <div class="viewport-btn" title="Tablet" onclick="setPreviewViewport('tablet')">📱</div>
+                <div class="viewport-btn" title="Mobile" onclick="setPreviewViewport('mobile')">📲</div>
               </div>
               <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--color-success);"></div><span style="font-size:0.72rem;color:var(--text-muted);">Live on ruvenstudio.vercel.app</span></div>
             </div>
             <div class="builder-preview-frame">
-              <div style="width:100%;max-width:900px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);">
+              <div id="homepage-preview-frame-container" style="width:100%;max-width:900px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);transition: max-width 0.3s ease;">
                 <div style="height:6px;background:var(--brand-burgundy);"></div>
                 <div style="padding:16px;background:#111;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-subtle);">
                   <div style="display:flex;gap:6px;"><div style="width:10px;height:10px;border-radius:50%;background:#ef4444;"></div><div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;"></div><div style="width:10px;height:10px;border-radius:50%;background:#22c55e;"></div></div>
                   <div style="flex:1;background:var(--bg-elevated);border-radius:4px;padding:4px 12px;font-size:0.72rem;color:var(--text-muted);">ruvenstudio.vercel.app</div>
                 </div>
-                <div style="padding:20px;min-height:400px;">
-                  <div style="height:160px;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative;overflow:hidden;">
-                    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(103,0,0,0.4),transparent);"></div>
-                    <div style="position:relative;text-align:center;"><div style="font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:8px;">Put on the Armor of Light</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.6);">Romans 13:12</div></div>
-                  </div>
-                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                    <div style="height:80px;background:var(--bg-elevated);border-radius:var(--radius-sm);"></div>
-                    <div style="height:80px;background:var(--bg-elevated);border-radius:var(--radius-sm);"></div>
-                    <div style="height:80px;background:var(--bg-elevated);border-radius:var(--radius-sm);"></div>
-                  </div>
+                <div id="homepage-preview-container" style="padding:20px;min-height:400px;display:flex;flex-direction:column;gap:12px;">
+                  <!-- Dynamically rendered mockup preview -->
                 </div>
               </div>
             </div>
@@ -1128,55 +1135,60 @@
       <!-- USERS & ROLES -->
       <div id="panel-users" class="section-panel">
         <div class="page-header">
-          <div class="page-title-group"><h1 class="page-title">Users &amp; Roles</h1><p class="page-subtitle">Manage team access and permissions</p></div>
-          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openInviteModal()">Invite User</button></div>
+          <div class="page-title-group"><h1 class="page-title">Team &amp; Access</h1><p class="page-subtitle">Manage team members, roles, and custom permissions</p></div>
+          <div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openInviteModal()">Invite Team Member</button></div>
         </div>
 
         <!-- Team -->
         <div class="card" style="margin-bottom:var(--space-6);">
-          <div class="card-header"><div class="card-title">Team Members</div><span style="font-size:0.8rem;color:var(--text-muted);">4 members</span></div>
-          <table class="table">
-            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last Active</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>
-              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand-burgundy),var(--brand-gold));display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">SA</div><span class="td-primary">Super Admin</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">admin@ruvenstudio.com</td><td><span class="badge badge-burgundy">Super Admin</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Just now</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td style="text-align:right;"><span style="font-size:0.75rem;color:var(--text-disabled);">You</span></td></tr>
-              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">JK</div><span class="td-primary">James Kumar</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">james@ruvenstudio.com</td><td><span class="badge badge-gold">Store Manager</span></td><td style="color:var(--text-muted);font-size:0.78rem;">2h ago</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm" onclick="showToast('info','Settings','User settings opened')">Manage</button></div></td></tr>
-              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--color-success),#86efac);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">SP</div><span class="td-primary">Sarah Philip</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">sarah@ruvenstudio.com</td><td><span class="badge badge-info">Content Editor</span></td><td style="color:var(--text-muted);font-size:0.78rem;">Yesterday</td><td><span class="badge badge-success"><span class="badge-dot"></span>Active</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm">Manage</button></div></td></tr>
-              <tr><td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;">MT</div><span class="td-primary">Mark Thomas</span></div></td><td style="color:var(--text-muted);font-size:0.82rem;">mark@ruvenstudio.com</td><td><span class="badge badge-muted">Community Manager</span></td><td style="color:var(--text-muted);font-size:0.78rem;">3d ago</td><td><span class="badge badge-muted"><span class="badge-dot"></span>Inactive</span></td><td><div style="display:flex;gap:6px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm">Manage</button></div></td></tr>
-            </tbody>
-          </table>
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);">
+            <div>
+              <div class="card-title">Team Directory</div>
+              <div class="card-subtitle">Active and pending administrator accounts</div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <input type="text" placeholder="Search team…" oninput="filterTeamTable(this)" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:6px 12px;font-size:0.8rem;border-radius:var(--radius-md);color:var(--text-primary);outline:none;width:180px;">
+              <span id="team-count" style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">4 members</span>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="table" id="team-table">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last Active</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+              <tbody id="team-table-body">
+                <!-- Dynamically generated -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <!-- Roles -->
-        <h2 style="font-size:1rem;font-weight:700;margin-bottom:var(--space-4);">Role Permissions</h2>
-        <div class="role-grid">
-          <div class="role-card-full">
-            <div class="role-header"><div class="role-emoji">👑</div><div><div class="role-name-full">Super Admin</div><div class="role-desc">Full access to everything</div></div></div>
-            <div class="permission-list">
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage products</div>
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage orders</div>
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage users</div>
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>View analytics</div>
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Edit settings</div>
+        <!-- Roles and Permissions Grid -->
+        <div class="card">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);">
+            <div>
+              <div class="card-title">Role-Based Access Control</div>
+              <div class="card-subtitle">Customize security permissions for each organizational role</div>
             </div>
+            <select id="rbac-role-select" class="select" onchange="loadRolePermissions(this.value)" style="background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:6px 12px;font-size:0.8rem;border-radius:var(--radius-md);color:var(--text-primary);cursor:pointer;outline:none;font-weight:600;min-width:180px;">
+              <option value="super-admin">Super Admin</option>
+              <option value="admin">Admin</option>
+              <option value="store-manager">Store Manager</option>
+              <option value="content-manager">Content Manager</option>
+              <option value="product-manager">Product Manager</option>
+              <option value="marketing-manager">Marketing Manager</option>
+              <option value="support">Customer Support</option>
+              <option value="warehouse-manager">Warehouse Manager</option>
+              <option value="community-manager">Community Manager</option>
+              <option value="finance">Finance</option>
+              <option value="guest">Guest</option>
+            </select>
           </div>
-          <div class="role-card-full">
-            <div class="role-header"><div class="role-emoji">🛍️</div><div><div class="role-name-full">Store Manager</div><div class="role-desc">Manage catalog &amp; orders</div></div></div>
-            <div class="permission-list">
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage products</div>
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Manage orders</div>
-              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage users</div>
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>View analytics</div>
-              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Edit settings</div>
+          <div class="card-body" style="padding:var(--space-6);">
+            <div id="rbac-permissions-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space-5);">
+              <!-- Dynamically generated checklist of toggles -->
             </div>
-          </div>
-          <div class="role-card-full">
-            <div class="role-header"><div class="role-emoji">✍️</div><div><div class="role-name-full">Content Editor</div><div class="role-desc">Manage content &amp; media</div></div></div>
-            <div class="permission-list">
-              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage products</div>
-              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage orders</div>
-              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Manage users</div>
-              <div class="permission-item granted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Edit articles &amp; media</div>
-              <div class="permission-item denied"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Edit settings</div>
+            <div style="margin-top:var(--space-6);display:flex;justify-content:flex-end;gap:var(--space-3);">
+              <span id="rbac-save-indicator" style="font-size:0.8rem;color:var(--color-success);align-self:center;opacity:0;transition:opacity 0.2s;font-weight:600;">✓ Permissions saved</span>
+              <button class="btn btn-primary btn-sm" onclick="saveRolePermissions()">Save Permission Schema</button>
             </div>
           </div>
         </div>
@@ -1235,6 +1247,75 @@
                   <label class="label">Razorpay Key ID</label>
                   <input type="text" class="input" value="rzp_live_••••••••••••" style="font-family:var(--font-mono);font-size:0.8rem;">
                 </div>
+              </div>
+            </div>
+            <!-- Payments -->
+            <div id="settings-payments" class="card settings-content" style="display:none;">
+              <div class="card-header"><div class="card-title">Payment Gateways</div></div>
+              <div class="card-body">
+                <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Razorpay</div><div class="toggle-description">Accept UPI, Cards, Netbanking in India</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Stripe</div><div class="toggle-description">Accept international card payments</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Cash on Delivery (COD)</div><div class="toggle-description">Charge extra ₹50 fee for COD orders</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+              </div>
+            </div>
+
+            <!-- Shipping -->
+            <div id="settings-shipping" class="card settings-content" style="display:none;">
+              <div class="card-header"><div class="card-title">Shipping Zones</div></div>
+              <div class="card-body">
+                <div style="background:var(--bg-elevated);padding:12px;border-radius:6px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+                  <div><strong>Domestic (India)</strong><div style="font-size:0.75rem;color:var(--text-muted);">All states and Union Territories</div></div>
+                  <div><span class="badge badge-success">Free Shipping</span></div>
+                </div>
+                <div style="background:var(--bg-elevated);padding:12px;border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+                  <div><strong>International</strong><div style="font-size:0.75rem;color:var(--text-muted);">Rest of the World</div></div>
+                  <div><span class="badge badge-info">₹1,500 Flat Rate</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEO Manager -->
+            <div id="settings-seo" class="card settings-content" style="display:none;">
+              <div class="card-header"><div class="card-title">SEO & Redirect Manager</div></div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                  <div style="background:var(--bg-elevated);padding:16px;border-radius:8px;text-align:center;border:1px solid var(--border-subtle);">
+                    <div style="font-size:2rem;font-weight:800;color:var(--color-success);">88/100</div>
+                    <div style="font-weight:700;font-size:0.8rem;margin-top:4px;">SEO Health Score</div>
+                    <p style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">2 issues detected: 1 missing description, 1 broken redirect link.</p>
+                  </div>
+                  <div style="background:var(--bg-elevated);padding:16px;border-radius:8px;text-align:center;border:1px solid var(--border-subtle);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;">
+                    <div style="font-size:0.75rem;color:var(--text-muted);">Last Rebuild: Today at 07:15 AM</div>
+                    <button class="btn btn-secondary btn-sm" onclick="rebuildSitemap()">Rebuild XML Sitemap</button>
+                    <span id="sitemap-spinner" style="display:none;font-size:0.72rem;color:var(--brand-gold);">⚙️ Rebuilding...</span>
+                  </div>
+                </div>
+                
+                <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:12px;color:var(--text-primary);">301 Redirects</h3>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                  <input type="text" id="redirect-src" class="input" placeholder="Old Path (e.g. /old-hoodie)" style="flex:1;">
+                  <input type="text" id="redirect-dst" class="input" placeholder="New Path (e.g. /products/hoodie)" style="flex:1;">
+                  <button class="btn btn-primary btn-sm" onclick="addRedirect()">Add Redirect</button>
+                </div>
+                <div style="max-height:200px;overflow-y:auto;border:1px solid var(--border-subtle);border-radius:6px;">
+                  <table class="table" style="margin:0;">
+                    <thead>
+                      <tr><th>Source Path</th><th>Destination</th><th style="text-align:right;">Action</th></tr>
+                    </thead>
+                    <tbody id="redirect-table-body">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Security -->
+            <div id="settings-security" class="card settings-content" style="display:none;">
+              <div class="card-header"><div class="card-title">Security & Authenticator</div></div>
+              <div class="card-body">
+                <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Require 2FA</div><div class="toggle-description">Enforce two-factor authentication for all staff accounts</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Session Timeout</div><div class="toggle-description">Auto log out users after 24 hours of inactivity</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
               </div>
             </div>
           </div>
@@ -1370,20 +1451,16 @@
       <!-- AUDIT LOGS -->
       <div id="panel-audit" class="section-panel">
         <div class="page-header">
-          <div class="page-title-group"><h1 class="page-title">Audit Logs</h1><p class="page-subtitle">Full audit trail of all admin actions</p></div>
+          <div class="page-title-group"><h1 class="page-title">Activity &amp; Audit Logs</h1><p class="page-subtitle">A running record of operations with standard undo callbacks</p></div>
           <div class="page-actions"><button class="btn btn-secondary btn-sm" onclick="showToast('info','Export','Audit log exported')">Export CSV</button></div>
         </div>
         <div class="table-container">
           <table class="table">
-            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Resource</th><th>IP</th></tr></thead>
-            <tbody>
-              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 01:42:00</td><td class="td-primary">Super Admin</td><td><span class="badge badge-success">PUBLISH</span></td><td>Product: Armor of Light Tee</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">203.0.113.1</td></tr>
-              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 01:38:12</td><td class="td-primary">James Kumar</td><td><span class="badge badge-info">UPDATE</span></td><td>Order: #RS-1042</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">198.51.100.42</td></tr>
-              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 01:22:05</td><td class="td-primary">Sarah Philip</td><td><span class="badge badge-gold">CREATE</span></td><td>Article: Romans 13 Devotional</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">192.0.2.55</td></tr>
-              <tr><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">2026-06-23 00:55:01</td><td class="td-primary">Super Admin</td><td><span class="badge badge-error">DELETE</span></td><td>Coupon: EXPIRED2025</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">203.0.113.1</td></tr>
+            <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Affected Resource</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody id="audit-table-body">
+              <!-- Dynamically generated activity log entries -->
             </tbody>
           </table>
-          <div class="table-pagination"><span class="pagination-info">Showing 1–4 of 128 log entries</span><div class="pagination-btns"><div class="page-btn">‹</div><div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">›</div></div></div>
         </div>
       </div>
 
@@ -1397,18 +1474,22 @@
 
 <!-- Product Editor Modal -->
 <div id="modal-product" class="modal-overlay">
+  <input type="hidden" id="prod-edit-id">
   <div class="modal modal-xl">
     <div class="modal-header">
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:32px;height:32px;background:var(--brand-burgundy-glow);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1rem;">📦</div>
         <div>
           <div class="modal-title">New Product</div>
-          <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--text-muted);margin-top:2px;"><div class="autosave-dot saving"></div>Autosaving…</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--text-muted);margin-top:2px;">
+            <div id="prod-autosave-dot" class="autosave-dot"></div>
+            <span id="prod-autosave-text">Autosaved</span>
+          </div>
         </div>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn btn-secondary btn-sm">Save Draft</button>
-        <button class="btn btn-primary btn-sm" onclick="closeModal('modal-product');showToast('success','Published!','Product is now live on the website')">Publish</button>
+        <button class="btn btn-secondary btn-sm" onclick="saveProduct('draft')">Save Draft</button>
+        <button class="btn btn-primary btn-sm" onclick="saveProduct('published')">Publish</button>
         <div class="modal-close" onclick="closeModal('modal-product')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
       </div>
     </div>
@@ -1418,17 +1499,17 @@
           <div class="card">
             <div class="card-header"><div class="card-title">Basic Information</div></div>
             <div class="card-body">
-              <div class="form-group"><label class="label">Product Name</label><input type="text" class="input" placeholder="e.g. Armor of Light Tee — White"></div>
+              <div class="form-group"><label class="label">Product Name</label><input type="text" id="prod-edit-name" class="input" placeholder="e.g. Armor of Light Tee — White" oninput="triggerProductAutosave()"></div>
               <div class="form-row">
-                <div class="form-group"><label class="label">Slug</label><input type="text" class="input" placeholder="armor-of-light-tee-white"></div>
-                <div class="form-group"><label class="label">Collection</label><select class="select"><option>Faith Essentials</option><option>Armor Collection</option><option>New Arrivals</option></select></div>
+                <div class="form-group"><label class="label">Slug</label><input type="text" id="prod-edit-slug" class="input" placeholder="armor-of-light-tee-white" oninput="triggerProductAutosave()"></div>
+                <div class="form-group"><label class="label">Collection</label><select id="prod-edit-collection" class="select" onchange="triggerProductAutosave()"><option value="Faith Essentials">Faith Essentials</option><option value="Armor Collection">Armor Collection</option><option value="New Arrivals">New Arrivals</option><option value="Accessories">Accessories</option></select></div>
               </div>
-              <div class="form-group"><label class="label">Short Description</label><textarea class="textarea" style="min-height:80px;" placeholder="A brief product description (shown on cards)…"></textarea></div>
-              <div class="form-group"><label class="label">Long Description / Story</label><textarea class="textarea" placeholder="Tell the story behind this design and its spiritual meaning…"></textarea></div>
+              <div class="form-group"><label class="label">Short Description</label><textarea id="prod-edit-short-desc" class="textarea" style="min-height:80px;" placeholder="A brief product description (shown on cards)…" oninput="triggerProductAutosave()"></textarea></div>
+              <div class="form-group"><label class="label">Long Description / Story</label><textarea id="prod-edit-long-desc" class="textarea" placeholder="Tell the story behind this design and its spiritual meaning…" oninput="triggerProductAutosave()"></textarea></div>
               <div class="form-group">
                 <label class="label">Bible Verse</label>
-                <input type="text" class="input" placeholder="e.g. Romans 13:12" style="margin-bottom:8px;">
-                <textarea class="textarea" style="min-height:60px;" placeholder="Paste the full verse text here…"></textarea>
+                <input type="text" id="prod-edit-verse" class="input" placeholder="e.g. Romans 13:12" style="margin-bottom:8px;" oninput="triggerProductAutosave()">
+                <textarea id="prod-edit-verse-text" class="textarea" style="min-height:60px;" placeholder="Paste the full verse text here…" oninput="triggerProductAutosave()"></textarea>
               </div>
             </div>
           </div>
@@ -1436,15 +1517,15 @@
             <div class="card-header"><div class="card-title">Pricing &amp; Inventory</div></div>
             <div class="card-body">
               <div class="form-row cols-3">
-                <div class="form-group"><label class="label">Price (₹)</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" class="input" placeholder="2890"></div></div>
-                <div class="form-group"><label class="label">Compare Price</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" class="input" placeholder="3500"></div></div>
-                <div class="form-group"><label class="label">Cost Price</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" class="input" placeholder="1200"></div></div>
+                <div class="form-group"><label class="label">Price (₹)</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" id="prod-edit-price" class="input" placeholder="2890" oninput="triggerProductAutosave()"></div></div>
+                <div class="form-group"><label class="label">Compare Price</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" id="prod-edit-compare-price" class="input" placeholder="3500" oninput="triggerProductAutosave()"></div></div>
+                <div class="form-group"><label class="label">Cost Price</label><div class="price-input-group"><span class="currency-symbol">₹</span><input type="number" id="prod-edit-cost-price" class="input" placeholder="1200" oninput="triggerProductAutosave()"></div></div>
               </div>
               <div class="form-row">
-                <div class="form-group"><label class="label">SKU</label><input type="text" class="input" placeholder="RS-001"></div>
-                <div class="form-group"><label class="label">Barcode / ISBN</label><input type="text" class="input" placeholder="8901234567890"></div>
+                <div class="form-group"><label class="label">SKU</label><input type="text" id="prod-edit-sku" class="input" placeholder="RS-001" oninput="triggerProductAutosave()"></div>
+                <div class="form-group"><label class="label">Barcode / ISBN</label><input type="text" id="prod-edit-barcode" class="input" placeholder="8901234567890" oninput="triggerProductAutosave()"></div>
               </div>
-              <div class="form-group"><label class="label">Inventory Count</label><input type="number" class="input" placeholder="50"></div>
+              <div class="form-group"><label class="label">Inventory Count</label><input type="number" id="prod-edit-stock" class="input" placeholder="50" oninput="triggerProductAutosave()"></div>
             </div>
           </div>
           <div class="card">
@@ -1469,9 +1550,9 @@
           <div class="card">
             <div class="card-header"><div class="card-title">Status</div></div>
             <div class="card-body">
-              <div class="form-group"><label class="label">Visibility</label><select class="select"><option>Draft</option><option>Published</option><option>Archived</option></select></div>
-              <div class="form-group"><label class="label">Publish Date</label><input type="datetime-local" class="input"></div>
-              <div class="toggle-row" style="margin-top:8px;"><div class="toggle-info"><div class="toggle-label">Featured Product</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+              <div class="form-group"><label class="label">Visibility</label><select id="prod-edit-status" class="select" onchange="triggerProductAutosave()"><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></div>
+              <div class="form-group"><label class="label">Publish Date</label><input type="datetime-local" id="prod-edit-publish-date" class="input" onchange="triggerProductAutosave()"></div>
+              <div class="toggle-row" style="margin-top:8px;"><div class="toggle-info"><div class="toggle-label">Featured Product</div></div><label class="toggle"><input type="checkbox" id="prod-edit-featured" onchange="triggerProductAutosave()"><span class="toggle-slider"></span></label></div>
             </div>
           </div>
           <div class="ai-panel">
@@ -1491,9 +1572,9 @@
           <div class="card">
             <div class="card-header"><div class="card-title">SEO</div></div>
             <div class="card-body">
-              <div class="form-group"><label class="label">Meta Title</label><input type="text" class="input" placeholder="Armor of Light Tee | Ruven Studio"></div>
-              <div class="form-group"><label class="label">Meta Description</label><textarea class="textarea" style="min-height:60px;" placeholder="Premium faith streetwear…"></textarea></div>
-              <div class="form-group"><label class="label">Tags</label><input type="text" class="input" placeholder="faith, streetwear, christian, tshirt"></div>
+              <div class="form-group"><label class="label">Meta Title</label><input type="text" id="prod-edit-meta-title" class="input" placeholder="Armor of Light Tee | Ruven Studio" oninput="triggerProductAutosave()"></div>
+              <div class="form-group"><label class="label">Meta Description</label><textarea id="prod-edit-meta-desc" class="textarea" style="min-height:60px;" placeholder="Premium faith streetwear…" oninput="triggerProductAutosave()"></textarea></div>
+              <div class="form-group"><label class="label">Tags</label><input type="text" id="prod-edit-tags" class="input" placeholder="faith, streetwear, christian, tshirt" oninput="triggerProductAutosave()"></div>
             </div>
           </div>
         </div>
@@ -1504,19 +1585,23 @@
 
 <!-- Article Editor Modal -->
 <div id="modal-article" class="modal-overlay">
+  <input type="hidden" id="art-edit-id">
   <div class="modal modal-xl">
     <div class="modal-header">
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:32px;height:32px;background:var(--brand-gold-dim);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1rem;">✍️</div>
         <div>
           <div class="modal-title">Article Editor</div>
-          <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--text-muted);margin-top:2px;"><div class="autosave-dot"></div>Saved 2 seconds ago</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--text-muted);margin-top:2px;">
+            <div id="art-autosave-dot" class="autosave-dot"></div>
+            <span id="art-autosave-text">Autosaved</span>
+          </div>
         </div>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn btn-secondary btn-sm">Preview</button>
-        <button class="btn btn-secondary btn-sm">Schedule</button>
-        <button class="btn btn-primary btn-sm" onclick="closeModal('modal-article');showToast('success','Published!','Article is now live on the Faith Journal')">Publish</button>
+        <button class="btn btn-secondary btn-sm" onclick="previewArticle()">Preview</button>
+        <button class="btn btn-secondary btn-sm" onclick="saveArticle('review')">Submit for Review</button>
+        <button class="btn btn-primary btn-sm" onclick="saveArticle('published')">Publish</button>
         <div class="modal-close" onclick="closeModal('modal-article')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
       </div>
     </div>
@@ -1524,38 +1609,25 @@
       <div class="editor-wrapper">
         <div class="editor-main">
           <div class="editor-toolbar">
-            <div class="editor-tool active" title="Bold"><b>B</b></div>
+            <div class="editor-tool" title="Add Paragraph" onclick="addArticleBlock('paragraph')">¶ P</div>
+            <div class="editor-tool" title="Add Heading" onclick="addArticleBlock('heading')">H</div>
+            <div class="editor-tool" title="Add Verse" onclick="addArticleBlock('verse')">✝ V</div>
+            <div class="editor-tool-sep"></div>
+            <div class="editor-tool" title="Bold"><b>B</b></div>
             <div class="editor-tool" title="Italic"><i>I</i></div>
             <div class="editor-tool" title="Underline"><u>U</u></div>
             <div class="editor-tool-sep"></div>
-            <div class="editor-tool" title="Heading 1">H1</div>
-            <div class="editor-tool" title="Heading 2">H2</div>
-            <div class="editor-tool-sep"></div>
             <div class="editor-tool" title="Image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
             <div class="editor-tool" title="Quote">❝</div>
-            <div class="editor-tool active" title="Bible Verse">✝</div>
-            <div class="editor-tool" title="Link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
             <div class="editor-tool-sep"></div>
-            <div class="editor-tool" title="Embed Product">📦</div>
-            <div class="editor-tool" title="Embed YouTube">▶</div>
+            <div class="editor-tool" title="Embed Product" onclick="addArticleBlock('product')">📦 Product</div>
           </div>
           <div class="editor-body">
-            <textarea class="editor-title-input" placeholder="Article title…" rows="1" style="height:auto;overflow:hidden;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-            <div class="block-list">
-              <div class="block-item">
-                <textarea class="block-content block-heading" placeholder="Write a heading…" rows="1" style="height:auto;overflow:hidden;font-size:1.4rem;font-weight:700;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">The Night Is Far Gone</textarea>
-              </div>
-              <div class="block-item">
-                <textarea class="block-content" rows="3" placeholder="Write your paragraph…" style="height:auto;overflow:hidden;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">Romans 13:12 opens with a striking declaration: "The night is nearly over; the day is almost here." Paul writes this to the church in Rome, reminding them of the urgency of their spiritual calling.</textarea>
-              </div>
-              <div class="block-item">
-                <div class="block-verse" contenteditable="true">"Let us put aside the deeds of darkness and put on the armor of light." — Romans 13:12</div>
-              </div>
-              <div class="block-item">
-                <textarea class="block-content" rows="3" placeholder="Continue writing…" style="height:auto;overflow:hidden;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">In our modern context, this verse speaks powerfully to the cultural moment we find ourselves in. The armor of light is not merely metaphorical—it is a daily choice to clothe ourselves in righteousness.</textarea>
-              </div>
+            <textarea id="art-edit-title" class="editor-title-input" placeholder="Article title…" rows="1" style="height:auto;overflow:hidden;" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';triggerArticleAutosave()"></textarea>
+            <div id="art-edit-block-list" class="block-list">
+              <!-- Rendered dynamically -->
             </div>
-            <div class="add-block-trigger" style="margin-top:16px;">
+            <div class="add-block-trigger" style="margin-top:16px;" onclick="addArticleBlock('paragraph')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Click to add a block…
             </div>
@@ -1565,10 +1637,10 @@
           <div class="card">
             <div class="card-header"><div class="card-title">Publish Settings</div></div>
             <div class="card-body">
-              <div class="form-group"><label class="label">Status</label><select class="select"><option>Draft</option><option>Published</option><option>Scheduled</option></select></div>
-              <div class="form-group"><label class="label">Category</label><select class="select"><option>Devotional</option><option>Scripture Study</option><option>Brand Story</option><option>Community</option></select></div>
-              <div class="form-group"><label class="label">Author</label><select class="select"><option>Super Admin</option><option>Pastor James</option><option>Sarah Philip</option></select></div>
-              <div class="form-group"><label class="label">Tags</label><input type="text" class="input" placeholder="romans, faith, armor"></div>
+              <div class="form-group"><label class="label">Status</label><select id="art-edit-status" class="select" onchange="triggerArticleAutosave()"><option value="draft">Draft</option><option value="review">In Review</option><option value="published">Published</option></select></div>
+              <div class="form-group"><label class="label">Category</label><select id="art-edit-category" class="select" onchange="triggerArticleAutosave()"><option value="Devotional">Devotional</option><option value="Scripture Study">Scripture Study</option><option value="Brand Story">Brand Story</option><option value="Community">Community</option></select></div>
+              <div class="form-group"><label class="label">Author</label><select id="art-edit-author" class="select" onchange="triggerArticleAutosave()"><option value="Super Admin">Super Admin</option><option value="Pastor James">Pastor James</option><option value="Sarah Philip">Sarah Philip</option></select></div>
+              <div class="form-group"><label class="label">Tags</label><input type="text" id="art-edit-tags" class="input" placeholder="romans, faith, armor" oninput="triggerArticleAutosave()"></div>
             </div>
           </div>
           <div class="card">
@@ -1690,13 +1762,13 @@
   <div class="modal">
     <div class="modal-header"><div class="modal-title">Invite Team Member</div><div class="modal-close" onclick="closeModal('modal-invite')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
     <div class="modal-body">
-      <div class="form-group"><label class="label">Email Address</label><input type="email" class="input" placeholder="colleague@ruvenstudio.com"></div>
-      <div class="form-group"><label class="label">Role</label><select class="select"><option>Store Manager</option><option>Product Manager</option><option>Content Editor</option><option>Marketing Manager</option><option>Customer Support</option><option>Community Manager</option></select></div>
-      <div class="form-group"><label class="label">Personal Message <span class="label-optional">(optional)</span></label><textarea class="textarea" style="min-height:80px;" placeholder="Welcome to the Ruven Studio team!"></textarea></div>
+      <div class="form-group"><label class="label">Email Address</label><input type="email" class="input" id="invite-email" placeholder="colleague@ruvenstudio.com"></div>
+      <div class="form-group"><label class="label">Role</label><select class="select" id="invite-role"><option value="admin">Admin</option><option value="store-manager">Store Manager</option><option value="content-manager">Content Manager</option><option value="product-manager">Product Manager</option><option value="marketing-manager">Marketing Manager</option><option value="support">Customer Support</option><option value="warehouse-manager">Warehouse Manager</option><option value="community-manager">Community Manager</option><option value="finance">Finance</option><option value="guest">Guest</option></select></div>
+      <div class="form-group"><label class="label">Personal Message <span class="label-optional">(optional)</span></label><textarea class="textarea" id="invite-msg" style="min-height:80px;" placeholder="Welcome to the Ruven Studio team!"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-invite')">Cancel</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-invite');showToast('success','Invite Sent','An invitation email has been sent')">Send Invite</button>
+      <button class="btn btn-primary" onclick="submitInvite()">Send Invite</button>
     </div>
   </div>
 </div>
@@ -1779,34 +1851,13 @@
 
 <!-- NOTIFICATIONS PANEL -->
 <div id="notif-panel" class="notif-panel">
-  <div class="notif-header">
+  <div class="notif-header" style="display:flex;align-items:center;width:100%;">
     <span class="notif-title">Notifications</span>
-    <span class="notif-count">5 new</span>
+    <span id="notif-count-badge" class="notif-count">3 new</span>
+    <button class="btn btn-ghost btn-sm" onclick="markAllNotificationsAsRead()" style="color:var(--brand-gold);padding:0;background:none;border:none;margin-left:auto;font-size:0.75rem;cursor:pointer;">Mark all read</button>
   </div>
-  <div class="notif-list">
-    <div class="notif-item unread" onclick="navigate('orders');toggleNotifications()">
-      <div class="notif-icon" style="background:var(--color-info-bg);">🛍️</div>
-      <div class="notif-content"><div class="notif-text"><strong>New Order</strong> — #RS-1042 from Priya Sharma · ₹2,890</div><div class="notif-time">2 minutes ago</div></div>
-      <div class="notif-unread-dot"></div>
-    </div>
-    <div class="notif-item unread" onclick="navigate('products');toggleNotifications()">
-      <div class="notif-icon" style="background:var(--color-error-bg);">⚠️</div>
-      <div class="notif-content"><div class="notif-text"><strong>Low Stock Alert</strong> — Armor of Light Tee (White/M) has 3 units left</div><div class="notif-time">14 minutes ago</div></div>
-      <div class="notif-unread-dot"></div>
-    </div>
-    <div class="notif-item unread" onclick="navigate('community');toggleNotifications()">
-      <div class="notif-icon" style="background:var(--brand-burgundy-glow);">🙏</div>
-      <div class="notif-content"><div class="notif-text"><strong>New Prayer Request</strong> — Awaiting review from Priya S.</div><div class="notif-time">1 hour ago</div></div>
-      <div class="notif-unread-dot"></div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-icon" style="background:var(--color-success-bg);">✅</div>
-      <div class="notif-content"><div class="notif-text"><strong>Article Published</strong> — "Romans 13: Armor of Light" is now live</div><div class="notif-time">3 hours ago</div></div>
-    </div>
-    <div class="notif-item">
-      <div class="notif-icon" style="background:var(--brand-gold-dim);">⭐</div>
-      <div class="notif-content"><div class="notif-text"><strong>New Review</strong> — Rahul M. left a 5-star review</div><div class="notif-time">5 hours ago</div></div>
-    </div>
+  <div id="notif-list-container" class="notif-list">
+    <!-- Dynamically generated notifications -->
   </div>
 </div>
 
