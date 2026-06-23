@@ -51,7 +51,7 @@ const labelSt: React.CSSProperties = {
 };
 
 /* ─────────────────────────────────────────────
-   Inner Login Form (client logic lives here)
+   Inner Login/SignUp Form (client logic lives here)
 ───────────────────────────────────────────── */
 function LoginForm() {
   const router = useRouter();
@@ -60,6 +60,7 @@ function LoginForm() {
   const [email,      setEmail]      = useState("");
   const [password,   setPassword]   = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isSignUp,   setIsSignUp]   = useState(false);
 
   /* UI state */
   const [showPassword, setShowPassword] = useState(false);
@@ -98,12 +99,15 @@ function LoginForm() {
     if (!password) {
       setPwError("Password is required.");
       ok = false;
+    } else if (isSignUp && password.length < 6) {
+      setPwError("Password must be at least 6 characters.");
+      ok = false;
     }
 
     return ok;
-  }, [email, password]);
+  }, [email, password, isSignUp]);
 
-  /* ── Submit ──────────────────────────────── */
+  /* ── Submit (Login / Sign Up) ────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
@@ -116,46 +120,89 @@ function LoginForm() {
 
     if (isDummy) {
       await new Promise<void>((res) => setTimeout(res, 1200));
-      if (email === "admin@ruven.in" && password === "admin123") {
-        document.cookie = "mock_admin_session=true; path=/; max-age=86400";
-        document.cookie = "mock_user_email=admin@ruven.in; path=/; max-age=86400";
-        document.cookie = "mock_user_name=Super Admin; path=/; max-age=86400";
-        router.push("/admin");
-      } else if (email === "customer@ruven.in" && password === "customer123") {
+      if (isSignUp) {
+        // Mock successful sign up for any email
         document.cookie = "mock_customer_session=true; path=/; max-age=86400";
-        document.cookie = "mock_user_email=customer@ruven.in; path=/; max-age=86400";
-        document.cookie = "mock_user_name=John Doe; path=/; max-age=86400";
+        document.cookie = `mock_user_email=${email.trim()}; path=/; max-age=86400`;
+        const derivedName = email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+        document.cookie = `mock_user_name=${derivedName}; path=/; max-age=86400`;
         router.push("/account");
       } else {
-        setAuthError("Incorrect email or password. Please try again.");
-        setLoading(false);
+        // Mock login
+        if (email === "admin@ruven.in" && password === "admin123") {
+          document.cookie = "mock_admin_session=true; path=/; max-age=86400";
+          document.cookie = "mock_user_email=admin@ruven.in; path=/; max-age=86400";
+          document.cookie = "mock_user_name=Super Admin; path=/; max-age=86400";
+          router.push("/admin");
+        } else if (email === "customer@ruven.in" && password === "customer123") {
+          document.cookie = "mock_customer_session=true; path=/; max-age=86400";
+          document.cookie = "mock_user_email=customer@ruven.in; path=/; max-age=86400";
+          document.cookie = "mock_user_name=John Doe; path=/; max-age=86400";
+          router.push("/account");
+        } else {
+          // Allow custom mock email login in dev sandbox for convenience
+          document.cookie = "mock_customer_session=true; path=/; max-age=86400";
+          document.cookie = `mock_user_email=${email.trim()}; path=/; max-age=86400`;
+          const derivedName = email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+          document.cookie = `mock_user_name=${derivedName}; path=/; max-age=86400`;
+          router.push("/account");
+        }
       }
       return;
     }
 
     try {
       const supabase = createClient();
-      const { error: authErr } = await supabase.auth.signInWithPassword({ email, password });
-      if (authErr) throw authErr;
-      if (email.endsWith("@ruvenstudio.in") || email.endsWith("@ruven.in")) {
-        router.push("/admin");
+      if (isSignUp) {
+        // Real Supabase sign up
+        const { data, error: authErr } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/account`,
+          }
+        });
+        if (authErr) throw authErr;
+        
+        if (data?.session) {
+          if (email.endsWith("@ruvenstudio.in") || email.endsWith("@ruven.in")) {
+            router.push("/admin");
+          } else {
+            router.push("/account");
+          }
+        } else {
+          setAuthError("Registration successful! Please check your email inbox to confirm your account.");
+          setLoading(false);
+        }
       } else {
-        router.push("/account");
+        // Real Supabase sign in
+        const { error: authErr } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        if (authErr) throw authErr;
+        if (email.endsWith("@ruvenstudio.in") || email.endsWith("@ruven.in")) {
+          router.push("/admin");
+        } else {
+          router.push("/account");
+        }
       }
-    } catch {
-      setAuthError("Incorrect email or password. Please try again.");
+    } catch (err: any) {
+      setAuthError(err.message || "Incorrect email or password. Please try again.");
       setLoading(false);
     }
   };
 
-  /* ── Google OAuth ────────────────────────── */
+  /* ── Google OAuth (Mock / Real) ──────────── */
   const handleGoogleSignIn = async () => {
     const isDummy =
       process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("dummy") ||
       !process.env.NEXT_PUBLIC_SUPABASE_URL;
 
     if (isDummy) {
-      setAuthError("Google sign-in requires Supabase configuration.");
+      setLoading(true);
+      await new Promise<void>((res) => setTimeout(res, 800));
+      document.cookie = "mock_customer_session=true; path=/; max-age=86400";
+      document.cookie = "mock_user_email=google.user@gmail.com; path=/; max-age=86400";
+      document.cookie = "mock_user_name=Google Tester; path=/; max-age=86400";
+      router.push("/account");
       return;
     }
     try {
@@ -185,9 +232,9 @@ function LoginForm() {
     ? T.dark
     : T.border;
 
-  /* ═══════════════════════════════════════════
-     Render
-  ═══════════════════════════════════════════ */
+  /* ───────────────────────────────────────────
+     RENDER
+     ─────────────────────────────────────────── */
   return (
     <>
       {/* Spinner keyframe — injected once */}
@@ -203,7 +250,7 @@ function LoginForm() {
         .forgot-link { color: ${T.muted}; transition: color 0.15s ease; }
         .forgot-link:hover { color: ${T.dark}; }
         .google-btn { transition: background 0.15s ease, border-color 0.15s ease; }
-        .google-btn:hover { background: #F0EDE8 !important; border-color: #A8A49E !important; }
+        .google-btn:hover { background: #F9F9F9 !important; border-color: ${T.dark} !important; }
         @media (max-width: 767px) {
           .login-left-panel { display: none !important; }
           .login-right-panel { width: 100% !important; padding: 32px 24px !important; }
@@ -283,48 +330,53 @@ function LoginForm() {
             {/* Scripture quote */}
             <blockquote
               style={{
-                fontFamily: 'Georgia, "Times New Roman", serif',
-                fontSize: "15px",
-                fontStyle: "italic",
-                lineHeight: 1.65,
-                color: "rgba(255,255,255,0.92)",
-                margin: "0 0 8px 0",
+                margin: 0,
                 padding: 0,
                 border: "none",
+                fontFamily: 'Georgia, "Times New Roman", serif',
+                color: T.bgWhite,
               }}
             >
-              &ldquo;Cast off the works of darkness and put on the armor of
-              light.&rdquo;
+              <p
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 400,
+                  lineHeight: 1.4,
+                  letterSpacing: "-0.01em",
+                  margin: "0 0 8px 0",
+                  fontStyle: "italic",
+                }}
+              >
+                &ldquo;Cast off the works of darkness and put on the armor of light.&rdquo;
+              </p>
+              <footer
+                style={{
+                  fontSize: "10px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  color: "rgba(255,255,255,0.60)",
+                }}
+              >
+                &mdash; Romans 13:12
+              </footer>
             </blockquote>
-
-            {/* Scripture reference */}
-            <p
-              style={{
-                fontSize: "11px",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                color: "rgba(255,255,255,0.40)",
-                margin: 0,
-              }}
-            >
-              — Romans 13:12
-            </p>
           </div>
         </div>
 
         {/* ──────────────────────────────────────
-            RIGHT FORM PANEL  (55%)
+            RIGHT FORM PANEL  (55%) - White Background
         ────────────────────────────────────── */}
         <div
           className="login-right-panel"
           style={{
             flex: 1,
-            background: T.bgPage,
+            background: T.bgWhite,
             overflowY: "auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             padding: "40px 24px",
+            fontFamily: '"DM Sans", sans-serif',
           }}
         >
           {/* Inner content wrapper */}
@@ -334,7 +386,7 @@ function LoginForm() {
               width: "100%",
               maxWidth: "380px",
               padding: "48px 40px",
-              background: T.bgPage,
+              background: T.bgWhite,
             }}
           >
             {/* ── Back to shop ───────────────── */}
@@ -353,22 +405,22 @@ function LoginForm() {
                 fontFamily: "inherit",
               }}
             >
-              ← Back to shop
+              &larr; Back to shop
             </Link>
 
             {/* ── Page heading ───────────────── */}
             <h1
               style={{
-                fontFamily: 'Georgia, "Times New Roman", serif',
+                fontFamily: '"DM Sans", sans-serif',
                 fontSize: "28px",
-                fontWeight: 400,
+                fontWeight: 600,
                 color: T.dark,
                 letterSpacing: "-0.025em",
                 lineHeight: 1.2,
                 margin: "0 0 6px 0",
               }}
             >
-              Welcome back.
+              {isSignUp ? "Create account." : "Welcome back."}
             </h1>
 
             {/* ── Sub-heading ────────────────── */}
@@ -380,7 +432,7 @@ function LoginForm() {
                 margin: "0 0 36px 0",
               }}
             >
-              Sign in to your Ruven Studio account.
+              {isSignUp ? "Sign up for a Ruven Studio account." : "Sign in to your Ruven Studio account."}
             </p>
 
             {/* ══════════════════════════════════
@@ -436,7 +488,7 @@ function LoginForm() {
                     id="login-password"
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    autoComplete="current-password"
+                    autoComplete={isSignUp ? "new-password" : "current-password"}
                     placeholder="••••••••"
                     tabIndex={0}
                     value={password}
@@ -500,7 +552,7 @@ function LoginForm() {
               {/* ── Links row ──────────────────── */}
               <div
                 style={{
-                  display: "flex",
+                  display: isSignUp ? "none" : "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   marginTop: "10px",
@@ -556,6 +608,7 @@ function LoginForm() {
                     border: `1px solid ${T.errorBorder}`,
                     borderRadius: 0,
                     padding: "10px 14px",
+                    marginTop: isSignUp ? "20px" : "0",
                     marginBottom: "16px",
                     fontSize: "12px",
                     color: T.errorText,
@@ -566,7 +619,10 @@ function LoginForm() {
                 </div>
               )}
 
-              {/* ── Sign In button ─────────────── */}
+              {/* Spacer when error is not showing in Sign Up mode */}
+              {isSignUp && !authError && <div style={{ height: "24px" }} />}
+
+              {/* ── Sign In / Sign Up button ────── */}
               <button
                 type="submit"
                 id="signin-btn"
@@ -574,7 +630,7 @@ function LoginForm() {
                 disabled={loading}
                 style={{
                   background: T.dark,
-                  color: T.bgPage,
+                  color: "#FFFFFF",
                   borderRadius: 0,
                   height: "44px",
                   width: "100%",
@@ -603,17 +659,17 @@ function LoginForm() {
                       style={{
                         width: "14px",
                         height: "14px",
-                        border: "1.5px solid rgba(245,243,238,0.35)",
-                        borderTopColor: T.bgPage,
+                        border: "1.5px solid rgba(255,255,255,0.35)",
+                        borderTopColor: "#FFFFFF",
                         borderRadius: "50%",
                         display: "inline-block",
                         flexShrink: 0,
                       }}
                     />
-                    Signing in&hellip;
+                    {isSignUp ? "Creating account…" : "Signing in…"}
                   </>
                 ) : (
-                  "Sign In"
+                  isSignUp ? "Create Account" : "Sign In"
                 )}
               </button>
 
@@ -632,11 +688,11 @@ function LoginForm() {
                   style={{
                     fontSize: "10px",
                     textTransform: "uppercase",
-                    letterSpacing: "0.06em",
-                    color: "#AAAAAA",
+                    letterSpacing: "0.05em",
+                    color: T.muted,
                   }}
                 >
-                  or
+                  OR
                 </span>
                 <div style={{ flex: 1, height: "0.5px", background: T.border }} />
               </div>
@@ -692,7 +748,7 @@ function LoginForm() {
                 Continue with Google
               </button>
 
-              {/* ── Create account link ────────── */}
+              {/* ── Toggle Sign In / Sign Up Link ── */}
               <p
                 style={{
                   textAlign: "center",
@@ -702,19 +758,31 @@ function LoginForm() {
                   fontFamily: "inherit",
                 }}
               >
-                Don&apos;t have an account?
-                <Link
-                  href="/register"
+                {isSignUp ? "Already have an account?" : "Don't have an account?"}
+                <button
+                  type="button"
                   tabIndex={0}
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setAuthError("");
+                    setEmailError("");
+                    setPwError("");
+                  }}
                   style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
                     color: T.dark,
-                    fontWeight: 500,
+                    fontWeight: 600,
                     textDecoration: "underline",
                     marginLeft: "4px",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    fontSize: "12px",
                   }}
                 >
-                  Create account
-                </Link>
+                  {isSignUp ? "Sign in" : "Create account"}
+                </button>
               </p>
 
               {/* ── Dev sandbox (localhost only) ─ */}
@@ -722,8 +790,8 @@ function LoginForm() {
                 <div
                   style={{
                     marginTop: "32px",
-                    background: "#EEEAE3",
-                    border: `1px solid #D9D5CE`,
+                    background: "#F9F9F9",
+                    border: `1px solid #EAEAEA`,
                     padding: "14px 16px",
                     fontSize: "10px",
                     color: "#666",
@@ -777,7 +845,7 @@ export default function LoginPage() {
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
-          background: "#F5F3EE",
+          background: "#FFFFFF",
           overflowX: "hidden",
         }}
       >
