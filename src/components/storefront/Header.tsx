@@ -500,7 +500,7 @@ export const Header: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-start justify-center pt-[10vh] px-4 md:px-0"
+            className="fixed inset-0 bg-[#111111]/40 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-0"
           >
             {/* Click outside search modal to close */}
             <div className="absolute inset-0 z-0" onClick={() => setSearchOpen(false)} />
@@ -552,146 +552,59 @@ export const Header: React.FC = () => {
                     </div>
                   </div>
                 ) : !searchQuery.trim() ? (
-                  /* Empty state - Spotlight dashboard */
-                  <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 divide-y md:divide-y-0 md:divide-x divide-border-warm bg-white dark:bg-zinc-900">
-                    <div className="space-y-6">
-                      {/* Recent Searches */}
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
-                          Recent Searches
-                        </span>
-                        <div className="flex flex-wrap gap-2 mt-3">
+                  /* Empty state - Spotlight dashboard (Simplified to Recent Searches & Trending Products) */
+                  <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 divide-y md:divide-y-0 md:divide-x divide-border-warm/30 bg-white dark:bg-zinc-900">
+                    {/* Left side: Recent Searches */}
+                    <div className="space-y-4">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-text-light-muted block">
+                        Recent Searches
+                      </span>
+                      {recentSearches.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
                           {recentSearches.map((tag) => (
                             <button
                               key={tag}
                               onClick={() => handleSuggestionClick(tag)}
-                              className="px-3 py-1 bg-bg-card dark:bg-zinc-800 text-[11px] text-text-primary hover:bg-brand-burgundy hover:text-white transition-colors cursor-pointer rounded-none border border-border-warm/50"
+                              className="px-3.5 py-1.5 bg-bg-card dark:bg-zinc-800 text-[11px] text-text-primary hover:bg-brand-burgundy hover:text-white transition-colors cursor-pointer rounded-none border border-border-warm/50 font-sans"
                             >
                               {tag}
                             </button>
                           ))}
                         </div>
-                      </div>
-
-                      {/* Popular Collections */}
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
-                          Popular Collections
-                        </span>
-                        <div className="flex flex-col gap-2 mt-3 font-sans">
-                          {[
-                            { name: "Oversized Tees Drop", slug: "oversized-tees" },
-                            { name: "French Terry Hoodies", slug: "hoodies" },
-                            { name: "All Streetwear Catalog", slug: "" }
-                          ].map((col) => (
-                            <Link
-                              key={col.name}
-                              href={`/shop${col.slug ? `?category=${col.slug}` : ""}`}
-                              onClick={() => {
-                                addRecentSearch(col.name);
-                                setSearchOpen(false);
-                              }}
-                              className="text-xs font-semibold text-text-primary hover:text-brand-burgundy flex items-center justify-between group py-1 border-b border-border-warm/20"
-                            >
-                              <span>{col.name}</span>
-                              <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-brand-burgundy" />
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Quick Links */}
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
-                          Quick Links
-                        </span>
-                        <div className="grid grid-cols-2 gap-3 mt-3 font-sans">
-                          <Link href="/shop" onClick={() => setSearchOpen(false)} className="text-xs font-semibold text-text-primary hover:text-brand-burgundy transition-colors">All Shop</Link>
-                          <Link href="/account" onClick={() => setSearchOpen(false)} className="text-xs font-semibold text-text-primary hover:text-brand-burgundy transition-colors">My Dashboard</Link>
-                          <Link href="/tracking" onClick={() => setSearchOpen(false)} className="text-xs font-semibold text-text-primary hover:text-brand-burgundy transition-colors">Track Cargo</Link>
-                          <Link href="/#story-section" onClick={() => setSearchOpen(false)} className="text-xs font-semibold text-text-primary hover:text-brand-burgundy transition-colors">Our Story</Link>
-                        </div>
-                      </div>
+                      ) : (
+                        <p className="text-xs text-text-light-muted font-sans">No recent searches.</p>
+                      )}
                     </div>
 
-                    <div className="md:pl-8 pt-6 md:pt-0 space-y-6">
-                      {/* Trending Products */}
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
-                          Trending Products
-                        </span>
-                        <div className="flex flex-col gap-3 mt-3 font-sans">
-                          {allProducts.slice(0, 3).map((prod) => (
-                            <Link
-                              key={prod.id}
-                              href={`/products/${prod.slug}`}
-                              onClick={() => {
-                                addRecentSearch(prod.name);
-                                setSearchOpen(false);
-                              }}
-                              className="flex items-center gap-3.5 group animate-fadeIn"
-                            >
-                              <div className="w-9 h-9 relative bg-zinc-50 dark:bg-zinc-800 border border-border-warm flex-shrink-0 overflow-hidden">
-                                <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" />
-                              </div>
-                              <div className="min-w-0">
-                                <span className="text-xs font-semibold text-text-primary block truncate group-hover:text-brand-burgundy transition-colors">
-                                  {prod.name}
-                                </span>
-                                <span className="text-[10px] text-text-light-muted block mt-0.5">
-                                  ₹{prod.base_price.toFixed(0)}
-                                </span>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Latest Journal Articles */}
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
-                          Latest Journal Articles
-                        </span>
-                        <div className="flex flex-col gap-2.5 mt-3 font-sans">
-                          {allDevotionals.slice(0, 2).map((dev) => (
-                            <Link
-                              key={dev.id}
-                              href={`/journal/${dev.slug}`}
-                              onClick={() => {
-                                addRecentSearch(dev.title);
-                                setSearchOpen(false);
-                              }}
-                              className="text-xs font-semibold text-text-primary hover:text-brand-burgundy flex flex-col group py-1"
-                            >
-                              <span className="group-hover:text-brand-burgundy transition-colors text-xs font-medium">{dev.title}</span>
-                              <span className="text-[9px] text-text-light-muted mt-0.5">By {dev.author} — Devotional</span>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Suggested Scriptures */}
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
-                          Suggested Scriptures
-                        </span>
-                        <div className="space-y-2 mt-3 font-sans">
-                          {[
-                            { quote: "Do not be conformed to this world...", ref: "Romans 12:2" },
-                            { quote: "Put on the armor of light...", ref: "Romans 13:12" }
-                          ].map((item) => (
-                            <button
-                              key={item.ref}
-                              onClick={() => handleSuggestionClick(item.ref)}
-                              className="text-left w-full block group text-xs text-text-muted hover:text-brand-burgundy transition-colors"
-                            >
-                              <p className="italic font-light text-text-muted group-hover:text-brand-burgundy">"{item.quote}"</p>
-                              <span className="text-[9px] font-bold tracking-wider uppercase text-brand-burgundy block mt-0.5">
-                                {item.ref}
+                    {/* Right side: Trending Products */}
+                    <div className="md:pl-8 pt-6 md:pt-0 space-y-4">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-text-light-muted block">
+                        Trending Products
+                      </span>
+                      <div className="flex flex-col gap-3.5 font-sans">
+                        {allProducts.slice(0, 3).map((prod) => (
+                          <Link
+                            key={prod.id}
+                            href={`/products/${prod.slug}`}
+                            onClick={() => {
+                              addRecentSearch(prod.name);
+                              setSearchOpen(false);
+                            }}
+                            className="flex items-center gap-3.5 group animate-fadeIn"
+                          >
+                            <div className="w-10 h-10 relative bg-zinc-50 dark:bg-zinc-800 border border-border-warm flex-shrink-0 overflow-hidden">
+                              <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="min-w-0">
+                              <span className="text-xs font-semibold text-text-primary block truncate group-hover:text-brand-burgundy transition-colors">
+                                {prod.name}
                               </span>
-                            </button>
-                          ))}
-                        </div>
+                              <span className="text-[10px] text-text-light-muted block mt-0.5">
+                                ₹{prod.base_price.toFixed(0)}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
                       </div>
                     </div>
                   </div>

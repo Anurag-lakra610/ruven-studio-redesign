@@ -5538,7 +5538,7 @@ h1, h2, h3, h4, h5, h6 {
   color: rgba(103, 0, 0, 0.02);
   z-index: 1;
   pointer-events: none;
-  font-family: serif;
+  font-family: var(--font-sans);
 }
 
 /* 5. Story Behind the Design */
