@@ -328,7 +328,6 @@ h1, h2, h3, h4, h5, h6 {
 /* ==========================================================================
    3. Header Navigation & Mega Menu
    ========================================================================== */
-/* Announcement Bar */
 .announcement-bar {
   background-color: var(--color-brand-burgundy);
   color: var(--color-white);
@@ -341,19 +340,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*
- * FLAT TRACK — the only architecture that guarantees zero gap at the seam.
+ * 6-GROUP INFINITE TICKER
  *
  * Logic:
- *   • All direct children (spans + cross SVGs) sit in ONE flat flex row.
- *   • Every child carries margin-right: 2rem — no exceptions.
- *   • Copy 1 ends with a cross + its 2rem margin.
- *   • Copy 2 starts with the first span immediately after.
- *   • Seam spacing  = 2rem  (last child's margin-right of copy 1)
- *   • Item spacing  = 2rem  (every child's margin-right)
- *   • They are EQUAL → zero visible gap, ever.
- *
- *   The -50% translate works because both copies are structurally
- *   identical so track_width = 2 × copy_width exactly.
+ *   • We wrap the marquee content in an `.announcement-group`.
+ *   • We place 6 identical copies of the group inside the track.
+ *   • The track has width: max-content (total width = 6 * group_width).
+ *   • We animate translateX from 0 to -16.666667% (exactly 1/6th of total width, i.e., 1 group width).
+ *   • Since we have 6 copies, the track has plenty of content to cover ultra-wide monitors without gaps.
+ *   • Spacing between items inside the group is gap: 2rem.
+ *   • Spacing at the end of the group is padding-right: 2rem, making the connection to the next group seamless.
  */
 .announcement-track {
   display: flex;
@@ -367,19 +363,21 @@ h1, h2, h3, h4, h5, h6 {
   animation-play-state: paused;
 }
 
-/* Every direct child gets the same right margin — this is the core rule */
-.announcement-track > * {
-  margin-right: 2rem;
+.announcement-group {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-right: 2rem;
   flex-shrink: 0;
-  white-space: nowrap;
 }
 
-.announcement-track > span {
+.announcement-group > span {
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .announcement-cross {
@@ -387,11 +385,12 @@ h1, h2, h3, h4, h5, h6 {
   height: 11px;
   color: rgba(255, 255, 255, 0.5);
   display: block;
+  flex-shrink: 0;
 }
 
 @keyframes announcementMarquee {
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to   { transform: translateX(-16.666667%); }
 }
 
 

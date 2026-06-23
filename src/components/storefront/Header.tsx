@@ -289,29 +289,75 @@ export const Header: React.FC = () => {
   return (
     <>
       {/* ── Announcement ticker ─────────────────────────────────────────────────
-           FLAT TRACK: every span and svg is a direct child of the track.
-           CSS gives each child the same margin-right, so the seam between
-           copy-1's last item and copy-2's first item has identical spacing
-           to every other adjacent pair. Zero gap — guaranteed by math.
+           6-GROUP INFINITE TICKER:
+           To prevent empty gaps on wide or ultra-wide screens, we render 6 copies
+           of the content block inside a track with no track-level gap.
+           Each group has gap: 2rem and padding-right: 2rem.
+           The track translates by exactly -16.666667% (1/6th of total width),
+           meaning it loops perfectly and seamlessly with no gaps or jumps.
       ─────────────────────────────────────────────────────────────────────── */}
       <div className="announcement-bar" role="marquee" aria-label="Announcement ticker">
         <div className="announcement-track">
 
-          {/* ── Copy 1 ── */}
-          <span>Designed to Start Conversations About Christ</span>
-          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-          <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
-          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-          <span>Made with Purpose</span>
-          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          {/* Copy 1 */}
+          <div className="announcement-group">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          </div>
 
-          {/* ── Copy 2 — aria-hidden so screen readers only announce copy 1 ── */}
-          <span aria-hidden="true">Designed to Start Conversations About Christ</span>
-          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-          <span aria-hidden="true">Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
-          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-          <span aria-hidden="true">Made with Purpose</span>
-          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          {/* Copy 2 */}
+          <div className="announcement-group" aria-hidden="true">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          </div>
+
+          {/* Copy 3 */}
+          <div className="announcement-group" aria-hidden="true">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          </div>
+
+          {/* Copy 4 */}
+          <div className="announcement-group" aria-hidden="true">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          </div>
+
+          {/* Copy 5 */}
+          <div className="announcement-group" aria-hidden="true">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          </div>
+
+          {/* Copy 6 */}
+          <div className="announcement-group" aria-hidden="true">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          </div>
 
         </div>
       </div>
