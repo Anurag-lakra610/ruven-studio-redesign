@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { MockProduct, MockDevotional } from "@/lib/db";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Search,
@@ -22,6 +23,18 @@ import {
 
 export const Header: React.FC = () => {
   const router = useRouter();
+  
+  // Custom Spotlight Search states
+  const [allProducts, setAllProducts] = useState<MockProduct[]>([]);
+  const [allDevotionals, setAllDevotionals] = useState<MockDevotional[]>([]);
+  const [searchResults, setSearchResults] = useState<{
+    products: MockProduct[];
+    devotionals: MockDevotional[];
+    collections: { name: string; slug: string }[];
+  }>({ products: [], devotionals: [], collections: [] });
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const [searching, setSearching] = useState(false);
+
   const {
     cart,
     wishlist,
@@ -40,6 +53,144 @@ export const Header: React.FC = () => {
   } = useCart();
 
   const [isMobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  // Fetch search sources on overlay open
+  useEffect(() => {
+    if (isSearchOpen) {
+      Promise.all([
+        import("@/lib/db").then((db) => db.getProducts()),
+        import("@/lib/db").then((db) => db.getDevotionals())
+      ]).then(([productsData, devotionalsData]) => {
+        setAllProducts(productsData);
+        setAllDevotionals(devotionalsData);
+      });
+      setSearchQuery("");
+      setActiveItemIndex(0);
+    }
+  }, [isSearchOpen, setSearchQuery]);
+
+  // Live filter query debounce
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults({ products: [], devotionals: [], collections: [] });
+      setActiveItemIndex(0);
+      return;
+    }
+
+    setSearching(true);
+    const delayDebounce = setTimeout(() => {
+      const query = searchQuery.toLowerCase().trim();
+
+      const filteredProducts = allProducts.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query) ||
+          (p.scripture &&
+            (p.scripture.book.toLowerCase().includes(query) ||
+              p.scripture.text_content.toLowerCase().includes(query)))
+      );
+
+      const filteredDevotionals = allDevotionals.filter(
+        (d) =>
+          d.title.toLowerCase().includes(query) ||
+          d.summary.toLowerCase().includes(query)
+      );
+
+      const mockCollections = [
+        { name: "Oversized Tees", slug: "oversized-tees" },
+        { name: "French Terry Hoodies", slug: "hoodies" },
+        { name: "Streetwear", slug: "streetwear" }
+      ];
+      const filteredCollections = mockCollections.filter((c) =>
+        c.name.toLowerCase().includes(query)
+      );
+
+      setSearchResults({
+        products: filteredProducts,
+        devotionals: filteredDevotionals,
+        collections: filteredCollections
+      });
+      setActiveItemIndex(0);
+      setSearching(false);
+    }, 200);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery, allProducts, allDevotionals]);
+
+  // Flatten results for keyboard traversal
+  const flatResults: {
+    type: "product" | "devotional" | "collection";
+    id: string;
+    title: string;
+    subtitle?: string;
+    url: string;
+    image?: string;
+  }[] = [];
+
+  searchResults.collections.forEach((c) => {
+    flatResults.push({
+      type: "collection",
+      id: c.slug,
+      title: c.name,
+      subtitle: "Collection Catalog",
+      url: `/shop?category=${c.slug}`
+    });
+  });
+
+  searchResults.products.forEach((p) => {
+    flatResults.push({
+      type: "product",
+      id: p.id,
+      title: p.name,
+      subtitle: `$${p.base_price.toFixed(2)} — ${p.category_slug || "Apparel"}`,
+      url: `/products/${p.slug}`,
+      image: p.image
+    });
+  });
+
+  searchResults.devotionals.forEach((d) => {
+    flatResults.push({
+      type: "devotional",
+      id: d.id,
+      title: d.title,
+      subtitle: `By ${d.author} — Journal Devotional`,
+      url: `/journal/${d.slug}`,
+      image: d.cover_image_url
+    });
+  });
+
+  // Keyboard navigation & Shortcuts listeners
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+      if (isSearchOpen && flatResults.length > 0) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          setActiveItemIndex((prev) => (prev + 1) % flatResults.length);
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          setActiveItemIndex((prev) => (prev - 1 + flatResults.length) % flatResults.length);
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const activeItem = flatResults[activeItemIndex];
+          if (activeItem) {
+            setSearchOpen(false);
+            router.push(activeItem.url);
+          }
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isSearchOpen, flatResults, activeItemIndex, router, setSearchOpen]);
 
   const cartTotalItems = cart.reduce((acc, item) => acc + item.qty, 0);
   const cartSubtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
@@ -133,11 +284,6 @@ export const Header: React.FC = () => {
         {/* Desktop Navigation Links */}
         <nav className="nav-desktop">
           <ul className="nav-links">
-            <li className="nav-item">
-              <Link href="/" className="nav-link">
-                Home
-              </Link>
-            </li>
             <li className="nav-item mega-menu-trigger">
               <Link href="/shop" className="nav-link">
                 Shop
@@ -215,6 +361,11 @@ export const Header: React.FC = () => {
                 Community
               </Link>
             </li>
+            <li className="nav-item">
+              <Link href="/journal/the-armor-of-light" className="nav-link">
+                Journal
+              </Link>
+            </li>
           </ul>
         </nav>
 
@@ -279,53 +430,234 @@ export const Header: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex flex-col items-center justify-start pt-[100px] px-6"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center pt-[10vh] px-4 md:px-0"
           >
-            <button
-              onClick={() => setSearchOpen(false)}
-              className="absolute top-6 right-6 text-white hover:text-brand-gold transition-colors p-2"
-              aria-label="Close Search"
-            >
-              <X className="w-7 h-7" />
-            </button>
+            {/* Click outside search modal to close */}
+            <div className="absolute inset-0 z-0" onClick={() => setSearchOpen(false)} />
 
             <motion.div
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
-              transition={{ delay: 0.1 }}
-              className="w-full max-w-xl bg-white dark:bg-zinc-900 rounded-lg p-6 shadow-2xl"
+              transition={{ duration: 0.2 }}
+              className="relative z-10 w-full max-w-[760px] bg-white dark:bg-zinc-900 rounded-none flex flex-col shadow-2xl border border-border-warm overflow-hidden"
             >
-              <form onSubmit={handleSearchSubmit} className="relative flex items-center border-b border-border-warm pb-3">
-                <Search className="w-6 h-6 text-text-muted mr-3" />
+              {/* Input Header */}
+              <div className="h-[64px] border-b border-border-warm flex items-center px-6 gap-3.5 bg-white dark:bg-zinc-950">
+                <Search className="w-5 h-5 text-text-muted flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search oversized tees, hoodies, scriptures..."
+                  placeholder="Search products, collections, articles or Bible verses..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full text-lg bg-transparent border-none p-0 focus:outline-none text-text-primary placeholder:text-text-muted"
+                  className="w-full text-base bg-transparent border-none p-0 focus:outline-none focus:ring-0 text-text-primary placeholder:text-text-light-muted font-sans"
                   autoFocus
                 />
                 {searchQuery && (
-                  <button type="button" onClick={() => setSearchQuery("")} className="text-text-muted hover:text-text-primary">
-                    <X className="w-5 h-5" />
+                  <button type="button" onClick={() => setSearchQuery("")} className="text-text-muted hover:text-text-primary p-1">
+                    <X className="w-4 h-4" />
                   </button>
                 )}
-              </form>
+                <span className="text-[9px] font-bold border border-border-warm px-1.5 py-0.5 text-text-muted select-none rounded-none hidden sm:inline-block">
+                  ESC
+                </span>
+              </div>
 
-              <div className="mt-6">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">Popular searches</span>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {["tee", "hoodie", "armor", "renewal", "Romans 12:2"].map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => handleSuggestionClick(tag)}
-                      className="px-3.5 py-1.5 bg-bg-card dark:bg-zinc-800 rounded-full text-xs text-text-primary hover:bg-brand-burgundy hover:text-white transition-colors"
-                    >
-                      {tag}
-                    </button>
-                  ))}
+              {/* Suggestions / Results */}
+              <div className="flex-1 overflow-y-auto max-h-[440px] bg-white dark:bg-zinc-900">
+                {searching ? (
+                  /* Loading Skeletons */
+                  <div className="p-6 space-y-4">
+                    <div className="h-4 bg-zinc-100 dark:bg-zinc-800 w-1/3 animate-pulse rounded-none" />
+                    <div className="space-y-3">
+                      {[1, 2, 3].map((n) => (
+                        <div key={n} className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-zinc-100 dark:bg-zinc-800 animate-pulse rounded-none" />
+                          <div className="flex-grow space-y-2">
+                            <div className="h-3.5 bg-zinc-100 dark:bg-zinc-800 w-2/3 animate-pulse rounded-none" />
+                            <div className="h-2.5 bg-zinc-100 dark:bg-zinc-800 w-1/3 animate-pulse rounded-none" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : !searchQuery.trim() ? (
+                  /* Empty state - suggestions */
+                  <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-border-warm">
+                    <div className="space-y-5">
+                      {/* Popular Search Tags */}
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
+                          Suggested Searches
+                        </span>
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          {["tee", "hoodie", "armor", "renewal", "Romans 12:2"].map((tag) => (
+                            <button
+                              key={tag}
+                              onClick={() => handleSuggestionClick(tag)}
+                              className="px-3 py-1 bg-bg-card dark:bg-zinc-800 text-[11px] text-text-primary hover:bg-brand-burgundy hover:text-white transition-colors cursor-pointer rounded-none border border-border-warm/50"
+                            >
+                              {tag}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Popular Collections */}
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
+                          Popular Collections
+                        </span>
+                        <div className="flex flex-col gap-2 mt-3 font-sans">
+                          {[
+                            { name: "Oversized Tees Drop", url: "/shop?category=oversized-tees" },
+                            { name: "French Terry Hoodies", url: "/shop?category=hoodies" },
+                            { name: "All Streetwear", url: "/shop" }
+                          ].map((col) => (
+                            <Link
+                              key={col.name}
+                              href={col.url}
+                              onClick={() => setSearchOpen(false)}
+                              className="text-xs font-semibold text-text-primary hover:text-brand-burgundy flex items-center justify-between group py-1"
+                            >
+                              <span>{col.name}</span>
+                              <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-brand-burgundy" />
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="sm:pl-6 pt-5 sm:pt-0 space-y-5">
+                      {/* Trending Products */}
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
+                          Trending Items
+                        </span>
+                        <div className="flex flex-col gap-3 mt-3 font-sans">
+                          {allProducts.slice(0, 2).map((prod) => (
+                            <Link
+                              key={prod.id}
+                              href={`/products/${prod.slug}`}
+                              onClick={() => setSearchOpen(false)}
+                              className="flex items-center gap-3.5 group animate-fadeIn"
+                            >
+                              <div className="w-9 h-9 relative bg-zinc-50 dark:bg-zinc-800 border border-border-warm flex-shrink-0 overflow-hidden">
+                                <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div className="min-w-0">
+                                <span className="text-xs font-semibold text-text-primary block truncate group-hover:text-brand-burgundy transition-colors">
+                                  {prod.name}
+                                </span>
+                                <span className="text-[10px] text-text-light-muted block mt-0.5">
+                                  ${prod.base_price.toFixed(2)}
+                                </span>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Suggested Scriptures */}
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-text-light-muted block">
+                          Suggested Scriptures
+                        </span>
+                        <div className="space-y-2 mt-3 font-sans">
+                          {[
+                            { quote: "Do not be conformed to this world...", ref: "Romans 12:2" },
+                            { quote: "Put on the armor of light...", ref: "Romans 13:12" }
+                          ].map((item) => (
+                            <button
+                              key={item.ref}
+                              onClick={() => handleSuggestionClick(item.ref)}
+                              className="text-left w-full block group text-xs text-text-muted hover:text-brand-burgundy transition-colors"
+                            >
+                              <p className="italic font-light text-text-muted group-hover:text-brand-burgundy">"{item.quote}"</p>
+                              <span className="text-[9px] font-bold tracking-wider uppercase text-brand-burgundy block mt-0.5">
+                                {item.ref}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : flatResults.length === 0 ? (
+                  /* No Results state */
+                  <div className="p-12 text-center space-y-2.5">
+                    <p className="text-sm text-text-muted font-sans">
+                      No results found for "<strong className="text-text-primary font-semibold">{searchQuery}</strong>".
+                    </p>
+                    <p className="text-xs text-text-light-muted font-sans">
+                      Try searching for "tee", "hoodie", or a scripture citation like "Romans".
+                    </p>
+                  </div>
+                ) : (
+                  /* List Results */
+                  <div className="divide-y divide-border-warm/30 py-2 font-sans">
+                    <div className="px-6 pb-2 pt-1">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-text-light-muted">
+                        Search Results ({flatResults.length})
+                      </span>
+                    </div>
+                    {flatResults.map((item, idx) => {
+                      const isActive = idx === activeItemIndex;
+                      return (
+                        <Link
+                          key={item.id}
+                          href={item.url}
+                          onClick={() => setSearchOpen(false)}
+                          className={`flex items-center gap-4 px-6 py-3.5 transition-all select-none border-l-2 ${
+                            isActive
+                              ? "bg-bg-card dark:bg-zinc-800/50 border-brand-burgundy pl-7 text-brand-burgundy"
+                              : "border-transparent hover:bg-bg-secondary"
+                          }`}
+                        >
+                          {item.image ? (
+                            <div className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 flex-shrink-0 overflow-hidden border border-border-warm">
+                              <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0 border border-border-warm">
+                              <span className="text-[9px] font-bold text-text-light-muted tracking-widest uppercase">
+                                {item.type.slice(0, 3)}
+                              </span>
+                            </div>
+                          )}
+                          <div className="flex-grow min-w-0">
+                            <h4 className="text-sm font-semibold text-text-primary truncate">
+                              {item.title}
+                            </h4>
+                            <p className="text-[11px] text-text-muted truncate mt-0.5">
+                              {item.subtitle}
+                            </p>
+                          </div>
+                          {isActive && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-burgundy flex items-center gap-1.5 flex-shrink-0 animate-pulse">
+                              Open <ArrowRight className="w-3.5 h-3.5" />
+                            </span>
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer navigation guide */}
+              <div className="h-[44px] bg-bg-card dark:bg-zinc-950 border-t border-border-warm flex items-center px-6 justify-between text-[10px] text-text-light-muted tracking-wider uppercase font-semibold">
+                <div className="flex items-center gap-4">
+                  <span>
+                    <kbd className="border border-border-warm px-1.5 py-0.5 text-[8px] bg-white dark:bg-zinc-900 rounded-none mr-1.5 font-sans">↑↓</kbd>
+                    Navigate
+                  </span>
+                  <span>
+                    <kbd className="border border-border-warm px-1.5 py-0.5 text-[8px] bg-white dark:bg-zinc-900 rounded-none mr-1.5 font-sans">Enter</kbd>
+                    Select
+                  </span>
                 </div>
+                <span>⌘ K Search Mode</span>
               </div>
             </motion.div>
           </motion.div>
@@ -550,20 +882,11 @@ export const Header: React.FC = () => {
                 <ul className="space-y-4">
                   <li>
                     <Link
-                      href="/"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block text-sm font-bold uppercase tracking-wider text-text-primary hover:text-brand-burgundy transition-colors"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
                       href="/shop"
                       onClick={() => setMobileMenuOpen(false)}
                       className="block text-sm font-bold uppercase tracking-wider text-text-primary hover:text-brand-burgundy transition-colors"
                     >
-                      Shop All
+                      Shop
                     </Link>
                   </li>
                   <li>
@@ -609,6 +932,15 @@ export const Header: React.FC = () => {
                       className="block text-sm font-bold uppercase tracking-wider text-text-primary hover:text-brand-burgundy transition-colors"
                     >
                       Community
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/journal/the-armor-of-light"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-sm font-bold uppercase tracking-wider text-text-primary hover:text-brand-burgundy transition-colors"
+                    >
+                      Journal
                     </Link>
                   </li>
                 </ul>

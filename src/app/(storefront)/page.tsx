@@ -746,9 +746,9 @@ export default function StorefrontHomePage() {
         <div className="blur-shape shape-1"></div>
         <div className="blur-shape shape-2"></div>
         
-        <div className="hero-content">
-          <h1 className="hero-headline">Put on the<br/>Armor of Light.</h1>
-          <p className="hero-supporting-text">Inspired by Romans 13:12. Heavy-weight, minimalist streetwear designed to start quiet, meaningful conversations about faith, identity, and grace.</p>
+        <div className="hero-content font-sans">
+          <h1 className="hero-headline">Faith, Woven Into<br/>Everyday Life.</h1>
+          <p className="hero-supporting-text">Minimalist streetwear designed to quietly start meaningful conversations. Every garment is crafted to serve as a physical canvas for timeless scriptures.</p>
           <div className="hero-cta-group" style={{ display: "flex", gap: "1.2rem", flexWrap: "wrap", marginTop: "2rem" }}>
             <Link href="/shop" className="cta-button cta-button-primary">
               <span className="btn-content">

@@ -49,7 +49,7 @@
   --border-radius-sm: 8px;
   --border-radius-md: 16px;
   --border-radius-lg: 24px;
-  --border-radius-full: 9999px;
+  --border-radius-full: 0px;
   
   /* Animation Timing */
   --transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -131,18 +131,26 @@ img {
 
 input, textarea, select {
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: 0.9rem;
   background: transparent;
   border: 1px solid var(--color-border);
-  padding: 0.8rem 1rem;
-  border-radius: var(--border-radius-sm);
+  height: 52px;
+  padding: 0 1.2rem;
+  border-radius: 0;
   color: var(--color-text-primary);
   outline: none;
-  transition: border-color var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+textarea {
+  height: auto;
+  min-height: 120px;
+  padding: 1rem 1.2rem;
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: var(--color-text-primary);
+  border-color: var(--color-brand-burgundy);
+  box-shadow: 0 0 0 1px var(--color-brand-burgundy);
 }
 
 /* ==========================================================================
