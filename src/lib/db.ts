@@ -345,3 +345,319 @@ export async function getDevotionalBySlug(slug: string): Promise<MockDevotional 
     return MOCK_DEVOTIONALS.find(a => a.slug === slug) || null;
   }
 }
+
+// HOMEPAGE CMS INTERFACES
+export interface HomepageSection {
+  id: string;
+  section_key: string;
+  section_order: number;
+  is_active: boolean;
+  settings: any;
+}
+
+export interface CampaignSettings {
+  id: string;
+  campaign_name: string;
+  subtitle: string;
+  description: string;
+  tee_product_id: string | null;
+  hoodie_product_id: string | null;
+  is_active: boolean;
+  start_date: string | null;
+  end_date: string | null;
+}
+
+// CMS MOCK DATA
+export const MOCK_HOMEPAGE_SECTIONS: HomepageSection[] = [
+  {
+    id: "h1111111-1111-1111-1111-111111111111",
+    section_key: "trust-strip",
+    section_order: 1,
+    is_active: true,
+    settings: {
+      items: [
+        { icon: "Shirt", text: "Premium Fabric" },
+        { icon: "Sparkles", text: "Faith Inspired" },
+        { icon: "ShieldCheck", text: "Secure Checkout" },
+        { icon: "Truck", text: "Fast Shipping" },
+        { icon: "Compass", text: "Designed with Purpose" },
+        { icon: "Activity", text: "Made for Everyday Wear" }
+      ]
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111112",
+    section_key: "editorial-mission",
+    section_order: 2,
+    is_active: true,
+    settings: {
+      subtitle: "our purpose",
+      title: "Formed in Faith. Tailored for Purpose.",
+      paragraph: "Ruven Studio is an independent Christian lifestyle label creating heavy-weight apparel designed to start quiet, meaningful conversations. We construct each garment to serve as a visual bridge, allowing you to carry your faith with elegance and confidence in modern creative environments.",
+      quote_text: "We don't create clothing to conform; we design to transform.",
+      quote_author: "The Ruven Collective",
+      verse_quote: "Do not be conformed to this world, but be transformed by the renewal of your mind...",
+      verse_ref: "Romans 12:2",
+      image_url: "/brand_story_lifestyle.png"
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111113",
+    section_key: "featured-campaign",
+    section_order: 3,
+    is_active: true,
+    settings: {
+      subtitle: "editorial drop 01",
+      title: "The Armor & Protection Campaign",
+      description: "A meticulous collection representing strength and spiritual integrity in a chaotic world. Styled with Scandinavian minimalism and heavyweight textures.",
+      statement_title: "Every Thread Tells a Story",
+      statement_description: "Our graphics are not simple illustrations. They are screen-printed conversations waiting to happen, serving as reminders of mental renewal, clarity, and protection in God.",
+      statement_cta_text: "Browse All Apparel",
+      statement_cta_link: "/shop"
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111114",
+    section_key: "lifestyle-immersive",
+    section_order: 4,
+    is_active: true,
+    settings: {
+      subtitle: "lifestyle campaign",
+      title: "Faith Is Meant To Be Lived. Not Hidden.",
+      description: "Designed in India to carry the message of light. Our premium minimal streetwear helps you start the conversations that matter.",
+      cta_text: "Explore the Lookbook",
+      cta_link: "/shop",
+      image_url: "/hero_lifestyle.png"
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111115",
+    section_key: "scripture-highlight",
+    section_order: 5,
+    is_active: true,
+    settings: {
+      label: "scripture focus",
+      verse: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.",
+      reference: "Romans 12:2",
+      explanation_title: "Why This Verse Matters",
+      explanation_text: "In a generation driven by noise, social pressure, and anxiety, this verse is a sanctuary. It reminds us that our true identity is found in renewal and divine transformation, rather than mimicking temporary worldly patterns. This scriptural theme forms the creative core of our Heavyweight Hoodie collection.",
+      cta_text: "Explore Mind Renewal Drops",
+      cta_link: "/shop?category=hoodies"
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111116",
+    section_key: "best-sellers",
+    section_order: 6,
+    is_active: true,
+    settings: {
+      subtitle: "essential drops",
+      title: "Ruven Studio Best Sellers",
+      hero_product_fabric: "Fabric: 380 GSM ultra-heavy combed French Terry. Loop-back lining, double-lined drawstring-free hood. Crafted to represent comfortable, mindful living.",
+      hero_product_verse: "Do not conform... but be transformed."
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111117",
+    section_key: "why-ruven",
+    section_order: 7,
+    is_active: true,
+    settings: {
+      subtitle: "crafted for conversation",
+      title: "The Anatomy of Ruven Studio",
+      items: [
+        { icon: "MessageSquare", title: "Designed to Start Conversations", description: "Every graphic acts as an intentional conversation starter, creating direct opportunities to share faith and hope." },
+        { icon: "Shirt", title: "Premium Heavyweight Cotton", description: "Tailored in 240 GSM T-shirts and 380 GSM loopback French Terry hoodies. Durable, dense, and built to last." },
+        { icon: "Feather", title: "Faith Inspired Graphics", description: "Original, minimalist scriptural symbols screen-printed carefully with absolute precision." },
+        { icon: "Calendar", title: "Limited Edition Collections", description: "Released in small, calculated runs to maintain design integrity and reduce environmental manufacturing waste." },
+        { icon: "Heart", title: "Ethically Produced", description: "Independently manufactured in clean, safe facilities in India supporting local creative tailors." },
+        { icon: "Activity", title: "Built for Everyday Wear", description: "Featuring pre-shrunk structures, double-stitched details, and timeless cuts for modern comfort." }
+      ]
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111118",
+    section_key: "testimonials",
+    section_order: 8,
+    is_active: true,
+    settings: {
+      subtitle: "united in faith",
+      title: "Shared Reflections",
+      reviews: [
+        {
+          rating: 5,
+          quote: "The Armor of Light tee has opened so many doors. Friends at college ask what the shield represents, allowing me to share my faith journey naturally.",
+          author_initial: "D",
+          author_name: "David S.",
+          author_sub: "Bengaluru • College Ministry",
+          avatar_color: "var(--color-brand-burgundy)",
+          avatar_text_color: "var(--color-white)"
+        },
+        {
+          rating: 5,
+          quote: "The comfort of the loopback French Terry is outstanding, but the reminder of mental renewal on the chest serves as a quiet anchor of peace during my days.",
+          author_initial: "P",
+          author_name: "Priya M.",
+          author_sub: "Mumbai • Creative Director",
+          avatar_color: "var(--color-brand-gold)",
+          avatar_text_color: "var(--color-text-primary)"
+        },
+        {
+          rating: 5,
+          quote: "Perfect boxy fit. I wear my Ruven Studio tees to fellowships and study circles. It always sparks conversations about walk of faith and identity in Christ.",
+          author_initial: "R",
+          author_name: "Rahul K.",
+          author_sub: "New Delhi • Student Leader",
+          avatar_color: "var(--color-border)",
+          avatar_text_color: "var(--color-text-primary)"
+        }
+      ]
+    }
+  },
+  {
+    id: "h1111111-1111-1111-1111-111111111119",
+    section_key: "instagram-gallery",
+    section_order: 9,
+    is_active: true,
+    settings: {
+      subtitle: "fellowship studio",
+      title: "Shared on Instagram",
+      instagram_handle: "@ruven.studio",
+      instagram_link: "https://instagram.com/ruven.studio",
+      items: [
+        { image_url: "/brand_story_lifestyle.png", link: "https://instagram.com/ruven.studio" },
+        { image_url: "/hero_lifestyle.png", link: "https://instagram.com/ruven.studio" },
+        { image_url: "/oversized_tee_product.png", link: "https://instagram.com/ruven.studio" },
+        { image_url: "/faith_hoodie_product.png", link: "https://instagram.com/ruven.studio" }
+      ]
+    }
+  }
+];
+
+export const MOCK_CAMPAIGN_SETTINGS: CampaignSettings = {
+  id: "c2222222-2222-2222-2222-222222222222",
+  campaign_name: "The Armor & Protection Campaign",
+  subtitle: "editorial drop 01",
+  description: "A meticulous collection representing strength and spiritual integrity in a chaotic world. Styled with Scandinavian minimalism and heavyweight textures.",
+  tee_product_id: "f1111111-1111-1111-1111-111111111111",
+  hoodie_product_id: "f1111111-1111-1111-1111-111111111112",
+  is_active: true,
+  start_date: null,
+  end_date: null
+};
+
+// GET HOMEPAGE SECTIONS
+export async function getHomepageSections(): Promise<HomepageSection[]> {
+  if (isDummy()) {
+    return [...MOCK_HOMEPAGE_SECTIONS].sort((a, b) => a.section_order - b.section_order);
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("homepage_sections")
+      .select("*")
+      .order("section_order", { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.warn("Supabase query error for homepage sections, falling back to mock data:", error);
+    return [...MOCK_HOMEPAGE_SECTIONS].sort((a, b) => a.section_order - b.section_order);
+  }
+}
+
+// UPDATE HOMEPAGE SECTION
+export async function updateHomepageSection(key: string, settings: any, isActive: boolean = true, sectionOrder?: number): Promise<boolean> {
+  if (isDummy()) {
+    const idx = MOCK_HOMEPAGE_SECTIONS.findIndex(s => s.section_key === key);
+    if (idx !== -1) {
+      MOCK_HOMEPAGE_SECTIONS[idx].settings = settings;
+      MOCK_HOMEPAGE_SECTIONS[idx].is_active = isActive;
+      if (typeof sectionOrder === "number") {
+        MOCK_HOMEPAGE_SECTIONS[idx].section_order = sectionOrder;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const updateObj: any = { settings, is_active: isActive, updated_at: new Date().toISOString() };
+    if (typeof sectionOrder === "number") {
+      updateObj.section_order = sectionOrder;
+    }
+    const { error } = await supabase
+      .from("homepage_sections")
+      .update(updateObj)
+      .eq("section_key", key);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.warn("Supabase update error for homepage section:", error);
+    const idx = MOCK_HOMEPAGE_SECTIONS.findIndex(s => s.section_key === key);
+    if (idx !== -1) {
+      MOCK_HOMEPAGE_SECTIONS[idx].settings = settings;
+      MOCK_HOMEPAGE_SECTIONS[idx].is_active = isActive;
+      if (typeof sectionOrder === "number") {
+        MOCK_HOMEPAGE_SECTIONS[idx].section_order = sectionOrder;
+      }
+      return true;
+    }
+    return false;
+  }
+}
+
+// GET ACTIVE CAMPAIGN
+export async function getActiveCampaign(): Promise<CampaignSettings | null> {
+  if (isDummy()) {
+    return MOCK_CAMPAIGN_SETTINGS;
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("campaign_settings")
+      .select("*")
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.warn("Supabase query error for active campaign, falling back to mock data:", error);
+    return MOCK_CAMPAIGN_SETTINGS;
+  }
+}
+
+// UPDATE CAMPAIGN
+export async function updateCampaignSettings(id: string, updates: Partial<CampaignSettings>): Promise<boolean> {
+  if (isDummy()) {
+    if (MOCK_CAMPAIGN_SETTINGS.id === id) {
+      Object.assign(MOCK_CAMPAIGN_SETTINGS, updates);
+      return true;
+    }
+    return false;
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { error } = await supabase
+      .from("campaign_settings")
+      .update(updates)
+      .eq("id", id);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.warn("Supabase update error for campaign settings:", error);
+    if (MOCK_CAMPAIGN_SETTINGS.id === id) {
+      Object.assign(MOCK_CAMPAIGN_SETTINGS, updates);
+      return true;
+    }
+    return false;
+  }
+}
+
