@@ -79,115 +79,123 @@ export const Header: React.FC = () => {
   return (
     <>
       {/* Announcement Bar */}
-      <div className="relative w-full h-[40px] bg-brand-burgundy text-white overflow-hidden z-50 flex items-center">
-        <div className="flex w-max whitespace-nowrap animate-[announcementMarquee_28s_linear_infinite]">
-          <div className="flex items-center gap-12 pr-12">
-            <span className="text-[10px] font-bold tracking-[0.08em] uppercase">Designed to Start Conversations About Christ</span>
-            <span className="w-1.5 h-3 text-brand-gold font-bold">†</span>
-            <span className="text-[10px] font-bold tracking-[0.08em] uppercase">Premium Quality • Faith Inspired • Limited Collections</span>
-            <span className="w-1.5 h-3 text-brand-gold font-bold">†</span>
-            <span className="text-[10px] font-bold tracking-[0.08em] uppercase">Made with Purpose</span>
-            <span className="w-1.5 h-3 text-brand-gold font-bold">†</span>
+      <div className="announcement-bar">
+        <div className="announcement-track">
+          <div className="announcement-content">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality • Faith Inspired • Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
           </div>
-          <div className="flex items-center gap-12 pr-12" aria-hidden="true">
-            <span className="text-[10px] font-bold tracking-[0.08em] uppercase">Designed to Start Conversations About Christ</span>
-            <span className="w-1.5 h-3 text-brand-gold font-bold">†</span>
-            <span className="text-[10px] font-bold tracking-[0.08em] uppercase">Premium Quality • Faith Inspired • Limited Collections</span>
-            <span className="w-1.5 h-3 text-brand-gold font-bold">†</span>
-            <span className="text-[10px] font-bold tracking-[0.08em] uppercase">Made with Purpose</span>
-            <span className="w-1.5 h-3 text-brand-gold font-bold">†</span>
+          <div className="announcement-content" aria-hidden="true">
+            <span>Designed to Start Conversations About Christ</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Premium Quality • Faith Inspired • Limited Collections</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+            <span>Made with Purpose</span>
+            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
           </div>
         </div>
       </div>
 
       {/* Main Header */}
-      <header className="sticky top-0 left-0 w-full h-[80px] bg-white dark:bg-zinc-950 border-b border-border-warm z-40 flex items-center justify-between px-6 md:px-12 transition-all">
+      <header className="header" id="site-header">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center justify-center">
+        <Link href="/" className="brand-logo">
           <Image
             src="/logo.png"
             alt="Ruven Studio Logo"
             width={120}
             height={50}
-            className="h-[55px] w-auto object-contain dark:invert"
+            className="brand-logo-img"
             priority
           />
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center h-full">
-          <ul className="flex items-center gap-10 h-full">
-            <li className="h-full flex items-center">
-              <Link href="/" className="text-xs font-bold uppercase tracking-[0.08em] text-text-primary hover:text-brand-burgundy transition-colors relative py-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-burgundy after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left">
+        <nav className="nav-desktop">
+          <ul className="nav-links">
+            <li className="nav-item">
+              <Link href="/" className="nav-link">
                 Home
               </Link>
             </li>
-            <li className="group h-full flex items-center static">
-              <Link href="/shop" className="text-xs font-bold uppercase tracking-[0.08em] text-text-primary hover:text-brand-burgundy transition-colors relative py-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-burgundy after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left">
+            <li className="nav-item mega-menu-trigger">
+              <Link href="/shop" className="nav-link">
                 Shop
               </Link>
 
               {/* Mega Menu Dropdown */}
-              <div className="absolute top-full left-0 w-full bg-white dark:bg-zinc-900 border-b border-border-warm shadow-xl px-12 py-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-350 z-50">
-                <div className="max-w-[1400px] mx-auto grid grid-cols-4 gap-8">
-                  <Link href="/shop?filter=new-arrivals" className="block group/item transition-transform duration-200">
-                    <div className="w-full aspect-[4/3] overflow-hidden rounded bg-bg-card mb-3 relative">
-                      <Image src="/hero_lifestyle.png" alt="Featured Collection" fill className="object-cover group-hover/item:scale-105 transition-transform duration-500" />
-                    </div>
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-text-primary mb-1">Featured Collection</h5>
-                    <p className="text-[10px] text-text-muted">Explore the visual ministry drop</p>
-                  </Link>
+              <div className="mega-menu">
+                <div className="mega-menu-grid">
+                  <div className="mega-menu-col">
+                    <Link href="/shop?filter=new-arrivals" className="mega-item">
+                      <div className="mega-item-img-wrap">
+                        <img src="/hero_lifestyle.png" alt="Featured Collection" />
+                      </div>
+                      <h5>Featured Collection</h5>
+                      <p>Explore the visual ministry drop</p>
+                    </Link>
+                  </div>
 
-                  <Link href="/shop?category=oversized-tees" className="block group/item transition-transform duration-200">
-                    <div className="w-full aspect-[4/3] overflow-hidden rounded bg-bg-card mb-3 relative">
-                      <Image src="/oversized_tee_product.png" alt="Oversized Tees" fill className="object-cover group-hover/item:scale-105 transition-transform duration-500" />
-                    </div>
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-text-primary mb-1">Oversized Tees</h5>
-                    <p className="text-[10px] text-text-muted">Heavy-weight 240 GSM organic cotton</p>
-                  </Link>
+                  <div className="mega-menu-col">
+                    <Link href="/shop?category=oversized-tees" className="mega-item">
+                      <div className="mega-item-img-wrap">
+                        <img src="/oversized_tee_product.png" alt="Oversized Tees" />
+                      </div>
+                      <h5>Oversized Tees</h5>
+                      <p>Heavy-weight 240 GSM organic cotton</p>
+                    </Link>
+                  </div>
 
-                  <Link href="/shop?category=hoodies" className="block group/item transition-transform duration-200">
-                    <div className="w-full aspect-[4/3] overflow-hidden rounded bg-bg-card mb-3 relative">
-                      <Image src="/faith_hoodie_product.png" alt="Premium Hoodies" fill className="object-cover group-hover/item:scale-105 transition-transform duration-500" />
-                    </div>
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-text-primary mb-1">Premium Hoodies</h5>
-                    <p className="text-[10px] text-text-muted">Cozy 380 GSM French Terry hoodies</p>
-                  </Link>
+                  <div className="mega-menu-col">
+                    <Link href="/shop?category=hoodies" className="mega-item">
+                      <div className="mega-item-img-wrap">
+                        <img src="/faith_hoodie_product.png" alt="Premium Hoodies" />
+                      </div>
+                      <h5>Premium Hoodies</h5>
+                      <p>Cozy 380 GSM French Terry hoodies</p>
+                    </Link>
+                  </div>
 
-                  <Link href="/shop?filter=best-sellers" className="block group/item transition-transform duration-200">
-                    <div className="w-full aspect-[4/3] overflow-hidden rounded bg-bg-card mb-3 relative">
-                      <Image src="/brand_story_lifestyle.png" alt="Best Sellers" fill className="object-cover group-hover/item:scale-105 transition-transform duration-500" />
-                    </div>
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-text-primary mb-1">Best Sellers</h5>
-                    <p className="text-[10px] text-text-muted">Our most loved conversation starters</p>
-                  </Link>
+                  <div className="mega-menu-col">
+                    <Link href="/shop?filter=best-sellers" className="mega-item">
+                      <div className="mega-item-img-wrap">
+                        <img src="/brand_story_lifestyle.png" alt="Best Sellers" />
+                      </div>
+                      <h5>Best Sellers</h5>
+                      <p>Our most loved conversation starters</p>
+                    </Link>
+                  </div>
                 </div>
 
-                <div className="max-w-[1400px] mx-auto border-t border-border-warm mt-8 pt-4 flex justify-center gap-12">
-                  <Link href="/shop?filter=new-arrivals" className="text-[11px] font-bold uppercase tracking-widest text-text-muted hover:text-brand-burgundy transition-colors">
+                <div className="mega-menu-links">
+                  <Link href="/shop?filter=new-arrivals">
                     New Drops
                   </Link>
-                  <Link href="/shop?filter=best-sellers" className="text-[11px] font-bold uppercase tracking-widest text-text-muted hover:text-brand-burgundy transition-colors">
+                  <Link href="/shop?filter=best-sellers">
                     Limited Edition
                   </Link>
-                  <Link href="/shop" className="text-[11px] font-bold uppercase tracking-widest text-text-muted hover:text-brand-burgundy transition-colors">
+                  <Link href="/shop">
                     Browse All
                   </Link>
                 </div>
               </div>
             </li>
-            <li className="h-full flex items-center">
-              <Link href="/shop?filter=new-arrivals" className="text-xs font-bold uppercase tracking-[0.08em] text-text-primary hover:text-brand-burgundy transition-colors relative py-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-burgundy after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left">
+            <li className="nav-item">
+              <Link href="/shop?filter=new-arrivals" className="nav-link">
                 New Arrivals
               </Link>
             </li>
-            <li className="h-full flex items-center">
-              <Link href="/#story-section" className="text-xs font-bold uppercase tracking-[0.08em] text-text-primary hover:text-brand-burgundy transition-colors relative py-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-burgundy after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left">
+            <li className="nav-item">
+              <Link href="/#story-section" className="nav-link">
                 Our Story
               </Link>
             </li>
-            <li className="h-full flex items-center">
-              <Link href="/#community-section" className="text-xs font-bold uppercase tracking-[0.08em] text-text-primary hover:text-brand-burgundy transition-colors relative py-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-burgundy after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left">
+            <li className="nav-item">
+              <Link href="/#community-section" className="nav-link">
                 Community
               </Link>
             </li>
@@ -195,10 +203,10 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Header Actions */}
-        <div className="flex items-center gap-6">
+        <div className="nav-actions">
           <button
             onClick={() => setSearchOpen(true)}
-            className="text-text-primary hover:text-brand-burgundy transition-colors p-1"
+            className="nav-action-btn"
             aria-label="Open Search"
           >
             <Search className="w-5 h-5" />
@@ -206,12 +214,12 @@ export const Header: React.FC = () => {
 
           <button
             onClick={() => setWishlistOpen(true)}
-            className="relative text-text-primary hover:text-brand-burgundy transition-colors p-1"
+            className="nav-action-btn"
             aria-label="Open Wishlist"
           >
             <Heart className="w-5 h-5" />
             {wishlist.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-brand-burgundy text-white text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center">
+              <span className="badge-count">
                 {wishlist.length}
               </span>
             )}
@@ -219,7 +227,7 @@ export const Header: React.FC = () => {
 
           <Link
             href="/account"
-            className="text-text-primary hover:text-brand-burgundy transition-colors p-1"
+            className="nav-action-btn"
             aria-label="Account Settings"
           >
             <User className="w-5 h-5" />
@@ -227,12 +235,12 @@ export const Header: React.FC = () => {
 
           <button
             onClick={() => setCartOpen(true)}
-            className="relative text-text-primary hover:text-brand-burgundy transition-colors p-1"
+            className="nav-action-btn"
             aria-label="Open Cart"
           >
             <ShoppingBag className="w-5 h-5" />
             {cartTotalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-brand-burgundy text-white text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center">
+              <span className="badge-count">
                 {cartTotalItems}
               </span>
             )}
@@ -240,7 +248,7 @@ export const Header: React.FC = () => {
 
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="lg:hidden text-text-primary hover:text-brand-burgundy transition-colors p-1"
+            className="mobile-menu-toggle"
             aria-label="Toggle Menu"
           >
             <Menu className="w-5 h-5" />

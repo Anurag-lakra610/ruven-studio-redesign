@@ -83,84 +83,61 @@ export default function StorefrontHomePage() {
   return (
     <div className="w-full flex flex-col bg-bg-warm dark:bg-zinc-950 overflow-x-hidden">
       {/* 1. HERO SLIDER */}
-      <section className="relative h-[calc(100vh-120px)] w-full overflow-hidden flex items-center px-6 md:px-20 lg:px-28">
-        <div className="absolute inset-0 z-0">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeSlide}
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.2, ease: "easeInOut" }}
-              className="absolute inset-0 w-full h-full"
+      <section className="hero">
+        <div className="hero-bg" id="hero-bg-parallax">
+          {heroSlides.map((slide, idx) => (
+            <div
+              key={idx}
+              className={`hero-slide ${activeSlide === idx ? "active" : ""}`}
             >
-              <Image
-                src={heroSlides[activeSlide].image}
-                alt={heroSlides[activeSlide].alt}
-                fill
-                priority
-                className="object-cover object-[center_20%]"
+              <img
+                src={slide.image}
+                alt={slide.alt}
+                className="hero-img"
               />
-            </motion.div>
-          </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent z-10" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/10 to-black/30 z-10" />
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.035%22/%3E%3C/svg%3E')] pointer-events-none z-15" />
+            </div>
+          ))}
         </div>
-
-        {/* Hero Content */}
-        <div className="relative z-20 max-w-xl text-white space-y-6 pt-12">
-          <motion.h1
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]"
-          >
-            Put on the <br />
-            <span className="text-brand-gold">Armor of Light.</span>
-          </motion.h1>
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-sm md:text-base text-zinc-300 font-medium leading-relaxed max-w-md"
-          >
-            Inspired by Romans 13:12. Premium heavyweight streetwear designed to start quiet, meaningful conversations about faith, identity, and grace in everyday environments.
-          </motion.p>
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="flex flex-wrap gap-4"
-          >
-            <Link
-              href="/shop"
-              className="px-8 py-3.5 bg-brand-burgundy hover:bg-brand-gold text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg shadow-brand-burgundy/15 flex items-center gap-2"
-            >
-              <span>Shop Collection</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <a
-              href="#story-section"
-              className="px-8 py-3.5 bg-transparent border border-white hover:bg-white hover:text-text-primary text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 transform hover:-translate-y-0.5"
-            >
-              Our Story
-            </a>
-          </motion.div>
-        </div>
-
-        {/* Hero indicators */}
-        <div className="absolute bottom-10 left-6 md:left-20 lg:left-28 flex gap-3 z-20">
+        <div className="hero-overlay"></div>
+        
+        {/* Slideshow Indicators */}
+        <div className="hero-indicators">
           {heroSlides.map((_, idx) => (
             <button
               key={idx}
+              className={`indicator-dot ${activeSlide === idx ? "active" : ""}`}
               onClick={() => setActiveSlide(idx)}
-              className={`h-[2px] transition-all duration-350 cursor-pointer ${
-                activeSlide === idx ? "w-[40px] bg-brand-gold" : "w-[20px] bg-white/30"
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
+              aria-label={`Slide ${idx + 1}`}
             />
           ))}
+        </div>
+        <div className="hero-grain"></div>
+        
+        {/* Animated Background Blurred Shapes */}
+        <div className="blur-shape shape-1"></div>
+        <div className="blur-shape shape-2"></div>
+        
+        <div className="hero-content">
+          <h1 className="hero-headline">Put on the<br/>Armor of Light.</h1>
+          <p className="hero-supporting-text">Inspired by Romans 13:12. Heavy-weight, minimalist streetwear designed to start quiet, meaningful conversations about faith, identity, and grace.</p>
+          <div className="hero-cta-group" style={{ display: "flex", gap: "1.2rem", flexWrap: "wrap", marginTop: "2rem" }}>
+            <Link href="/shop" className="cta-button cta-button-primary">
+              <span className="btn-content">
+                <span className="btn-text">Shop Collection</span>
+                <span className="btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+              </span>
+            </Link>
+            <a href="#story-section" className="cta-button cta-button-secondary">
+              <span className="btn-content">
+                <span className="btn-text">Our Story</span>
+                <span className="btn-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
+              </span>
+            </a>
+          </div>
         </div>
       </section>
 
