@@ -288,29 +288,30 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      {/* Announcement Bar — 2 identical copies, -50% translate = seamless infinite loop */}
-      <div className="announcement-bar">
+      {/* ── Announcement ticker ─────────────────────────────────────────────────
+           FLAT TRACK: every span and svg is a direct child of the track.
+           CSS gives each child the same margin-right, so the seam between
+           copy-1's last item and copy-2's first item has identical spacing
+           to every other adjacent pair. Zero gap — guaranteed by math.
+      ─────────────────────────────────────────────────────────────────────── */}
+      <div className="announcement-bar" role="marquee" aria-label="Announcement ticker">
         <div className="announcement-track">
 
-          {/* Copy 1 */}
-          <div className="announcement-content">
-            <span>Designed to Start Conversations About Christ</span>
-            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
-            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-            <span>Made with Purpose</span>
-            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-          </div>
+          {/* ── Copy 1 ── */}
+          <span>Designed to Start Conversations About Christ</span>
+          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          <span>Made with Purpose</span>
+          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
 
-          {/* Copy 2 — aria-hidden so screen readers only see copy 1 */}
-          <div className="announcement-content" aria-hidden="true">
-            <span>Designed to Start Conversations About Christ</span>
-            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-            <span>Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
-            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-            <span>Made with Purpose</span>
-            <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
-          </div>
+          {/* ── Copy 2 — aria-hidden so screen readers only announce copy 1 ── */}
+          <span aria-hidden="true">Designed to Start Conversations About Christ</span>
+          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          <span aria-hidden="true">Premium Quality&nbsp;&bull;&nbsp;Faith Inspired&nbsp;&bull;&nbsp;Limited Collections</span>
+          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
+          <span aria-hidden="true">Made with Purpose</span>
+          <svg className="announcement-cross" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 2h4v5h6v4h-6v11h-4v-11h-6v-4h6z"/></svg>
 
         </div>
       </div>

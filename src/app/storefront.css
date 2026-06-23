@@ -340,12 +340,26 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 
+/*
+ * FLAT TRACK — the only architecture that guarantees zero gap at the seam.
+ *
+ * Logic:
+ *   • All direct children (spans + cross SVGs) sit in ONE flat flex row.
+ *   • Every child carries margin-right: 2rem — no exceptions.
+ *   • Copy 1 ends with a cross + its 2rem margin.
+ *   • Copy 2 starts with the first span immediately after.
+ *   • Seam spacing  = 2rem  (last child's margin-right of copy 1)
+ *   • Item spacing  = 2rem  (every child's margin-right)
+ *   • They are EQUAL → zero visible gap, ever.
+ *
+ *   The -50% translate works because both copies are structurally
+ *   identical so track_width = 2 × copy_width exactly.
+ */
 .announcement-track {
   display: flex;
   align-items: center;
   width: max-content;
-  /* No gap here — spacing is baked into each content block via padding-inline */
-  animation: announcementMarquee 28s linear infinite;
+  animation: announcementMarquee 30s linear infinite;
   will-change: transform;
 }
 
@@ -353,38 +367,33 @@ h1, h2, h3, h4, h5, h6 {
   animation-play-state: paused;
 }
 
-.announcement-content {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  /* Both copies must be identical width.
-     padding-inline-end creates the same amount of space
-     at the tail of EACH copy so the gap between end of
-     copy-1 and start of copy-2 equals the gap between
-     any two items inside a copy. */
-  padding-inline-end: 2.5rem;
-  white-space: nowrap;
+/* Every direct child gets the same right margin — this is the core rule */
+.announcement-track > * {
+  margin-right: 2rem;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.announcement-content span {
+.announcement-track > span {
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  line-height: 1;
 }
 
 .announcement-cross {
-  width: 12px;
-  height: 12px;
-  color: rgba(255, 255, 255, 0.55);
-  flex-shrink: 0;
+  width: 11px;
+  height: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  display: block;
 }
 
 @keyframes announcementMarquee {
-  0%   { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
+
 
 .header {
   position: sticky;
