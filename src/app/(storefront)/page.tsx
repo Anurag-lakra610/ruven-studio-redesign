@@ -648,63 +648,39 @@ export default function StorefrontHomePage() {
             
             <div className="testimonials-marquee-wrapper">
               <div className="testimonials-marquee-track">
-                {/* Render Group 1 */}
-                <div className="testimonials-marquee-group">
-                  {testimonialsSettings.reviews.map((rev: any, idx: number) => (
-                    <div key={`group1-${idx}`} className="testimonial-card-v2">
-                      <div className="testimonial-rating-v2" role="img" aria-label={`${rev.rating} out of 5 stars`}>
-                        {Array.from({ length: rev.rating }).map((_, i) => (
-                          <Star key={i} className="w-3 h-3 fill-current text-current inline-block" />
-                        ))}
-                      </div>
-                      <p className="testimonial-quote-v2">"{rev.quote}"</p>
-                      <div className="testimonial-author-v2">
-                        <div 
-                          className="author-avatar-v2" 
-                          style={{ 
-                            backgroundColor: rev.avatar_color || 'var(--color-brand-burgundy)', 
-                            color: rev.avatar_text_color || 'var(--color-white)' 
-                          }}
-                        >
-                          {rev.author_initial}
+                {Array.from({ length: 6 }).map((_, gIdx) => (
+                  <div 
+                    key={`group-${gIdx}`} 
+                    className="testimonials-marquee-group"
+                    aria-hidden={gIdx > 0 ? "true" : undefined}
+                  >
+                    {testimonialsSettings.reviews.map((rev: any, idx: number) => (
+                      <div key={`review-${idx}`} className="testimonial-card-v2">
+                        <div className="testimonial-rating-v2" role="img" aria-label={`${rev.rating} out of 5 stars`}>
+                          {Array.from({ length: rev.rating }).map((_, i) => (
+                            <Star key={i} className="w-3 h-3 fill-current text-current inline-block" />
+                          ))}
                         </div>
-                        <div className="author-details-v2">
-                          <span className="author-name-v2">{rev.author_name}</span>
-                          <span className="author-loc-v2">{rev.author_sub}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Render Group 2 */}
-                <div className="testimonials-marquee-group">
-                  {testimonialsSettings.reviews.map((rev: any, idx: number) => (
-                    <div key={`group2-${idx}`} className="testimonial-card-v2">
-                      <div className="testimonial-rating-v2" role="img" aria-label={`${rev.rating} out of 5 stars`}>
-                        {Array.from({ length: rev.rating }).map((_, i) => (
-                          <Star key={i} className="w-3 h-3 fill-current text-current inline-block" />
-                        ))}
-                      </div>
-                      <p className="testimonial-quote-v2">"{rev.quote}"</p>
-                      <div className="testimonial-author-v2">
-                        <div 
-                          className="author-avatar-v2" 
-                          style={{ 
-                            backgroundColor: rev.avatar_color || 'var(--color-brand-burgundy)', 
-                            color: rev.avatar_text_color || 'var(--color-white)' 
-                          }}
-                        >
-                          {rev.author_initial}
-                        </div>
-                        <div className="author-details-v2">
-                          <span className="author-name-v2">{rev.author_name}</span>
-                          <span className="author-loc-v2">{rev.author_sub}</span>
+                        <p className="testimonial-quote-v2">"{rev.quote}"</p>
+                        <div className="testimonial-author-v2">
+                          <div 
+                            className="author-avatar-v2" 
+                            style={{ 
+                              backgroundColor: rev.avatar_color || 'var(--color-brand-burgundy)', 
+                              color: rev.avatar_text_color || 'var(--color-white)' 
+                            }}
+                          >
+                            {rev.author_initial}
+                          </div>
+                          <div className="author-details-v2">
+                            <span className="author-name-v2">{rev.author_name}</span>
+                            <span className="author-loc-v2">{rev.author_sub}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </section>
