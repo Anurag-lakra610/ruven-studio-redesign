@@ -3647,9 +3647,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .testimonials-header-v2 {
   max-width: var(--max-width-site);
-  margin: 0 auto 3rem;
-  padding: 0 var(--spacing-3xl);
-  text-align: center;
+  margin: 0 auto 3.5rem;
+  padding: 0 var(--spacing-xl);
+  text-align: left;
 }
 
 .testimonials-subtitle-v2 {
@@ -3669,7 +3669,6 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.15;
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
-  text-transform: uppercase;
 }
 
 /* Marquee Scroll Container */
@@ -3681,7 +3680,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: -50vw;
   margin-right: -50vw;
   overflow: hidden;
-  padding: 1.5rem 0;
+  padding: 2.5rem 0;
+  margin-top: -1rem;
+  margin-bottom: -1.5rem;
   /* Cinematic edge fading mask */
   mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
@@ -3690,7 +3691,6 @@ h1, h2, h3, h4, h5, h6 {
 .testimonials-marquee-track {
   display: flex;
   width: max-content;
-  gap: 2rem;
   animation: testimonialLoop 40s linear infinite;
   will-change: transform;
 }
@@ -3699,37 +3699,44 @@ h1, h2, h3, h4, h5, h6 {
   animation-play-state: paused;
 }
 
+.testimonials-marquee-group {
+  display: flex;
+  gap: 2rem;
+  padding-right: 2rem; /* The key to mathematically perfect seamless loops */
+}
+
 .testimonial-card-v2 {
   width: 380px;
   background: var(--color-bg-card);
-  padding: 2.2rem;
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--color-border);
+  padding: 2.5rem;
+  border-radius: 20px; /* Apple-style rounded rects */
+  border: 1px solid rgba(17, 17, 17, 0.04);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1.5rem;
-  box-shadow: var(--shadow-subtle);
+  gap: 1.8rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.015);
   transition: all var(--transition-medium);
 }
 
 .testimonial-card-v2:hover {
-  transform: translateY(-5px);
-  border-color: var(--color-brand-burgundy-light);
-  box-shadow: var(--shadow-premium);
+  transform: translateY(-6px);
+  border-color: rgba(17, 17, 17, 0.08);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.035);
 }
 
 .testimonial-rating-v2 {
   display: flex;
   gap: 3px;
-  color: var(--color-brand-burgundy-light);
+  color: #C5A880; /* Elegant, premium metal bronze/gold tone rating stars */
 }
 
 .testimonial-quote-v2 {
   font-size: 0.95rem;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--color-text-primary);
-  font-style: italic;
+  font-style: normal; /* CRITICAL: Absolutely no italics as requested */
+  font-weight: 450;
   flex-grow: 1;
   text-transform: none;
 }
@@ -3738,22 +3745,20 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  border-top: 1px solid var(--color-border);
-  padding-top: 1.2rem;
+  margin-top: auto; /* Push to the bottom of the card */
+  /* NO divider line - using negative spacing/margins for Apple minimalist style */
 }
 
 .author-avatar-v2 {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 700;
-  background-color: var(--color-brand-burgundy);
-  color: var(--color-white);
-  box-shadow: 0 4px 10px rgba(103, 0, 0, 0.15);
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .author-details-v2 {
@@ -3773,11 +3778,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes testimonialLoop {
-  from {
-    transform: translateX(0);
+  0% {
+    transform: translate3d(0, 0, 0);
   }
-  to {
-    transform: translateX(-33.333333%);
+  100% {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -3812,7 +3817,6 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.15;
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
-  text-transform: uppercase;
 }
 
 .instagram-handle-v2 {
