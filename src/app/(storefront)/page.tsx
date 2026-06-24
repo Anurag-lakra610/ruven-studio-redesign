@@ -338,7 +338,6 @@ export default function StorefrontHomePage() {
                   <span className="mission-label">
                     {missionSettings.subtitle === "our story" || missionSettings.subtitle === "our purpose" ? "THE RUVEN STORY" : missionSettings.subtitle.toUpperCase()}
                   </span>
-                  <div className="mission-label-line" />
                 </div>
                 
                 <motion.h2 
@@ -381,8 +380,13 @@ export default function StorefrontHomePage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <Link href="/shop" className="mission-cta-btn">
-                    SHOP THE COLLECTION
+                  <Link href="/shop" className="cta-button cta-button-charcoal">
+                    <span className="btn-content">
+                      <span className="btn-text">SHOP THE COLLECTION</span>
+                      <span className="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </span>
+                    </span>
                   </Link>
                 </motion.div>
               </motion.div>
