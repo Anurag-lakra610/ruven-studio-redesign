@@ -61,6 +61,21 @@ export async function updateSession(request: NextRequest) {
       url.pathname = '/login'
       return NextResponse.redirect(url)
     }
+
+    // Protected Account Routes Check
+    if (request.nextUrl.pathname.startsWith('/account')) {
+      const mockCustomerCookie = request.cookies.get('mock_customer_session');
+      const mockAdminCookie = request.cookies.get('mock_admin_session');
+      if (mockCustomerCookie?.value === 'true' || mockAdminCookie?.value === 'true') {
+        return supabaseResponse
+      }
+
+      if (!user) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/login'
+        return NextResponse.redirect(url)
+      }
+    }
   } catch (error) {
     console.error("Middleware Supabase connection failed:", error)
     
@@ -68,6 +83,18 @@ export async function updateSession(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith('/admin')) {
       const mockAdminCookie = request.cookies.get('mock_admin_session');
       if (mockAdminCookie?.value === 'true') {
+        return supabaseResponse
+      }
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      return NextResponse.redirect(url)
+    }
+
+    // Safety fallback for account
+    if (request.nextUrl.pathname.startsWith('/account')) {
+      const mockCustomerCookie = request.cookies.get('mock_customer_session');
+      const mockAdminCookie = request.cookies.get('mock_admin_session');
+      if (mockCustomerCookie?.value === 'true' || mockAdminCookie?.value === 'true') {
         return supabaseResponse
       }
       const url = request.nextUrl.clone()

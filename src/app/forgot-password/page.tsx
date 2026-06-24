@@ -55,14 +55,29 @@ function ForgotPasswordForm() {
   // Form values
   const [email, setEmail] = useState("");
 
-  // UI state
-  const [loading, setLoading] = useState(false);
+  // Focus state
   const [emailFocused, setEmailFocused] = useState(false);
 
-  // Error & Success states
+  // Error states
   const [emailError, setEmailError] = useState("");
   const [authError, setAuthError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+
+  // UI state
+  const [loading, setLoading] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+
+  // Validation
+  const isEmailValid = email.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
+  // Countdown timer for Resend
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [countdown]);
 
   const validateForm = useCallback((): boolean => {
     let ok = true;
@@ -79,40 +94,107 @@ function ForgotPasswordForm() {
     return ok;
   }, [email]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthError("");
-    setSuccessMessage("");
-    if (!validateForm()) return;
-    setLoading(true);
-
+  const triggerReset = async () => {
     const isDummy =
       process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("dummy") ||
       !process.env.NEXT_PUBLIC_SUPABASE_URL;
 
     if (isDummy) {
-      await new Promise<void>((res) => setTimeout(res, 1200));
-      setSuccessMessage("A password recovery link has been sent to your email address (Simulated Sandbox).");
-      setLoading(false);
       return;
     }
 
-    try {
-      const supabase = createClient();
-      const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/login?recovery=true`,
-      });
-      if (resetErr) throw resetErr;
+    const supabase = createClient();
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+    const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${siteUrl}/reset-password`,
+    });
+    if (resetErr) throw resetErr;
+  };
 
-      setSuccessMessage("A password recovery link has been sent to your email address. Please check your inbox.");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError("");
+    if (!validateForm()) return;
+    setLoading(true);
+
+    try {
+      await triggerReset();
+      // Always show success regardless of whether email exists (security best practice)
+      setIsSent(true);
+      setCountdown(60);
       setLoading(false);
     } catch (err: any) {
-      setAuthError(err.message || "Failed to request password reset. Please try again.");
+      // Still show success to protect user accounts, or optionally handle connection failures here
+      // But per spec, always show success state on submit!
+      setIsSent(true);
+      setCountdown(60);
       setLoading(false);
     }
   };
 
-  const emailBorder = emailError ? T.errorRed : emailFocused ? T.dark : T.border;
+  const handleResend = async () => {
+    if (countdown > 0) return;
+    setAuthError("");
+    setCountdown(60);
+
+    try {
+      await triggerReset();
+    } catch (err: any) {
+      setAuthError(err.message || "Failed to resend link. Please try again.");
+    }
+  };
+
+  // Border logic
+  const emailBorder = emailError ? T.errorRed : isEmailValid ? T.successGreen : emailFocused ? T.dark : T.border;
+
+  if (isSent) {
+    return (
+      <div className="login-right-panel" style={{ flex: 1, background: T.bgWhite, overflowY: "auto", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px", fontFamily: 'var(--font-sans)' }}>
+        <div className="login-inner" style={{ width: "100%", maxWidth: "380px", padding: "48px 40px", background: T.bgWhite, border: `1px solid ${T.border}` }}>
+          <h2 style={{ fontSize: "22px", fontWeight: 600, color: T.dark, letterSpacing: "-0.02em", marginBottom: "12px", textTransform: "uppercase" }}>
+            Recovery email sent
+          </h2>
+          <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.6, marginBottom: "28px" }}>
+            If an account exists for <strong style={{ color: T.dark }}>{email}</strong>, you&apos;ll receive a link shortly. Check your spam folder too.
+          </p>
+
+          {authError && (
+            <div role="alert" style={{ background: T.errorBg, border: `1px solid ${T.errorBorder}`, padding: "10px 14px", marginBottom: "16px", fontSize: "12px", color: T.errorText }}>
+              {authError}
+            </div>
+          )}
+
+          <button
+            onClick={handleResend}
+            disabled={countdown > 0}
+            style={{
+              background: countdown > 0 ? T.border : T.dark,
+              color: countdown > 0 ? T.muted : "#FFFFFF",
+              borderRadius: 0,
+              height: "44px",
+              width: "100%",
+              fontSize: "13px",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              fontWeight: 500,
+              border: "none",
+              cursor: countdown > 0 ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "20px",
+            }}
+          >
+            {countdown > 0 ? `Resend (${countdown}s)` : "Resend"}
+          </button>
+
+          <Link href="/login" style={{ fontSize: "12px", color: T.dark, textDecoration: "underline", display: "block", textAlign: "center" }}>
+            Back to Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -224,55 +306,25 @@ function ForgotPasswordForm() {
                   onChange={(e) => {
                     setEmail(e.target.value);
                     if (emailError) setEmailError("");
-                    if (authError) setAuthError("");
                   }}
                   onFocus={() => setEmailFocused(true)}
                   onBlur={() => setEmailFocused(false)}
+                  aria-describedby={emailError ? "recovery-email-error" : undefined}
+                  aria-invalid={emailError ? "true" : "false"}
                   style={{ ...baseInput, borderColor: emailBorder }}
                 />
                 {emailError && (
-                  <span style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>
+                  <span
+                    id="recovery-email-error"
+                    role="alert"
+                    style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}
+                  >
                     {emailError}
                   </span>
                 )}
               </div>
 
-              {/* Success Banner */}
-              {successMessage && (
-                <div
-                  role="alert"
-                  style={{
-                    background: T.successBg,
-                    border: `1px solid ${T.successBorder}`,
-                    padding: "10px 14px",
-                    marginBottom: "20px",
-                    fontSize: "12px",
-                    color: T.successText,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {successMessage}
-                </div>
-              )}
-
-              {/* Error Banner */}
-              {authError && (
-                <div
-                  role="alert"
-                  style={{
-                    background: T.errorBg,
-                    border: `1px solid ${T.errorBorder}`,
-                    padding: "10px 14px",
-                    marginBottom: "20px",
-                    fontSize: "12px",
-                    color: T.errorText,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {authError}
-                </div>
-              )}
-
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -309,15 +361,7 @@ function ForgotPasswordForm() {
 
               <p style={{ textAlign: "center", fontSize: "12px", color: T.muted, margin: 0 }}>
                 Remember your password?
-                <Link
-                  href="/login"
-                  style={{
-                    color: T.dark,
-                    fontWeight: 600,
-                    textDecoration: "underline",
-                    marginLeft: "4px",
-                  }}
-                >
+                <Link href="/login" style={{ color: T.dark, fontWeight: 600, textDecoration: "underline", marginLeft: "4px" }}>
                   Sign in
                 </Link>
               </p>

@@ -8,9 +8,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { CartProvider } from "@/context/CartContext";
 import { Header } from "@/components/storefront/Header";
 
-/* ─────────────────────────────────────────────
-   Design Tokens — strictly from brand spec
-───────────────────────────────────────────── */
 const T = {
   bgPage:       "#F5F3EE",
   bgWhite:      "#FFFFFF",
@@ -27,7 +24,6 @@ const T = {
   successText:  "#1C522D",
 } as const;
 
-/* Shared style objects */
 const baseInput: React.CSSProperties = {
   border: `1px solid ${T.border}`,
   borderRadius: 0,
@@ -54,30 +50,27 @@ const labelSt: React.CSSProperties = {
   marginBottom: "5px",
 };
 
-/* ─────────────────────────────────────────────
-   Inner Login Form
-───────────────────────────────────────────── */
 function LoginForm() {
   const router = useRouter();
 
-  /* Form values */
-  const [email,      setEmail]      = useState("");
-  const [password,   setPassword]   = useState("");
+  // Form values
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  /* UI state */
+  // UI state
   const [showPassword, setShowPassword] = useState(false);
-  const [loading,      setLoading]      = useState(false);
-  const [isDev,        setIsDev]        = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isDev, setIsDev] = useState(false);
 
-  /* Focused states for border colour */
-  const [emailFocused, setEmailFocused]   = useState(false);
-  const [pwFocused,    setPwFocused]      = useState(false);
+  // Focused states
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [pwFocused, setPwFocused] = useState(false);
 
-  /* Error and Success states */
-  const [emailError,  setEmailError]  = useState("");
-  const [pwError,     setPwError]     = useState("");
-  const [authError,   setAuthError]   = useState("");
+  // Error & Success states
+  const [emailError, setEmailError] = useState("");
+  const [pwError, setPwError] = useState("");
+  const [authError, setAuthError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
@@ -94,7 +87,10 @@ function LoginForm() {
     }
   }, []);
 
-  /* ── Validation ─────────────────────────── */
+  // Validation
+  const isEmailValid = email.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isPasswordValid = password.length > 0;
+
   const validateForm = useCallback((): boolean => {
     let ok = true;
     setEmailError("");
@@ -116,7 +112,6 @@ function LoginForm() {
     return ok;
   }, [email, password]);
 
-  /* ── Submit (Login) ────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
@@ -163,21 +158,16 @@ function LoginForm() {
 
     try {
       const supabase = createClient();
-      // Real Supabase sign in
       const { error: authErr } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (authErr) throw authErr;
-      if (email.endsWith("@ruvenstudio.in") || email.endsWith("@ruven.in")) {
-        router.push("/admin");
-      } else {
-        router.push("/account");
-      }
+      
+      router.push("/account");
     } catch (err: any) {
-      setAuthError(err.message || "Incorrect email or password. Please try again.");
+      setAuthError("Incorrect email or password. Please try again.");
       setLoading(false);
     }
   };
 
-  /* ── Google OAuth (Mock / Real) ──────────── */
   const handleGoogleSignIn = async () => {
     const isDummy =
       process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("dummy") ||
@@ -194,37 +184,37 @@ function LoginForm() {
     }
     try {
       const supabase = createClient();
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
       await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: `${window.location.origin}/account` },
+        options: { redirectTo: `${siteUrl}/auth/callback` },
       });
     } catch {
       setAuthError("Google sign-in failed. Please try again.");
     }
   };
 
-  /* ── Clear auth error when user edits either field ── */
   const clearAuthError = () => { if (authError) setAuthError(""); };
 
-  /* ── Computed border colours ─────────────── */
+  // Compute borders based on UX rules: Red on invalid, Green on valid, Dark on active focus, grey default
   const emailBorder = emailError
     ? T.errorRed
+    : isEmailValid
+    ? T.successGreen
     : emailFocused
     ? T.dark
     : T.border;
 
   const pwBorder = pwError
     ? T.errorRed
+    : isPasswordValid
+    ? T.successGreen
     : pwFocused
     ? T.dark
     : T.border;
 
-  /* ───────────────────────────────────────────
-     RENDER
-     ─────────────────────────────────────────── */
   return (
     <>
-      {/* Spinner keyframe — injected once */}
       <style>{`
         @keyframes ruven-spin {
           to { transform: rotate(360deg); }
@@ -246,10 +236,7 @@ function LoginForm() {
       `}</style>
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden", minHeight: 0 }}>
-
-        {/* ──────────────────────────────────────
-            LEFT EDITORIAL PANEL  (45%)
-        ────────────────────────────────────── */}
+        {/* LEFT EDITORIAL PANEL */}
         <div
           className="login-left-panel"
           style={{
@@ -260,7 +247,6 @@ function LoginForm() {
             background: "#2A2820",
           }}
         >
-          {/* Hero image */}
           <img
             src="/hero_lifestyle.png"
             alt=""
@@ -278,8 +264,6 @@ function LoginForm() {
               display: "block",
             }}
           />
-
-          {/* Gradient overlay */}
           <div
             aria-hidden="true"
             style={{
@@ -290,69 +274,22 @@ function LoginForm() {
               zIndex: 1,
             }}
           />
-
-          {/* Scripture content block — bottom of panel */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "40px",
-              left: "32px",
-              right: "32px",
-              zIndex: 2,
-            }}
-          >
-            {/* Drop label */}
-            <p
-              style={{
-                fontSize: "10px",
-                textTransform: "uppercase",
-                letterSpacing: "0.2em",
-                color: "rgba(255,255,255,0.50)",
-                margin: "0 0 10px 0",
-              }}
-            >
+          <div style={{ position: "absolute", bottom: "40px", left: "32px", right: "32px", zIndex: 2 }}>
+            <p style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", color: "rgba(255,255,255,0.50)", margin: "0 0 10px 0" }}>
               Armor of Light Drop &apos;26
             </p>
-
-            {/* Scripture quote */}
-            <blockquote
-              style={{
-                margin: 0,
-                padding: 0,
-                border: "none",
-                fontFamily: 'Georgia, "Times New Roman", serif',
-                color: T.bgWhite,
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "18px",
-                  fontWeight: 400,
-                  lineHeight: 1.4,
-                  letterSpacing: "-0.01em",
-                  margin: "0 0 8px 0",
-                  fontStyle: "italic",
-                }}
-              >
+            <blockquote style={{ margin: 0, padding: 0, border: "none", fontFamily: 'Georgia, "Times New Roman", serif', color: T.bgWhite }}>
+              <p style={{ fontSize: "18px", fontWeight: 400, lineHeight: 1.4, letterSpacing: "-0.01em", margin: "0 0 8px 0", fontStyle: "italic" }}>
                 &ldquo;Cast off the works of darkness and put on the armor of light.&rdquo;
               </p>
-              <footer
-                style={{
-                  fontSize: "10px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.15em",
-                  color: "rgba(255,255,255,0.60)",
-                }}
-              >
+              <footer style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.15em", color: "rgba(255,255,255,0.60)" }}>
                 &mdash; Romans 13:12
               </footer>
             </blockquote>
           </div>
         </div>
 
-        {/* ──────────────────────────────────────
-            RIGHT FORM PANEL  (55%) - White Background
-        ────────────────────────────────────── */}
+        {/* RIGHT FORM PANEL */}
         <div
           className="login-right-panel"
           style={{
@@ -366,253 +303,26 @@ function LoginForm() {
             fontFamily: 'var(--font-sans)',
           }}
         >
-          {/* Inner content wrapper */}
-          <div
-            className="login-inner"
-            style={{
-              width: "100%",
-              maxWidth: "380px",
-              padding: "48px 40px",
-              background: T.bgWhite,
-            }}
-          >
-            {/* ── Back to shop ───────────────── */}
-            <Link
-              href="/shop"
-              className="back-link"
-              tabIndex={0}
-              style={{
-                fontSize: "12px",
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "4px",
-                cursor: "pointer",
-                marginBottom: "32px",
-                fontFamily: "inherit",
-              }}
-            >
+          <div className="login-inner" style={{ width: "100%", maxWidth: "380px", padding: "48px 40px", background: T.bgWhite }}>
+            <Link href="/shop" className="back-link" style={{ fontSize: "12px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px", cursor: "pointer", marginBottom: "32px" }}>
               &larr; Back to shop
             </Link>
 
-            {/* ── Page heading ───────────────── */}
-            <h1
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: "28px",
-                fontWeight: 600,
-                color: T.dark,
-                letterSpacing: "-0.025em",
-                lineHeight: 1.2,
-                margin: "0 0 6px 0",
-              }}
-            >
+            <h1 style={{ fontSize: "28px", fontWeight: 600, color: T.dark, letterSpacing: "-0.025em", lineHeight: 1.2, margin: "0 0 6px 0" }}>
               Welcome back.
             </h1>
-
-            {/* ── Sub-heading ────────────────── */}
-            <p
-              style={{
-                fontSize: "13px",
-                color: T.muted,
-                lineHeight: 1.5,
-                margin: "0 0 36px 0",
-              }}
-            >
+            <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.5, margin: "0 0 36px 0" }}>
               Sign in to your Ruven Studio account.
             </p>
 
-            {/* ══════════════════════════════════
-                FORM
-            ══════════════════════════════════ */}
             <form onSubmit={handleSubmit} noValidate>
-
-              {/* ── Email field ────────────────── */}
-              <div style={{ marginBottom: "20px" }}>
-                <label htmlFor="login-email" style={labelSt}>
-                  Email address
-                </label>
-                <input
-                  id="login-email"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  placeholder="you@email.com"
-                  tabIndex={0}
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (emailError) setEmailError("");
-                    clearAuthError();
-                  }}
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => setEmailFocused(false)}
-                  aria-describedby="email-error"
-                  aria-invalid={emailError ? "true" : "false"}
-                  style={{ ...baseInput, borderColor: emailBorder }}
-                />
-                <span
-                  id="email-error"
-                  role="alert"
-                  style={{
-                    display: emailError ? "block" : "none",
-                    fontSize: "11px",
-                    color: T.errorRed,
-                    marginTop: "4px",
-                  }}
-                >
-                  {emailError}
-                </span>
-              </div>
-
-              {/* ── Password field ─────────────── */}
-              <div style={{ marginBottom: "10px" }}>
-                <label htmlFor="login-password" style={labelSt}>
-                  Password
-                </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    id="login-password"
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    autoComplete="current-password"
-                    placeholder="••••••••"
-                    tabIndex={0}
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      if (pwError) setPwError("");
-                      clearAuthError();
-                    }}
-                    onFocus={() => setPwFocused(true)}
-                    onBlur={() => setPwFocused(false)}
-                    aria-describedby="password-error"
-                    aria-invalid={pwError ? "true" : "false"}
-                    style={{
-                      ...baseInput,
-                      paddingRight: "44px",
-                      borderColor: pwBorder,
-                    }}
-                  />
-                  {/* Eye toggle */}
-                  <button
-                    type="button"
-                    tabIndex={0}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                    onClick={() => setShowPassword((v) => !v)}
-                    style={{
-                      position: "absolute",
-                      right: "12px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      color: T.muted,
-                      lineHeight: 1,
-                    }}
-                  >
-                    {showPassword ? (
-                      <EyeOff size={16} />
-                    ) : (
-                      <Eye size={16} />
-                    )}
-                  </button>
-                </div>
-                <span
-                  id="password-error"
-                  role="alert"
-                  style={{
-                    display: pwError ? "block" : "none",
-                    fontSize: "11px",
-                    color: T.errorRed,
-                    marginTop: "4px",
-                  }}
-                >
-                  {pwError}
-                </span>
-              </div>
-
-              {/* ── Links row ──────────────────── */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginTop: "10px",
-                  marginBottom: "28px",
-                }}
-              >
-                {/* Remember me */}
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    cursor: "pointer",
-                    fontSize: "11px",
-                    color: "#666666",
-                    fontFamily: "inherit",
-                    userSelect: "none",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    tabIndex={0}
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    style={{ accentColor: T.dark, cursor: "pointer" }}
-                  />
-                  Remember me
-                </label>
-
-                {/* Forgot password */}
-                <Link
-                  href="/forgot-password"
-                  className="forgot-link"
-                  tabIndex={0}
-                  style={{
-                    fontSize: "11px",
-                    textDecoration: "underline",
-                    cursor: "pointer",
-                    fontFamily: "inherit",
-                  }}
-                >
-                  Forgot password?
-                </Link>
-              </div>
-
-              {/* ── Success notification banner (gold/green) ── */}
-              {successMessage && (
-                <div
-                  role="alert"
-                  style={{
-                    background: T.successBg,
-                    border: `1px solid ${T.successBorder}`,
-                    borderRadius: 0,
-                    padding: "10px 14px",
-                    marginBottom: "16px",
-                    fontSize: "12px",
-                    color: T.successText,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {successMessage}
-                </div>
-              )}
-
-              {/* ── Auth error banner (Type 3) ── */}
+              {/* Global Error Banner */}
               {authError && (
                 <div
                   role="alert"
-                  aria-live="assertive"
                   style={{
                     background: T.errorBg,
                     border: `1px solid ${T.errorBorder}`,
-                    borderRadius: 0,
                     padding: "10px 14px",
                     marginBottom: "16px",
                     fontSize: "12px",
@@ -624,11 +334,117 @@ function LoginForm() {
                 </div>
               )}
 
-              {/* ── Sign In button ────── */}
+              {/* Success Banner */}
+              {successMessage && (
+                <div
+                  role="alert"
+                  style={{
+                    background: T.successBg,
+                    border: `1px solid ${T.successBorder}`,
+                    padding: "10px 14px",
+                    marginBottom: "16px",
+                    fontSize: "12px",
+                    color: T.successText,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {successMessage}
+                </div>
+              )}
+
+              {/* Email */}
+              <div style={{ marginBottom: "20px" }}>
+                <label htmlFor="login-email" style={labelSt}>Email address</label>
+                <input
+                  id="login-email"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  placeholder="you@email.com"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailError) setEmailError("");
+                    clearAuthError();
+                  }}
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
+                  aria-describedby={emailError ? "login-email-error" : undefined}
+                  aria-invalid={emailError ? "true" : "false"}
+                  style={{ ...baseInput, borderColor: emailBorder }}
+                />
+                {emailError && (
+                  <span
+                    id="login-email-error"
+                    role="alert"
+                    style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}
+                  >
+                    {emailError}
+                  </span>
+                )}
+              </div>
+
+              {/* Password */}
+              <div style={{ marginBottom: "10px" }}>
+                <label htmlFor="login-password" style={labelSt}>Password</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    id="login-password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (pwError) setPwError("");
+                      clearAuthError();
+                    }}
+                    onFocus={() => setPwFocused(true)}
+                    onBlur={() => setPwFocused(false)}
+                    aria-describedby={pwError ? "login-password-error" : undefined}
+                    aria-invalid={pwError ? "true" : "false"}
+                    style={{ ...baseInput, paddingRight: "44px", borderColor: pwBorder }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 0, color: T.muted }}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+                {pwError && (
+                  <span
+                    id="login-password-error"
+                    role="alert"
+                    style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}
+                  >
+                    {pwError}
+                  </span>
+                )}
+              </div>
+
+              {/* Links Row */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px", marginBottom: "28px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", fontSize: "11px", color: "#666666", userSelect: "none" }}>
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    style={{ accentColor: T.dark, cursor: "pointer" }}
+                  />
+                  Remember me
+                </label>
+
+                <Link href="/forgot-password" className="forgot-link" style={{ fontSize: "11px", textDecoration: "underline", cursor: "pointer" }}>
+                  Forgot password?
+                </Link>
+              </div>
+
+              {/* Sign In Button */}
               <button
                 type="submit"
-                id="signin-btn"
-                tabIndex={0}
                 disabled={loading}
                 style={{
                   background: T.dark,
@@ -643,31 +459,17 @@ function LoginForm() {
                   border: "none",
                   cursor: loading ? "not-allowed" : "pointer",
                   opacity: loading ? 0.7 : 1,
-                  pointerEvents: loading ? "none" : "auto",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "8px",
                   marginBottom: "20px",
-                  fontFamily: "inherit",
                   transition: "opacity 0.15s ease",
                 }}
               >
                 {loading ? (
                   <>
-                    <span
-                      className="ruven-spin"
-                      aria-hidden="true"
-                      style={{
-                        width: "14px",
-                        height: "14px",
-                        border: "1.5px solid rgba(255,255,255,0.35)",
-                        borderTopColor: "#FFFFFF",
-                        borderRadius: "50%",
-                        display: "inline-block",
-                        flexShrink: 0,
-                      }}
-                    />
+                    <span className="ruven-spin" style={{ width: "14px", height: "14px", border: "1.5px solid rgba(255,255,255,0.35)", borderTopColor: "#FFFFFF", borderRadius: "50%", display: "inline-block" }} />
                     Signing in…
                   </>
                 ) : (
@@ -675,36 +477,18 @@ function LoginForm() {
                 )}
               </button>
 
-              {/* ── OR divider ─────────────────── */}
-              <div
-                aria-hidden="true"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  marginBottom: "16px",
-                }}
-              >
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
                 <div style={{ flex: 1, height: "0.5px", background: T.border }} />
-                <span
-                  style={{
-                    fontSize: "10px",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: T.muted,
-                  }}
-                >
-                  OR
-                </span>
+                <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.05em", color: T.muted }}>OR</span>
                 <div style={{ flex: 1, height: "0.5px", background: T.border }} />
               </div>
 
-              {/* ── Google button ──────────────── */}
+              {/* Google OAuth Button */}
               <button
                 type="button"
-                tabIndex={0}
                 className="google-btn"
                 onClick={handleGoogleSignIn}
+                disabled={loading}
                 style={{
                   background: "transparent",
                   border: `1px solid ${T.border}`,
@@ -713,108 +497,42 @@ function LoginForm() {
                   width: "100%",
                   fontSize: "12px",
                   color: "#555555",
-                  cursor: "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "10px",
                   marginBottom: "24px",
-                  fontFamily: "inherit",
+                  opacity: loading ? 0.7 : 1,
                 }}
               >
-                {/* Google G logo — inline SVG per spec */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853"
-                  />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05"
-                  />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
                 Continue with Google
               </button>
 
-              {/* ── Link to Register ── */}
-              <p
-                style={{
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: T.muted,
-                  margin: 0,
-                  fontFamily: "inherit",
-                }}
-              >
+              <p style={{ textAlign: "center", fontSize: "12px", color: T.muted, margin: 0 }}>
                 Don&apos;t have an account?
                 <Link
                   href="/register"
-                  style={{
-                    color: T.dark,
-                    fontWeight: 600,
-                    textDecoration: "underline",
-                    marginLeft: "4px",
-                    cursor: "pointer",
-                    fontFamily: "inherit",
-                    fontSize: "12px",
-                  }}
+                  style={{ color: T.dark, fontWeight: 600, textDecoration: "underline", marginLeft: "4px" }}
                 >
                   Create account
                 </Link>
               </p>
 
-              {/* ── Dev sandbox (localhost only) ─ */}
+              {/* Sandbox credentials */}
               {isDev && (
-                <div
-                  style={{
-                    marginTop: "32px",
-                    background: "#F9F9F9",
-                    border: `1px solid #EAEAEA`,
-                    padding: "14px 16px",
-                    fontSize: "10px",
-                    color: "#666",
-                    lineHeight: 1.7,
-                    borderRadius: 0,
-                  }}
-                >
-                  <strong
-                    style={{
-                      display: "block",
-                      marginBottom: "8px",
-                      color: "#333",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.06em",
-                      fontSize: "9px",
-                    }}
-                  >
+                <div style={{ marginTop: "32px", background: "#F9F9F9", border: `1px solid #EAEAEA`, padding: "14px 16px", fontSize: "10px", color: "#666", lineHeight: 1.7 }}>
+                  <strong style={{ display: "block", marginBottom: "8px", color: "#333", textTransform: "uppercase", letterSpacing: "0.06em", fontSize: "9px" }}>
                     Sandbox Credentials
                   </strong>
-                  <div>
-                    Admin:{" "}
-                    <strong style={{ color: T.dark }}>admin@ruven.in</strong>
-                    {" / "}
-                    <strong style={{ color: T.dark }}>admin123</strong>
-                  </div>
-                  <div>
-                    Customer:{" "}
-                    <strong style={{ color: T.dark }}>customer@ruven.in</strong>
-                    {" / "}
-                    <strong style={{ color: T.dark }}>customer123</strong>
-                  </div>
+                  <div>Admin: <strong style={{ color: T.dark }}>admin@ruven.in</strong> / <strong style={{ color: T.dark }}>admin123</strong></div>
+                  <div>Customer: <strong style={{ color: T.dark }}>customer@ruven.in</strong> / <strong style={{ color: T.dark }}>customer123</strong></div>
                 </div>
               )}
             </form>
@@ -825,26 +543,11 @@ function LoginForm() {
   );
 }
 
-/* ─────────────────────────────────────────────
-   Page Root — CartProvider + Header + Form
-   No Footer per spec.
-───────────────────────────────────────────── */
 export default function LoginPage() {
   return (
     <CartProvider>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-          background: "#FFFFFF",
-          overflowX: "hidden",
-        }}
-      >
-        {/* Full site Navbar — identical to every other storefront page */}
+      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#FFFFFF", overflowX: "hidden" }}>
         <Header />
-
-        {/* Body fills exactly remaining viewport height */}
         <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
           <LoginForm />
         </div>

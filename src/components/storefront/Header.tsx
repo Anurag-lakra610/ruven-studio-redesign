@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { MockProduct, MockDevotional } from "@/lib/db";
 import { AnimatePresence, motion } from "framer-motion";
+import { createClient } from "@/utils/supabase/client";
 import {
   Search,
   Heart,
@@ -43,6 +44,71 @@ const highlightKeyword = (text: string, query: string) => {
 
 export const Header: React.FC = () => {
   const router = useRouter();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const getCookie = (name: string) => {
+        if (typeof document === "undefined") return "";
+        const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)"));
+        return match ? decodeURIComponent(match[2]) : "";
+      };
+      const isMockCustomer = getCookie("mock_customer_session") === "true";
+      const isMockAdmin = getCookie("mock_admin_session") === "true";
+      if (isMockCustomer || isMockAdmin) {
+        setIsAuthenticated(true);
+        return;
+      }
+
+      const isDummy =
+        process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("dummy") ||
+        !process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+      if (isDummy) {
+        return;
+      }
+
+      try {
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsAuthenticated(!!session);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+
+    const isDummy =
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("dummy") ||
+      !process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+    if (!isDummy) {
+      try {
+        const supabase = createClient();
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+          if (session) {
+            setIsAuthenticated(true);
+          } else {
+            const getCookie = (name: string) => {
+              if (typeof document === "undefined") return "";
+              const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)"));
+              return match ? decodeURIComponent(match[2]) : "";
+            };
+            const isMockCustomer = getCookie("mock_customer_session") === "true";
+            const isMockAdmin = getCookie("mock_admin_session") === "true";
+            setIsAuthenticated(isMockCustomer || isMockAdmin);
+          }
+        });
+        return () => {
+          subscription.unsubscribe();
+        };
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
   
   // Custom Spotlight Search states
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
@@ -511,7 +577,7 @@ export const Header: React.FC = () => {
           </button>
 
           <Link
-            href="/account"
+            href={isAuthenticated ? "/account" : "/login"}
             className="nav-action-btn"
             aria-label="Account Settings"
           >
@@ -1036,7 +1102,7 @@ export const Header: React.FC = () => {
 
                   {/* BUG 9: Mobile account link — User icon + text side-by-side */}
                   <Link
-                    href="/account"
+                    href={isAuthenticated ? "/account" : "/login"}
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-between w-full text-xs font-bold uppercase tracking-wider text-text-primary"
                     aria-label="My Account"
