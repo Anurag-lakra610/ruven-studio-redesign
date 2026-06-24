@@ -603,7 +603,7 @@ function LoginForm() {
 
                   {/* Links Row */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px", marginBottom: "28px" }}>
-                    <label className="ruven-checkbox-container" style={{ fontSize: "11px", color: "#666666" }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "11px", color: "#666666", cursor: "pointer", userSelect: "none" }}>
                       <input
                         type="checkbox"
                         className="ruven-checkbox"

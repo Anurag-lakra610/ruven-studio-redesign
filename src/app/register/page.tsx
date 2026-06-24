@@ -596,10 +596,11 @@ function RegisterForm() {
 
                   {/* Terms Checkbox */}
                   <div style={{ marginBottom: "24px" }}>
-                    <label className="ruven-checkbox-container" style={{ fontSize: "11px", color: "#666666" }}>
+                    <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "11px", color: "#666666", cursor: "pointer", userSelect: "none", lineHeight: "1.4" }}>
                       <input
                         type="checkbox"
                         className="ruven-checkbox"
+                        style={{ marginTop: "2px" }}
                         checked={agreeTerms}
                         onChange={(e) => { setAgreeTerms(e.target.checked); if (termsError) setTermsError(""); }}
                       />
