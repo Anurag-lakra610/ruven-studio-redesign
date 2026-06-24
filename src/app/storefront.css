@@ -3373,10 +3373,26 @@ h1, h2, h3, h4, h5, h6 {
   gap: 2rem;
   padding-top: 1.5rem;
   padding-bottom: 2.5rem;
-  padding-left: max(var(--spacing-2xl), calc((100vw - var(--max-width-site)) / 2));
-  padding-right: max(var(--spacing-2xl), calc((100vw - var(--max-width-site)) / 2));
+  padding-left: 0;
+  padding-right: 0;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.best-sellers-layout::before {
+  content: '';
+  display: block;
+  flex: 0 0 auto;
+  width: max(var(--spacing-2xl), calc((100vw - var(--max-width-site)) / 2));
+  margin-right: -2rem;
+}
+
+.best-sellers-layout::after {
+  content: '';
+  display: block;
+  flex: 0 0 auto;
+  width: max(var(--spacing-2xl), calc((100vw - var(--max-width-site)) / 2));
+  margin-left: -2rem;
 }
 
 .best-sellers-layout::-webkit-scrollbar {
