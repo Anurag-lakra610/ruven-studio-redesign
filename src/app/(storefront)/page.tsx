@@ -414,9 +414,6 @@ export default function StorefrontHomePage() {
                 <span className="section-subtitle-lowercase">{campaignSettings.subtitle}</span>
                 <h2 className="editorial-title-v2">{campaignSettings.title}</h2>
               </div>
-              <p className="campaign-description">
-                {campaignSettings.description}
-              </p>
             </div>
             
             <div className="best-sellers-wrapper relative group">

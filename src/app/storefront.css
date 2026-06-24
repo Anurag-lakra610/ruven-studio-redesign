@@ -3437,11 +3437,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .scroll-arrow-btn.left-arrow {
-  left: max(1.5rem, calc((100vw - var(--max-width-site)) / 2 + 1.2rem));
+  left: 2rem;
 }
 
 .scroll-arrow-btn.right-arrow {
-  right: max(1.5rem, calc((100vw - var(--max-width-site)) / 2 + 1.2rem));
+  right: 2rem;
 }
 
 @media (max-width: 1024px) {
