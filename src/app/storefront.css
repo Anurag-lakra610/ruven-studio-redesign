@@ -28,9 +28,9 @@
   --color-overlay: rgba(17, 17, 17, 0.4);
   
   /* Typography Variables */
-  --font-editorial: 'DM Sans', sans-serif;
-  --font-accent: 'DM Sans', sans-serif;
-  --font-sans: 'DM Sans', sans-serif;
+  --font-editorial: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-accent: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   
   /* Spacing Scale (Cinematic Spacing - Evolved V2) */
   --spacing-2xs: 0.35rem;
@@ -6498,7 +6498,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: var(--spacing-xs);
 }
 .founder-signature {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.6rem;
   font-weight: 600;
   font-style: italic;

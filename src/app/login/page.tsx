@@ -376,7 +376,7 @@ function LoginForm() {
             alignItems: "center",
             justifyContent: "center",
             padding: "40px 24px",
-            fontFamily: '"DM Sans", sans-serif',
+            fontFamily: 'var(--font-sans)',
           }}
         >
           {/* Inner content wrapper */}
@@ -411,7 +411,7 @@ function LoginForm() {
             {/* ── Page heading ───────────────── */}
             <h1
               style={{
-                fontFamily: '"DM Sans", sans-serif',
+                fontFamily: 'var(--font-sans)',
                 fontSize: "28px",
                 fontWeight: 600,
                 color: T.dark,
