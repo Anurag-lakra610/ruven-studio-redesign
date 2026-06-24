@@ -49,6 +49,11 @@ export default function StorefrontHomePage() {
   const newArrivalsScrollRef = React.useRef<HTMLDivElement>(null);
   const bestSellersScrollRef = React.useRef<HTMLDivElement>(null);
 
+  const [newArrivalsShowLeft, setNewArrivalsShowLeft] = useState(false);
+  const [newArrivalsShowRight, setNewArrivalsShowRight] = useState(true);
+  const [bestSellersShowLeft, setBestSellersShowLeft] = useState(false);
+  const [bestSellersShowRight, setBestSellersShowRight] = useState(true);
+
   const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: "left" | "right") => {
     if (ref.current) {
       const { scrollLeft, clientWidth } = ref.current;
@@ -56,6 +61,18 @@ export default function StorefrontHomePage() {
         ? scrollLeft - clientWidth * 0.75 
         : scrollLeft + clientWidth * 0.75;
       ref.current.scrollTo({ left: scrollTo, behavior: "smooth" });
+    }
+  };
+
+  const updateScrollButtons = (
+    ref: React.RefObject<HTMLDivElement | null>, 
+    setLeft: (b: boolean) => void, 
+    setRight: (b: boolean) => void
+  ) => {
+    if (ref.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = ref.current;
+      setLeft(scrollLeft > 10);
+      setRight(scrollLeft + clientWidth < scrollWidth - 10);
     }
   };
 
@@ -71,6 +88,14 @@ export default function StorefrontHomePage() {
     getHomepageSections().then((res) => setSections(res));
     getActiveCampaign().then((res) => setCampaign(res));
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      updateScrollButtons(newArrivalsScrollRef, setNewArrivalsShowLeft, setNewArrivalsShowRight);
+      updateScrollButtons(bestSellersScrollRef, setBestSellersShowLeft, setBestSellersShowRight);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [products]);
 
   // Slide rotation timer
   useEffect(() => {
@@ -398,13 +423,17 @@ export default function StorefrontHomePage() {
               {/* Floating Left Navigation Button */}
               <button 
                 onClick={() => scroll(newArrivalsScrollRef, "left")}
-                className="scroll-arrow-btn left-arrow"
+                className={`scroll-arrow-btn left-arrow ${newArrivalsShowLeft ? "is-visible" : ""}`}
                 aria-label="Scroll left"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
 
-              <div ref={newArrivalsScrollRef} className="best-sellers-layout">
+              <div 
+                ref={newArrivalsScrollRef} 
+                className="best-sellers-layout"
+                onScroll={() => updateScrollButtons(newArrivalsScrollRef, setNewArrivalsShowLeft, setNewArrivalsShowRight)}
+              >
                 {[...products].reverse().map((product) => {
                   const isHoodie = product.category_slug === "hoodies" || product.slug.includes("hoodie");
                   const scriptureRef = product.scripture 
@@ -467,7 +496,7 @@ export default function StorefrontHomePage() {
               {/* Floating Right Navigation Button */}
               <button 
                 onClick={() => scroll(newArrivalsScrollRef, "right")}
-                className="scroll-arrow-btn right-arrow"
+                className={`scroll-arrow-btn right-arrow ${newArrivalsShowRight ? "is-visible" : ""}`}
                 aria-label="Scroll right"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -511,13 +540,17 @@ export default function StorefrontHomePage() {
               {/* Floating Left Navigation Button */}
               <button 
                 onClick={() => scroll(bestSellersScrollRef, "left")}
-                className="scroll-arrow-btn left-arrow"
+                className={`scroll-arrow-btn left-arrow ${bestSellersShowLeft ? "is-visible" : ""}`}
                 aria-label="Scroll left"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
 
-              <div ref={bestSellersScrollRef} className="best-sellers-layout">
+              <div 
+                ref={bestSellersScrollRef} 
+                className="best-sellers-layout"
+                onScroll={() => updateScrollButtons(bestSellersScrollRef, setBestSellersShowLeft, setBestSellersShowRight)}
+              >
                 {products.map((product) => {
                   const isHoodie = product.category_slug === "hoodies" || product.slug.includes("hoodie");
                   const scriptureRef = product.scripture 
@@ -580,7 +613,7 @@ export default function StorefrontHomePage() {
               {/* Floating Right Navigation Button */}
               <button 
                 onClick={() => scroll(bestSellersScrollRef, "right")}
-                className="scroll-arrow-btn right-arrow"
+                className={`scroll-arrow-btn right-arrow ${bestSellersShowRight ? "is-visible" : ""}`}
                 aria-label="Scroll right"
               >
                 <ChevronRight className="w-5 h-5" />

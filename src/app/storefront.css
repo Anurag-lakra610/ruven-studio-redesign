@@ -2821,7 +2821,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
   align-items: flex-end;
   gap: var(--spacing-xl);
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: 1.2rem;
   max-width: var(--max-width-site);
   margin-left: auto;
   margin-right: auto;
@@ -3353,7 +3353,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .best-sellers-header {
   max-width: var(--max-width-site);
-  margin: 0 auto var(--spacing-xl);
+  margin: 0 auto 1.2rem;
   padding: 0 var(--spacing-2xl);
 }
 
@@ -3391,7 +3391,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -3403,16 +3403,16 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 25;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s var(--transition-fast), transform 0.3s var(--transition-fast), background-color 0.3s var(--transition-fast), box-shadow 0.3s var(--transition-fast);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
-.best-sellers-wrapper:hover .scroll-arrow-btn {
-  opacity: 0.75;
+.best-sellers-wrapper:hover .scroll-arrow-btn.is-visible {
+  opacity: 0.85;
   pointer-events: auto;
 }
 
-.scroll-arrow-btn:hover {
+.scroll-arrow-btn.is-visible:hover {
   opacity: 0.98 !important;
   background: var(--color-white);
   transform: translateY(-50%) scale(1.05);
@@ -3420,11 +3420,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .scroll-arrow-btn.left-arrow {
-  left: max(1.5rem, calc((100vw - var(--max-width-site)) / 2 + 1.5rem));
+  left: max(1.5rem, calc((100vw - var(--max-width-site)) / 2 + 1.2rem));
 }
 
 .scroll-arrow-btn.right-arrow {
-  right: max(1.5rem, calc((100vw - var(--max-width-site)) / 2 + 1.5rem));
+  right: max(1.5rem, calc((100vw - var(--max-width-site)) / 2 + 1.2rem));
 }
 
 @media (max-width: 1024px) {
