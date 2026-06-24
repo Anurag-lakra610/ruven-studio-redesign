@@ -428,7 +428,7 @@ export const MOCK_HOMEPAGE_SECTIONS: HomepageSection[] = [
       description: "Designed in India to carry the message of light. Our premium minimal streetwear helps you start the conversations that matter.",
       cta_text: "Explore the Lookbook",
       cta_link: "/shop",
-      image_url: "/hero_lifestyle.png"
+      image_url: "/cta2.png"
     }
   },
   {

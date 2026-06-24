@@ -141,7 +141,7 @@ export default function StorefrontHomePage() {
     description: "Designed in India to carry the message of light. Our premium minimal streetwear helps you start the conversations that matter.",
     cta_text: "Explore the Lookbook",
     cta_link: "/shop",
-    image_url: "/hero_lifestyle.png"
+    image_url: "/cta2.png"
   };
 
   // Scripture Highlight variables
@@ -485,7 +485,14 @@ export default function StorefrontHomePage() {
               <span className="immersive-subtitle">{lifestyleSettings.subtitle}</span>
               <h2 className="immersive-statement" dangerouslySetInnerHTML={{ __html: lifestyleSettings.title.replace(/\n/g, '<br />') }} />
               <p className="immersive-subtext">{lifestyleSettings.description}</p>
-              <Link href={lifestyleSettings.cta_link} className="immersive-cta-link">{lifestyleSettings.cta_text}</Link>
+              <Link href={lifestyleSettings.cta_link} className="cta-button cta-button-charcoal">
+                <span className="btn-content">
+                  <span className="btn-text">{lifestyleSettings.cta_text}</span>
+                  <span className="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                </span>
+              </Link>
             </div>
           </section>
         );
