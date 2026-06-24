@@ -52,159 +52,9 @@ const labelSt: React.CSSProperties = {
 function ForgotPasswordForm() {
   const router = useRouter();
 
-  // Form values
-  const [email, setEmail] = useState("");
-
-  // Focus state
-  const [emailFocused, setEmailFocused] = useState(false);
-
-  // Error states
-  const [emailError, setEmailError] = useState("");
-  const [authError, setAuthError] = useState("");
-
-  // UI state
-  const [loading, setLoading] = useState(false);
-  const [isSent, setIsSent] = useState(false);
-  const [countdown, setCountdown] = useState(0);
-
-  // Validation
-  const isEmailValid = email.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-
-  // Countdown timer for Resend
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const timer = setInterval(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [countdown]);
-
-  const validateForm = useCallback((): boolean => {
-    let ok = true;
-    setEmailError("");
-
-    if (!email.trim()) {
-      setEmailError("Email address is required.");
-      ok = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      setEmailError("Please enter a valid email address.");
-      ok = false;
-    }
-
-    return ok;
-  }, [email]);
-
-  const triggerReset = async () => {
-    const isDummy =
-      process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("dummy") ||
-      !process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-    if (isDummy) {
-      return;
-    }
-
-    const supabase = createClient();
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-    const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${siteUrl}/reset-password`,
-    });
-    if (resetErr) throw resetErr;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthError("");
-    if (!validateForm()) return;
-    setLoading(true);
-
-    try {
-      await triggerReset();
-      // Always show success regardless of whether email exists (security best practice)
-      setIsSent(true);
-      setCountdown(60);
-      setLoading(false);
-    } catch (err: any) {
-      // Still show success to protect user accounts, or optionally handle connection failures here
-      // But per spec, always show success state on submit!
-      setIsSent(true);
-      setCountdown(60);
-      setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    if (countdown > 0) return;
-    setAuthError("");
-    setCountdown(60);
-
-    try {
-      await triggerReset();
-    } catch (err: any) {
-      setAuthError(err.message || "Failed to resend link. Please try again.");
-    }
-  };
-
-  // Border logic
-  const emailBorder = emailError ? T.errorRed : isEmailValid ? T.successGreen : emailFocused ? T.dark : T.border;
-
-  if (isSent) {
-    return (
-      <div className="login-right-panel" style={{ flex: 1, background: T.bgWhite, overflowY: "auto", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px", fontFamily: 'var(--font-sans)' }}>
-        <div className="login-inner" style={{ width: "100%", maxWidth: "380px", padding: "48px 40px", background: T.bgWhite, border: `1px solid ${T.border}` }}>
-          <h2 style={{ fontSize: "22px", fontWeight: 600, color: T.dark, letterSpacing: "-0.02em", marginBottom: "12px", textTransform: "uppercase" }}>
-            Recovery email sent
-          </h2>
-          <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.6, marginBottom: "28px" }}>
-            If an account exists for <strong style={{ color: T.dark }}>{email}</strong>, you&apos;ll receive a link shortly. Check your spam folder too.
-          </p>
-
-          {authError && (
-            <div role="alert" style={{ background: T.errorBg, border: `1px solid ${T.errorBorder}`, padding: "10px 14px", marginBottom: "16px", fontSize: "12px", color: T.errorText }}>
-              {authError}
-            </div>
-          )}
-
-          <button
-            onClick={handleResend}
-            disabled={countdown > 0}
-            style={{
-              background: countdown > 0 ? T.border : T.dark,
-              color: countdown > 0 ? T.muted : "#FFFFFF",
-              borderRadius: 0,
-              height: "44px",
-              width: "100%",
-              fontSize: "13px",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              fontWeight: 500,
-              border: "none",
-              cursor: countdown > 0 ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "20px",
-            }}
-          >
-            {countdown > 0 ? `Resend (${countdown}s)` : "Resend"}
-          </button>
-
-          <Link href="/login" style={{ fontSize: "12px", color: T.dark, textDecoration: "underline", display: "block", textAlign: "center" }}>
-            Back to Sign In
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <style>{`
-        @keyframes ruven-spin {
-          to { transform: rotate(360deg); }
-        }
-        .ruven-spin {
-          animation: ruven-spin 0.7s linear infinite;
-        }
         .back-link { color: ${T.muted}; transition: color 0.15s ease; }
         .back-link:hover { color: ${T.dark}; }
         @media (max-width: 767px) {
@@ -282,90 +132,34 @@ function ForgotPasswordForm() {
             fontFamily: 'var(--font-sans)',
           }}
         >
-          <div className="login-inner" style={{ width: "100%", maxWidth: "380px", padding: "48px 40px", background: T.bgWhite }}>
-            <Link href="/login" className="back-link" style={{ fontSize: "12px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px", cursor: "pointer", marginBottom: "32px" }}>
-              &larr; Back to sign in
-            </Link>
-
-            <h1 style={{ fontSize: "28px", fontWeight: 600, color: T.dark, letterSpacing: "-0.025em", lineHeight: 1.2, margin: "0 0 6px 0" }}>
-              Password reset.
-            </h1>
-            <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.5, margin: "0 0 36px 0" }}>
-              Reset your Ruven Studio account password.
+          <div className="login-inner" style={{ width: "100%", maxWidth: "380px", padding: "48px 40px", background: T.bgWhite, border: `1px solid ${T.border}` }}>
+            <h2 style={{ fontSize: "22px", fontWeight: 600, color: T.dark, letterSpacing: "-0.02em", marginBottom: "16px", textTransform: "uppercase" }}>
+              No Password Needed.
+            </h2>
+            <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.6, marginBottom: "28px" }}>
+              We have upgraded! Ruven Studio now uses passwordless OTP sign-in. You don&apos;t need a password anymore. Simply go to the sign-in page, enter your email or phone number, and you will receive a secure one-time code to log in instantly.
             </p>
 
-            <form onSubmit={handleSubmit} noValidate>
-              {/* Email */}
-              <div style={{ marginBottom: "24px" }}>
-                <label htmlFor="recovery-email" style={labelSt}>Email address</label>
-                <input
-                  id="recovery-email"
-                  type="email"
-                  placeholder="you@email.com"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (emailError) setEmailError("");
-                  }}
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => setEmailFocused(false)}
-                  aria-describedby={emailError ? "recovery-email-error" : undefined}
-                  aria-invalid={emailError ? "true" : "false"}
-                  style={{ ...baseInput, borderColor: emailBorder }}
-                />
-                {emailError && (
-                  <span
-                    id="recovery-email-error"
-                    role="alert"
-                    style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}
-                  >
-                    {emailError}
-                  </span>
-                )}
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  background: T.dark,
-                  color: "#FFFFFF",
-                  borderRadius: 0,
-                  height: "44px",
-                  width: "100%",
-                  fontSize: "13px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  fontWeight: 500,
-                  border: "none",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.7 : 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  marginBottom: "24px",
-                  transition: "opacity 0.15s ease",
-                }}
-              >
-                {loading ? (
-                  <>
-                    <span className="ruven-spin" style={{ width: "14px", height: "14px", border: "1.5px solid rgba(255,255,255,0.35)", borderTopColor: "#FFFFFF", borderRadius: "50%", display: "inline-block" }} />
-                    Sending link…
-                  </>
-                ) : (
-                  "Send Recovery Link"
-                )}
-              </button>
-
-              <p style={{ textAlign: "center", fontSize: "12px", color: T.muted, margin: 0 }}>
-                Remember your password?
-                <Link href="/login" style={{ color: T.dark, fontWeight: 600, textDecoration: "underline", marginLeft: "4px" }}>
-                  Sign in
-                </Link>
-              </p>
-            </form>
+            <Link
+              href="/login"
+              style={{
+                display: "inline-block",
+                background: T.dark,
+                color: "#FFFFFF",
+                fontSize: "12px",
+                fontWeight: 500,
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
+                padding: "0 32px",
+                height: "42px",
+                lineHeight: "42px",
+                textDecoration: "none",
+                width: "100%",
+                textAlign: "center"
+              }}
+            >
+              Go to Sign In
+            </Link>
           </div>
         </div>
       </div>

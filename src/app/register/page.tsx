@@ -58,8 +58,7 @@ function RegisterForm() {
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpCode, setOtpCode] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   // Focus states
@@ -67,38 +66,28 @@ function RegisterForm() {
   const [lnFocused, setLnFocused] = useState(false);
   const [phoneFocused, setPhoneFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
-  const [pwFocused, setPwFocused] = useState(false);
-  const [confirmPwFocused, setConfirmPwFocused] = useState(false);
+  const [otpFocused, setOtpFocused] = useState(false);
 
   // Field errors
   const [fnError, setFnError] = useState("");
   const [lnError, setLnError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [pwError, setPwError] = useState("");
-  const [confirmPwError, setConfirmPwError] = useState("");
+  const [otpError, setOtpError] = useState("");
   const [termsError, setTermsError] = useState("");
   const [authError, setAuthError] = useState("");
 
   // UI state
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [showOtpScreen, setShowOtpScreen] = useState(false);
   const [countdown, setCountdown] = useState(0);
-
-  // Password validators
-  const hasMinLength = password.length >= 6;
-  const hasLetter = /[a-zA-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const isPasswordValid = hasMinLength && hasLetter && hasNumber;
 
   // Real-time fields valid state check for borders
   const isFnValid = firstName.trim().length > 0;
   const isLnValid = lastName.trim().length > 0;
   const isPhoneValid = phone.trim().length > 0 && /^\+91\s?\d{10}$|^\d{10}$/.test(phone.trim().replace(/\s/g, ""));
   const isEmailValid = email.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const isConfirmPwValid = confirmPassword.length > 0 && password === confirmPassword;
+  const isOtpValid = otpCode.trim().length === 6 && /^\d+$/.test(otpCode.trim());
 
   // Countdown timer for Resend
   useEffect(() => {
@@ -115,8 +104,6 @@ function RegisterForm() {
     setLnError("");
     setPhoneError("");
     setEmailError("");
-    setPwError("");
-    setConfirmPwError("");
     setTermsError("");
 
     if (!firstName.trim()) {
@@ -141,27 +128,13 @@ function RegisterForm() {
       setEmailError("Please enter a valid email address.");
       ok = false;
     }
-    if (!password) {
-      setPwError("Password is required.");
-      ok = false;
-    } else if (!isPasswordValid) {
-      setPwError("Password does not meet the complexity requirements.");
-      ok = false;
-    }
-    if (!confirmPassword) {
-      setConfirmPwError("Please confirm your password.");
-      ok = false;
-    } else if (password !== confirmPassword) {
-      setConfirmPwError("Passwords do not match.");
-      ok = false;
-    }
     if (!agreeTerms) {
       setTermsError("You must agree to the Terms of Service and Privacy Policy.");
       ok = false;
     }
 
     return ok;
-  }, [firstName, lastName, phone, email, password, confirmPassword, agreeTerms, isPasswordValid]);
+  }, [firstName, lastName, phone, email, agreeTerms]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -175,7 +148,7 @@ function RegisterForm() {
 
     if (isDummy) {
       await new Promise<void>((res) => setTimeout(res, 1200));
-      setIsRegistered(true);
+      setShowOtpScreen(true);
       setCountdown(60);
       setLoading(false);
       return;
@@ -184,10 +157,10 @@ function RegisterForm() {
     try {
       const supabase = createClient();
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-      const { data, error: authErr } = await supabase.auth.signUp({
+      const { error: authErr } = await supabase.auth.signInWithOtp({
         email: email.trim(),
-        password,
         options: {
+          shouldCreateUser: true,
           emailRedirectTo: `${siteUrl}/auth/callback`,
           data: {
             first_name: firstName.trim(),
@@ -198,18 +171,68 @@ function RegisterForm() {
       });
       if (authErr) throw authErr;
 
-      setIsRegistered(true);
+      setShowOtpScreen(true);
       setCountdown(60);
       setLoading(false);
     } catch (err: any) {
-      setAuthError(err.message || "Failed to create account. Please try again.");
+      setAuthError(err.message || "Failed to send code. Please try again.");
       setLoading(false);
     }
   };
 
-  const handleResendEmail = async () => {
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setOtpError("");
+    setAuthError("");
+
+    if (!otpCode.trim()) {
+      setOtpError("OTP code is required.");
+      return;
+    } else if (otpCode.trim().length !== 6) {
+      setOtpError("OTP code must be exactly 6 digits.");
+      return;
+    }
+
+    setLoading(true);
+
+    const isDummy =
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("dummy") ||
+      !process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+    if (isDummy) {
+      await new Promise<void>((res) => setTimeout(res, 1200));
+      if (otpCode === "123456" || otpCode.length === 6) {
+        document.cookie = "mock_customer_session=true; path=/; max-age=86400";
+        document.cookie = `mock_user_email=${email.trim()}; path=/; max-age=86400`;
+        document.cookie = `mock_user_name=${firstName.trim()} ${lastName.trim()}; path=/; max-age=86400`;
+        router.push("/account");
+      } else {
+        setOtpError("Incorrect OTP code. Try 123456.");
+        setLoading(false);
+      }
+      return;
+    }
+
+    try {
+      const supabase = createClient();
+      const { error: authErr } = await supabase.auth.verifyOtp({
+        email: email.trim(),
+        token: otpCode.trim(),
+        type: 'email'
+      });
+      if (authErr) throw authErr;
+
+      router.push("/account");
+    } catch (err: any) {
+      setOtpError(err.message || "Incorrect verification code. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
     if (countdown > 0) return;
     setAuthError("");
+    setOtpError("");
     setCountdown(60);
 
     const isDummy =
@@ -223,16 +246,21 @@ function RegisterForm() {
     try {
       const supabase = createClient();
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
+      const { error } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {
-          emailRedirectTo: `${siteUrl}/auth/callback`
+          shouldCreateUser: true,
+          emailRedirectTo: `${siteUrl}/auth/callback`,
+          data: {
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
+            phone: phone.trim()
+          }
         }
       });
       if (error) throw error;
     } catch (err: any) {
-      setAuthError(err.message || "Failed to resend email. Please try again.");
+      setAuthError(err.message || "Failed to resend code. Please try again.");
     }
   };
 
@@ -241,57 +269,6 @@ function RegisterForm() {
   const lnBorder = lnError ? T.errorRed : isLnValid ? T.successGreen : lnFocused ? T.dark : T.border;
   const phoneBorder = phoneError ? T.errorRed : isPhoneValid ? T.successGreen : phoneFocused ? T.dark : T.border;
   const emailBorder = emailError ? T.errorRed : isEmailValid ? T.successGreen : emailFocused ? T.dark : T.border;
-  const pwBorder = pwError ? T.errorRed : isPasswordValid ? T.successGreen : pwFocused ? T.dark : T.border;
-  const confirmPwBorder = confirmPwError ? T.errorRed : isConfirmPwValid ? T.successGreen : confirmPwFocused ? T.dark : T.border;
-
-  if (isRegistered) {
-    return (
-      <div className="login-right-panel" style={{ flex: 1, background: T.bgWhite, overflowY: "auto", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px", fontFamily: 'var(--font-sans)' }}>
-        <div className="login-inner" style={{ width: "100%", maxWidth: "380px", padding: "48px 40px", background: T.bgWhite, border: `1px solid ${T.border}` }}>
-          <h2 style={{ fontSize: "22px", fontWeight: 600, color: T.dark, letterSpacing: "-0.02em", marginBottom: "12px", textTransform: "uppercase" }}>
-            Check your email
-          </h2>
-          <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.6, marginBottom: "28px" }}>
-            We sent a verification link to <strong style={{ color: T.dark }}>{email}</strong>. Click it to activate your account.
-          </p>
-
-          {authError && (
-            <div role="alert" style={{ background: T.errorBg, border: `1px solid ${T.errorBorder}`, padding: "10px 14px", marginBottom: "16px", fontSize: "12px", color: T.errorText }}>
-              {authError}
-            </div>
-          )}
-
-          <button
-            onClick={handleResendEmail}
-            disabled={countdown > 0}
-            style={{
-              background: countdown > 0 ? T.border : T.dark,
-              color: countdown > 0 ? T.muted : "#FFFFFF",
-              borderRadius: 0,
-              height: "44px",
-              width: "100%",
-              fontSize: "13px",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              fontWeight: 500,
-              border: "none",
-              cursor: countdown > 0 ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "20px",
-            }}
-          >
-            {countdown > 0 ? `Resend email (${countdown}s)` : "Resend email"}
-          </button>
-
-          <Link href="/login" style={{ fontSize: "12px", color: T.dark, textDecoration: "underline", display: "block", textAlign: "center" }}>
-            Back to Sign In
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -304,10 +281,6 @@ function RegisterForm() {
         }
         .back-link { color: ${T.muted}; transition: color 0.15s ease; }
         .back-link:hover { color: ${T.dark}; }
-        .google-btn { transition: background 0.15s ease, border-color 0.15s ease; }
-        .google-btn:hover { background: #F9F9F9 !important; border-color: ${T.dark} !important; }
-        .req-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: ${T.muted}; transition: color 0.15s ease; }
-        .req-item.active { color: ${T.dark}; }
         @media (max-width: 767px) {
           .login-left-panel { display: none !important; }
           .login-right-panel { width: 100% !important; padding: 32px 24px !important; }
@@ -388,225 +361,267 @@ function RegisterForm() {
               &larr; Back to shop
             </Link>
 
-            <h1 style={{ fontSize: "28px", fontWeight: 600, color: T.dark, letterSpacing: "-0.025em", lineHeight: 1.2, margin: "0 0 6px 0" }}>
-              Create account.
-            </h1>
-            <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.5, margin: "0 0 36px 0" }}>
-              Sign up for a Ruven Studio account.
-            </p>
+            {showOtpScreen ? (
+              <>
+                <h1 style={{ fontSize: "28px", fontWeight: 600, color: T.dark, letterSpacing: "-0.025em", lineHeight: 1.2, margin: "0 0 6px 0" }}>
+                  Verify code.
+                </h1>
+                <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.5, margin: "0 0 36px 0" }}>
+                  We sent a 6-digit confirmation code to <strong style={{ color: T.dark }}>{email}</strong>. Please enter it below.
+                </p>
 
-            <form onSubmit={handleSubmit} noValidate>
-              {/* Global Error Banner */}
-              {authError && (
-                <div role="alert" style={{ background: T.errorBg, border: `1px solid ${T.errorBorder}`, padding: "10px 14px", marginBottom: "16px", fontSize: "12px", color: T.errorText }}>
-                  {authError}
-                </div>
-              )}
+                <form onSubmit={handleVerifyOtp} noValidate>
+                  {/* Global Error Banner */}
+                  {authError && (
+                    <div role="alert" style={{ background: T.errorBg, border: `1px solid ${T.errorBorder}`, padding: "10px 14px", marginBottom: "16px", fontSize: "12px", color: T.errorText }}>
+                      {authError}
+                    </div>
+                  )}
 
-              {/* First Name & Last Name */}
-              <div style={{ display: "flex", gap: "16px", marginBottom: "20px" }}>
-                <div style={{ flex: 1 }}>
-                  <label htmlFor="register-firstname" style={labelSt}>First Name</label>
-                  <input
-                    id="register-firstname"
-                    type="text"
-                    placeholder="John"
-                    value={firstName}
-                    onChange={(e) => { setFirstName(e.target.value); if (fnError) setFnError(""); }}
-                    onFocus={() => setFnFocused(true)}
-                    onBlur={() => setFnFocused(false)}
-                    aria-describedby={fnError ? "register-firstname-error" : undefined}
-                    aria-invalid={fnError ? "true" : "false"}
-                    style={{ ...baseInput, borderColor: fnBorder }}
-                  />
-                  {fnError && <span id="register-firstname-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{fnError}</span>}
-                </div>
+                  {/* OTP Code */}
+                  <div style={{ marginBottom: "24px" }}>
+                    <label htmlFor="register-otp" style={labelSt}>6-Digit Code</label>
+                    <input
+                      id="register-otp"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={6}
+                      placeholder="123456"
+                      value={otpCode}
+                      onChange={(e) => { setOtpCode(e.target.value); if (otpError) setOtpError(""); }}
+                      onFocus={() => setOtpFocused(true)}
+                      onBlur={() => setOtpFocused(false)}
+                      aria-describedby={otpError ? "register-otp-error" : undefined}
+                      aria-invalid={otpError ? "true" : "false"}
+                      style={{ ...baseInput, letterSpacing: otpCode ? "0.5em" : "normal", textAlign: otpCode ? "center" : "left", fontSize: otpCode ? "18px" : "13px", borderColor: otpError ? T.errorRed : isOtpValid ? T.successGreen : otpFocused ? T.dark : T.border }}
+                    />
+                    {otpError && <span id="register-otp-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{otpError}</span>}
+                  </div>
 
-                <div style={{ flex: 1 }}>
-                  <label htmlFor="register-lastname" style={labelSt}>Last Name</label>
-                  <input
-                    id="register-lastname"
-                    type="text"
-                    placeholder="Doe"
-                    value={lastName}
-                    onChange={(e) => { setLastName(e.target.value); if (lnError) setLnError(""); }}
-                    onFocus={() => setLnFocused(true)}
-                    onBlur={() => setLnFocused(false)}
-                    aria-describedby={lnError ? "register-lastname-error" : undefined}
-                    aria-invalid={lnError ? "true" : "false"}
-                    style={{ ...baseInput, borderColor: lnBorder }}
-                  />
-                  {lnError && <span id="register-lastname-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{lnError}</span>}
-                </div>
-              </div>
-
-              {/* Phone Number */}
-              <div style={{ marginBottom: "20px" }}>
-                <label htmlFor="register-phone" style={labelSt}>Phone Number</label>
-                <input
-                  id="register-phone"
-                  type="tel"
-                  placeholder="+91 98765 43210"
-                  value={phone}
-                  onChange={(e) => { setPhone(e.target.value); if (phoneError) setPhoneError(""); }}
-                  onFocus={() => setPhoneFocused(true)}
-                  onBlur={() => setPhoneFocused(false)}
-                  aria-describedby={phoneError ? "register-phone-error" : undefined}
-                  aria-invalid={phoneError ? "true" : "false"}
-                  style={{ ...baseInput, borderColor: phoneBorder }}
-                />
-                {phoneError && <span id="register-phone-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{phoneError}</span>}
-              </div>
-
-              {/* Email */}
-              <div style={{ marginBottom: "20px" }}>
-                <label htmlFor="register-email" style={labelSt}>Email address</label>
-                <input
-                  id="register-email"
-                  type="email"
-                  placeholder="you@email.com"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(""); }}
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => setEmailFocused(false)}
-                  aria-describedby={emailError ? "register-email-error" : undefined}
-                  aria-invalid={emailError ? "true" : "false"}
-                  style={{ ...baseInput, borderColor: emailBorder }}
-                />
-                {emailError && <span id="register-email-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{emailError}</span>}
-              </div>
-
-              {/* Password */}
-              <div style={{ marginBottom: "20px" }}>
-                <label htmlFor="register-password" style={labelSt}>Password</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    id="register-password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value); if (pwError) setPwError(""); }}
-                    onFocus={() => setPwFocused(true)}
-                    onBlur={() => setPwFocused(false)}
-                    aria-describedby={pwError ? "register-password-error" : undefined}
-                    aria-invalid={pwError ? "true" : "false"}
-                    style={{ ...baseInput, paddingRight: "44px", borderColor: pwBorder }}
-                  />
+                  {/* Verify Button */}
                   <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 0, color: T.muted }}
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      background: T.dark,
+                      color: "#FFFFFF",
+                      borderRadius: 0,
+                      height: "44px",
+                      width: "100%",
+                      fontSize: "13px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      fontWeight: 500,
+                      border: "none",
+                      cursor: loading ? "not-allowed" : "pointer",
+                      opacity: loading ? 0.7 : 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      marginBottom: "20px",
+                      transition: "opacity 0.15s ease",
+                    }}
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {loading ? (
+                      <>
+                        <span className="ruven-spin" style={{ width: "14px", height: "14px", border: "1.5px solid rgba(255,255,255,0.35)", borderTopColor: "#FFFFFF", borderRadius: "50%", display: "inline-block" }} />
+                        Verifying code…
+                      </>
+                    ) : (
+                      "Verify & Login"
+                    )}
                   </button>
-                </div>
-                {pwError && <span id="register-password-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{pwError}</span>}
 
-                {/* Password strength guide */}
-                <div style={{ marginTop: "8px", display: "flex", flexDirection: "column", gap: "4px" }}>
-                  <div className={`req-item ${hasMinLength ? "active" : ""}`} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    {hasMinLength ? <Check size={10} style={{ color: T.successGreen }} /> : <X size={10} style={{ color: T.errorRed }} />}
-                    <span>At least 6 characters</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginTop: "16px" }}>
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      disabled={countdown > 0}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: countdown > 0 ? T.muted : T.dark,
+                        cursor: countdown > 0 ? "not-allowed" : "pointer",
+                        textDecoration: countdown > 0 ? "none" : "underline",
+                        padding: 0,
+                        fontFamily: "inherit"
+                      }}
+                    >
+                      {countdown > 0 ? `Resend Code (${countdown}s)` : "Resend Code"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowOtpScreen(false)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: T.muted,
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        padding: 0,
+                        fontFamily: "inherit"
+                      }}
+                    >
+                      Change Details
+                    </button>
                   </div>
-                  <div className={`req-item ${hasLetter ? "active" : ""}`} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    {hasLetter ? <Check size={10} style={{ color: T.successGreen }} /> : <X size={10} style={{ color: T.errorRed }} />}
-                    <span>Contains at least one letter</span>
-                  </div>
-                  <div className={`req-item ${hasNumber ? "active" : ""}`} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    {hasNumber ? <Check size={10} style={{ color: T.successGreen }} /> : <X size={10} style={{ color: T.errorRed }} />}
-                    <span>Contains at least one number</span>
-                  </div>
-                </div>
-              </div>
+                </form>
+              </>
+            ) : (
+              <>
+                <h1 style={{ fontSize: "28px", fontWeight: 600, color: T.dark, letterSpacing: "-0.025em", lineHeight: 1.2, margin: "0 0 6px 0" }}>
+                  Create account.
+                </h1>
+                <p style={{ fontSize: "13px", color: T.muted, lineHeight: 1.5, margin: "0 0 36px 0" }}>
+                  Sign up for a Ruven Studio account.
+                </p>
 
-              {/* Confirm Password */}
-              <div style={{ marginBottom: "20px" }}>
-                <label htmlFor="register-confirm-password" style={labelSt}>Confirm Password</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    id="register-confirm-password"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => { setConfirmPassword(e.target.value); if (confirmPwError) setConfirmPwError(""); }}
-                    onFocus={() => setConfirmPwFocused(true)}
-                    onBlur={() => setConfirmPwFocused(false)}
-                    aria-describedby={confirmPwError ? "register-confirm-error" : undefined}
-                    aria-invalid={confirmPwError ? "true" : "false"}
-                    style={{ ...baseInput, paddingRight: "44px", borderColor: confirmPwBorder }}
-                  />
+                <form onSubmit={handleSubmit} noValidate>
+                  {/* Global Error Banner */}
+                  {authError && (
+                    <div role="alert" style={{ background: T.errorBg, border: `1px solid ${T.errorBorder}`, padding: "10px 14px", marginBottom: "16px", fontSize: "12px", color: T.errorText }}>
+                      {authError}
+                    </div>
+                  )}
+
+                  {/* First Name & Last Name */}
+                  <div style={{ display: "flex", gap: "16px", marginBottom: "20px" }}>
+                    <div style={{ flex: 1 }}>
+                      <label htmlFor="register-firstname" style={labelSt}>First Name</label>
+                      <input
+                        id="register-firstname"
+                        type="text"
+                        placeholder="John"
+                        value={firstName}
+                        onChange={(e) => { setFirstName(e.target.value); if (fnError) setFnError(""); }}
+                        onFocus={() => setFnFocused(true)}
+                        onBlur={() => setFnFocused(false)}
+                        aria-describedby={fnError ? "register-firstname-error" : undefined}
+                        aria-invalid={fnError ? "true" : "false"}
+                        style={{ ...baseInput, borderColor: fnBorder }}
+                      />
+                      {fnError && <span id="register-firstname-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{fnError}</span>}
+                    </div>
+
+                    <div style={{ flex: 1 }}>
+                      <label htmlFor="register-lastname" style={labelSt}>Last Name</label>
+                      <input
+                        id="register-lastname"
+                        type="text"
+                        placeholder="Doe"
+                        value={lastName}
+                        onChange={(e) => { setLastName(e.target.value); if (lnError) setLnError(""); }}
+                        onFocus={() => setLnFocused(true)}
+                        onBlur={() => setLnFocused(false)}
+                        aria-describedby={lnError ? "register-lastname-error" : undefined}
+                        aria-invalid={lnError ? "true" : "false"}
+                        style={{ ...baseInput, borderColor: lnBorder }}
+                      />
+                      {lnError && <span id="register-lastname-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{lnError}</span>}
+                    </div>
+                  </div>
+
+                  {/* Phone Number */}
+                  <div style={{ marginBottom: "20px" }}>
+                    <label htmlFor="register-phone" style={labelSt}>Phone Number</label>
+                    <input
+                      id="register-phone"
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      value={phone}
+                      onChange={(e) => { setPhone(e.target.value); if (phoneError) setPhoneError(""); }}
+                      onFocus={() => setPhoneFocused(true)}
+                      onBlur={() => setPhoneFocused(false)}
+                      aria-describedby={phoneError ? "register-phone-error" : undefined}
+                      aria-invalid={phoneError ? "true" : "false"}
+                      style={{ ...baseInput, borderColor: phoneBorder }}
+                    />
+                    {phoneError && <span id="register-phone-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{phoneError}</span>}
+                  </div>
+
+                  {/* Email */}
+                  <div style={{ marginBottom: "20px" }}>
+                    <label htmlFor="register-email" style={labelSt}>Email address</label>
+                    <input
+                      id="register-email"
+                      type="email"
+                      placeholder="you@email.com"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(""); }}
+                      onFocus={() => setEmailFocused(true)}
+                      onBlur={() => setEmailFocused(false)}
+                      aria-describedby={emailError ? "register-email-error" : undefined}
+                      aria-invalid={emailError ? "true" : "false"}
+                      style={{ ...baseInput, borderColor: emailBorder }}
+                    />
+                    {emailError && <span id="register-email-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{emailError}</span>}
+                  </div>
+
+                  {/* Terms Checkbox */}
+                  <div style={{ marginBottom: "24px" }}>
+                    <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", cursor: "pointer", fontSize: "11px", color: "#666666", userSelect: "none" }}>
+                      <input
+                        type="checkbox"
+                        checked={agreeTerms}
+                        onChange={(e) => { setAgreeTerms(e.target.checked); if (termsError) setTermsError(""); }}
+                        style={{ accentColor: T.dark, cursor: "pointer", marginTop: "2px" }}
+                      />
+                      <span>
+                        I agree to the{" "}
+                        <Link href="/terms-of-service" style={{ textDecoration: "underline", color: T.dark }}>Terms of Service</Link>
+                        {" and "}
+                        <Link href="/privacy-policy" style={{ textDecoration: "underline", color: T.dark }}>Privacy Policy</Link>
+                      </span>
+                    </label>
+                    {termsError && <span role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{termsError}</span>}
+                  </div>
+
+                  {/* Submit Button */}
                   <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 0, color: T.muted }}
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      background: T.dark,
+                      color: "#FFFFFF",
+                      borderRadius: 0,
+                      height: "44px",
+                      width: "100%",
+                      fontSize: "13px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      fontWeight: 500,
+                      border: "none",
+                      cursor: loading ? "not-allowed" : "pointer",
+                      opacity: loading ? 0.7 : 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      marginBottom: "20px",
+                      transition: "opacity 0.15s ease",
+                    }}
                   >
-                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {loading ? (
+                      <>
+                        <span className="ruven-spin" style={{ width: "14px", height: "14px", border: "1.5px solid rgba(255,255,255,0.35)", borderTopColor: "#FFFFFF", borderRadius: "50%", display: "inline-block" }} />
+                        Creating account…
+                      </>
+                    ) : (
+                      "Create Account"
+                    )}
                   </button>
-                </div>
-                {confirmPwError && <span id="register-confirm-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{confirmPwError}</span>}
-              </div>
 
-              {/* Terms Checkbox */}
-              <div style={{ marginBottom: "24px" }}>
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", cursor: "pointer", fontSize: "11px", color: "#666666", userSelect: "none" }}>
-                  <input
-                    type="checkbox"
-                    checked={agreeTerms}
-                    onChange={(e) => { setAgreeTerms(e.target.checked); if (termsError) setTermsError(""); }}
-                    style={{ accentColor: T.dark, cursor: "pointer", marginTop: "2px" }}
-                  />
-                  <span>
-                    I agree to the{" "}
-                    <Link href="/terms-of-service" style={{ textDecoration: "underline", color: T.dark }}>Terms of Service</Link>
-                    {" and "}
-                    <Link href="/privacy-policy" style={{ textDecoration: "underline", color: T.dark }}>Privacy Policy</Link>
-                  </span>
-                </label>
-                {termsError && <span role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{termsError}</span>}
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  background: T.dark,
-                  color: "#FFFFFF",
-                  borderRadius: 0,
-                  height: "44px",
-                  width: "100%",
-                  fontSize: "13px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  fontWeight: 500,
-                  border: "none",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.7 : 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  marginBottom: "20px",
-                  transition: "opacity 0.15s ease",
-                }}
-              >
-                {loading ? (
-                  <>
-                    <span className="ruven-spin" style={{ width: "14px", height: "14px", border: "1.5px solid rgba(255,255,255,0.35)", borderTopColor: "#FFFFFF", borderRadius: "50%", display: "inline-block" }} />
-                    Creating account…
-                  </>
-                ) : (
-                  "Create Account"
-                )}
-              </button>
-
-              <p style={{ textAlign: "center", fontSize: "12px", color: T.muted, margin: 0 }}>
-                Already have an account?
-                <Link href="/login" style={{ color: T.dark, fontWeight: 600, textDecoration: "underline", marginLeft: "4px" }}>
-                  Sign in
-                </Link>
-              </p>
-            </form>
+                  <p style={{ textAlign: "center", fontSize: "12px", color: T.muted, margin: 0 }}>
+                    Already have an account?
+                    <Link href="/login" style={{ color: T.dark, fontWeight: 600, textDecoration: "underline", marginLeft: "4px" }}>
+                      Sign in
+                    </Link>
+                  </p>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </div>
