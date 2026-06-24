@@ -269,7 +269,7 @@ export default function StorefrontHomePage() {
     switch (sectionKey) {
       case "trust-strip":
         return showTrustStrip && (
-          <div key="trust-strip" className="trust-strip-v2">
+          <div key="trust-strip" className="trust-strip-v2 border-b border-border-warm">
             <div className="trust-strip-container">
               {trustItems.map((item: any, idx: number) => {
                 const IconComponent = iconMap[item.icon] || Shirt;
@@ -369,7 +369,7 @@ export default function StorefrontHomePage() {
 
       case "featured-campaign":
         return showFeaturedCampaign && (
-          <section key="featured-campaign" className="featured-campaign section-padding-lg">
+          <section key="featured-campaign" className="featured-campaign section-padding-lg border-b border-border-warm">
             <div className="campaign-header">
               <div>
                 <span className="section-subtitle-lowercase">{campaignSettings.subtitle}</span>
@@ -490,31 +490,6 @@ export default function StorefrontHomePage() {
           </section>
         );
 
-      case "scripture-highlight":
-        return showScripture && (
-          <section key="scripture-highlight" className="scripture-highlight section-padding-lg">
-            <div className="scripture-container">
-              <div className="scripture-vector">
-                <svg viewBox="0 0 100 100" className="scripture-svg-graphic" aria-hidden="true">
-                  <path d="M50,10 L50,90 M20,35 L80,35" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.3"></path>
-                  <circle cx="50" cy="35" r="22" stroke="currentColor" strokeWidth="1" stroke-dasharray="2 3" fill="none" opacity="0.25"></circle>
-                </svg>
-              </div>
-              <span className="verse-label-accent">{scriptureSettings.label}</span>
-              <blockquote className="modern-bible-verse">
-                "{scriptureSettings.verse}"
-              </blockquote>
-              <p className="modern-bible-reference">{scriptureSettings.reference}</p>
-              
-              <div className="verse-connection-box">
-                <h4>{scriptureSettings.explanation_title}</h4>
-                <p>{scriptureSettings.explanation_text}</p>
-                <Link href={scriptureSettings.cta_link} className="verse-connect-link">{scriptureSettings.cta_text}</Link>
-              </div>
-            </div>
-          </section>
-        );
-
       case "best-sellers":
         return showBestSellers && (
           <section key="best-sellers" className="best-sellers-editorial section-padding-lg border-b border-border-warm">
@@ -526,9 +501,22 @@ export default function StorefrontHomePage() {
             <div className="best-sellers-layout">
               {/* Card 1: Hoodie */}
               {hoodieProduct && (
-                <article className="product-card-v2" data-id={hoodieProduct.id}>
-                  <div className="product-card-img-wrap">
-                    <img src={hoodieProduct.image} alt={hoodieProduct.name} className="product-card-img" />
+                <article className="apple-product-card" data-id={hoodieProduct.id}>
+                  <div className="apple-card-text">
+                    <div className="apple-card-header-row">
+                      <span className="apple-card-scripture-ref">{hoodieProduct.scripture ? `${hoodieProduct.scripture.book} ${hoodieProduct.scripture.chapter}:${hoodieProduct.scripture.verse}` : "Romans 12:2"}</span>
+                      <span className="apple-card-badge best-seller">Best Seller</span>
+                    </div>
+                    <h3 className="apple-card-title">{hoodieProduct.name}</h3>
+                    <p className="apple-card-fabric">Fabric: 380 GSM Ultra-Heavy French Terry</p>
+                    <div className="apple-card-price-row">
+                      <span className="apple-card-price">₹{hoodieProduct.base_price}</span>
+                      {hoodieProduct.original_price && <span className="apple-card-price-original">₹{hoodieProduct.original_price}</span>}
+                    </div>
+                  </div>
+                  
+                  <div className="apple-card-img-wrap">
+                    <img src={hoodieProduct.image} alt={hoodieProduct.name} className="apple-card-img" />
                     <button 
                       onClick={() => handleWishlistToggle(hoodieProduct)}
                       className={`wishlist-btn ${isItemInWishlist(hoodieProduct.id) ? "active" : ""}`} 
@@ -536,10 +524,9 @@ export default function StorefrontHomePage() {
                     >
                       <Heart className="w-4 h-4 fill-current" />
                     </button>
-                    <span className="badge-tag">Best Seller</span>
                     
                     {/* Slide-up Quick Add Drawer on Hover */}
-                    <div className="quick-add-hover-drawer">
+                    <div className="apple-card-quick-add">
                       <span className="quick-add-drawer-label">Quick Add</span>
                       <div className="quick-add-drawer-sizes">
                         {["M", "L", "XL"].map((size) => (
@@ -554,27 +541,27 @@ export default function StorefrontHomePage() {
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="product-card-details">
-                    <span className="product-scripture-ref">{hoodieProduct.scripture ? `${hoodieProduct.scripture.book} ${hoodieProduct.scripture.chapter}:${hoodieProduct.scripture.verse}` : "Romans 12:2"}</span>
-                    <h3 className="product-card-title">{hoodieProduct.name}</h3>
-                    <p className="product-card-fabric">Fabric: 380 GSM Ultra-Heavy French Terry</p>
-                    <div className="product-card-price-row">
-                      <span className="product-card-price">₹{hoodieProduct.base_price}</span>
-                      {hoodieProduct.original_price && <span className="product-card-price-original">₹{hoodieProduct.original_price}</span>}
-                    </div>
-                    {bestSellersSettings.hero_product_verse && (
-                      <p className="product-card-verse-quote">"{bestSellersSettings.hero_product_verse}"</p>
-                    )}
-                  </div>
                 </article>
               )}
 
               {/* Card 2: Tee */}
               {teeProduct && (
-                <article className="product-card-v2" data-id={teeProduct.id}>
-                  <div className="product-card-img-wrap">
-                    <img src={teeProduct.image} alt={teeProduct.name} className="product-card-img" />
+                <article className="apple-product-card" data-id={teeProduct.id}>
+                  <div className="apple-card-text">
+                    <div className="apple-card-header-row">
+                      <span className="apple-card-scripture-ref">{teeProduct.scripture ? `${teeProduct.scripture.book} ${teeProduct.scripture.chapter}:${teeProduct.scripture.verse}` : "Romans 13:12"}</span>
+                      <span className="apple-card-badge new-drop">New Drop</span>
+                    </div>
+                    <h3 className="apple-card-title">{teeProduct.name}</h3>
+                    <p className="apple-card-fabric">Fabric: 240 GSM Organic Heavyweight Cotton</p>
+                    <div className="apple-card-price-row">
+                      <span className="apple-card-price">₹{teeProduct.base_price}</span>
+                      {teeProduct.original_price && <span className="apple-card-price-original">₹{teeProduct.original_price}</span>}
+                    </div>
+                  </div>
+                  
+                  <div className="apple-card-img-wrap">
+                    <img src={teeProduct.image} alt={teeProduct.name} className="apple-card-img" />
                     <button 
                       onClick={() => handleWishlistToggle(teeProduct)}
                       className={`wishlist-btn ${isItemInWishlist(teeProduct.id) ? "active" : ""}`} 
@@ -582,10 +569,9 @@ export default function StorefrontHomePage() {
                     >
                       <Heart className="w-4 h-4 fill-current" />
                     </button>
-                    <span className="badge-tag new-drop-badge">New Drop</span>
                     
                     {/* Slide-up Quick Add Drawer on Hover */}
-                    <div className="quick-add-hover-drawer">
+                    <div className="apple-card-quick-add">
                       <span className="quick-add-drawer-label">Quick Add</span>
                       <div className="quick-add-drawer-sizes">
                         {["S", "M", "L", "XL"].map((size) => (
@@ -599,17 +585,6 @@ export default function StorefrontHomePage() {
                         ))}
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="product-card-details">
-                    <span className="product-scripture-ref">{teeProduct.scripture ? `${teeProduct.scripture.book} ${teeProduct.scripture.chapter}:${teeProduct.scripture.verse}` : "Romans 13:12"}</span>
-                    <h3 className="product-card-title">{teeProduct.name}</h3>
-                    <p className="product-card-fabric">Fabric: 240 GSM Organic Heavyweight Cotton</p>
-                    <div className="product-card-price-row">
-                      <span className="product-card-price">₹{teeProduct.base_price}</span>
-                      {teeProduct.original_price && <span className="product-card-price-original">₹{teeProduct.original_price}</span>}
-                    </div>
-                    <p className="product-card-verse-quote">"Cast off the works of darkness and put on the armor of light."</p>
                   </div>
                 </article>
               )}
@@ -730,9 +705,10 @@ export default function StorefrontHomePage() {
     }
   };
 
-  const sectionOrderKeys = sections.length > 0 
+  const sectionOrderKeys = (sections.length > 0 
     ? sections.map(s => s.section_key)
-    : ["trust-strip", "editorial-mission", "featured-campaign", "lifestyle-immersive", "scripture-highlight", "best-sellers", "why-ruven", "testimonials", "instagram-gallery"];
+    : ["trust-strip", "editorial-mission", "featured-campaign", "lifestyle-immersive", "best-sellers", "why-ruven", "testimonials", "instagram-gallery"]
+  ).filter(key => key !== "scripture-highlight");
 
   // FAQ Accordion State & Component
   const FAQSection = () => {
