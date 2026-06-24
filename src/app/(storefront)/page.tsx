@@ -286,7 +286,7 @@ export default function StorefrontHomePage() {
 
       case "editorial-mission":
         return showMission && (
-          <section key="editorial-mission" className="editorial-mission section-padding-lg" id="story-section">
+          <section key="editorial-mission" className="editorial-mission section-padding-lg border-b border-border-warm" id="story-section">
             <div className="editorial-mission-grid">
               <motion.div 
                 className="mission-text-col"
@@ -517,96 +517,99 @@ export default function StorefrontHomePage() {
 
       case "best-sellers":
         return showBestSellers && (
-          <section key="best-sellers" className="best-sellers-editorial section-padding-lg">
+          <section key="best-sellers" className="best-sellers-editorial section-padding-lg border-b border-border-warm">
             <div className="best-sellers-header">
               <span className="section-subtitle-lowercase">{bestSellersSettings.subtitle}</span>
               <h2 className="editorial-title-v2">{bestSellersSettings.title}</h2>
             </div>
 
             <div className="best-sellers-layout">
-              {/* Hero Best Seller */}
+              {/* Card 1: Hoodie */}
               {hoodieProduct && (
-                <article className="product-card best-seller-hero-card" data-id={hoodieProduct.id}>
-                  <div className="best-seller-hero-grid">
-                    <div className="best-seller-hero-img-side">
-                      <img src={hoodieProduct.image} alt={hoodieProduct.name} className="best-seller-hero-img" />
-                      <button 
-                        onClick={() => handleWishlistToggle(hoodieProduct)}
-                        className={`wishlist-btn ${isItemInWishlist(hoodieProduct.id) ? "active" : ""}`} 
-                        aria-label="Add to wishlist"
-                      >
-                        <Heart className="w-4 h-4 fill-current" />
-                      </button>
-                      <span className="badge-tag">Best Seller</span>
-                    </div>
-                    <div className="best-seller-hero-info-side">
-                      <span className="best-seller-verse-ref">{hoodieProduct.scripture ? `${hoodieProduct.scripture.book} ${hoodieProduct.scripture.chapter}:${hoodieProduct.scripture.verse}` : "Romans 12:2"}</span>
-                      <h3 className="best-seller-title">{hoodieProduct.name}</h3>
-                      <p className="best-seller-price">
-                        ₹{hoodieProduct.base_price} {hoodieProduct.original_price && <span className="price-original">₹{hoodieProduct.original_price}</span>}
-                      </p>
-                      
-                      <p className="best-seller-fabric-summary">
-                        {bestSellersSettings.hero_product_fabric}
-                      </p>
-                      
-                      <div className="best-seller-verse-preview">
-                        <p className="verse-quote-short">"{bestSellersSettings.hero_product_verse}"</p>
-                      </div>
-                      
-                      <div className="best-seller-quick-add">
-                        <span className="quick-add-label">Quick Add Size</span>
-                        <div className="size-selector-v2">
-                          {["M", "L", "XL"].map((size) => (
-                            <button 
-                              key={size}
-                              onClick={() => handleQuickAdd(hoodieProduct, size)}
-                              className="size-btn" 
-                              data-size={size}
-                            >
-                              {size}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              )}
-
-              {/* Supporting Best Seller */}
-              {teeProduct && (
-                <article className="product-card best-seller-side-card" data-id={teeProduct.id}>
-                  <button 
-                    onClick={() => handleWishlistToggle(teeProduct)}
-                    className={`wishlist-btn ${isItemInWishlist(teeProduct.id) ? "active" : ""}`} 
-                    aria-label="Add to wishlist"
-                  >
-                    <Heart className="w-4 h-4 fill-current" />
-                  </button>
-                  <div className="best-seller-side-img-wrap">
-                    <img src={teeProduct.image} alt={teeProduct.name} className="best-seller-side-img" />
-                    <span className="badge-tag">New Drop</span>
-                  </div>
-                  <div className="best-seller-side-info">
-                    <span className="best-seller-verse-ref">{teeProduct.scripture ? `${teeProduct.scripture.book} ${teeProduct.scripture.chapter}:${teeProduct.scripture.verse}` : "Romans 13:12"}</span>
-                    <h3 className="best-seller-title">{teeProduct.name}</h3>
-                    <p className="best-seller-price">₹{teeProduct.base_price}</p>
+                <article className="product-card-v2" data-id={hoodieProduct.id}>
+                  <div className="product-card-img-wrap">
+                    <img src={hoodieProduct.image} alt={hoodieProduct.name} className="product-card-img" />
+                    <button 
+                      onClick={() => handleWishlistToggle(hoodieProduct)}
+                      className={`wishlist-btn ${isItemInWishlist(hoodieProduct.id) ? "active" : ""}`} 
+                      aria-label="Add to wishlist"
+                    >
+                      <Heart className="w-4 h-4 fill-current" />
+                    </button>
+                    <span className="badge-tag">Best Seller</span>
                     
-                    <div className="best-seller-quick-add-mini">
-                      <div className="size-selector-v2">
-                        {["S", "M", "L", "XL"].map((size) => (
+                    {/* Slide-up Quick Add Drawer on Hover */}
+                    <div className="quick-add-hover-drawer">
+                      <span className="quick-add-drawer-label">Quick Add</span>
+                      <div className="quick-add-drawer-sizes">
+                        {["M", "L", "XL"].map((size) => (
                           <button 
                             key={size}
-                            onClick={() => handleQuickAdd(teeProduct, size)}
-                            className="size-btn" 
-                            data-size={size}
+                            onClick={() => handleQuickAdd(hoodieProduct, size)}
+                            className="quick-add-size-circle"
                           >
                             {size}
                           </button>
                         ))}
                       </div>
                     </div>
+                  </div>
+                  
+                  <div className="product-card-details">
+                    <span className="product-scripture-ref">{hoodieProduct.scripture ? `${hoodieProduct.scripture.book} ${hoodieProduct.scripture.chapter}:${hoodieProduct.scripture.verse}` : "Romans 12:2"}</span>
+                    <h3 className="product-card-title">{hoodieProduct.name}</h3>
+                    <p className="product-card-fabric">Fabric: 380 GSM Ultra-Heavy French Terry</p>
+                    <div className="product-card-price-row">
+                      <span className="product-card-price">₹{hoodieProduct.base_price}</span>
+                      {hoodieProduct.original_price && <span className="product-card-price-original">₹{hoodieProduct.original_price}</span>}
+                    </div>
+                    {bestSellersSettings.hero_product_verse && (
+                      <p className="product-card-verse-quote">"{bestSellersSettings.hero_product_verse}"</p>
+                    )}
+                  </div>
+                </article>
+              )}
+
+              {/* Card 2: Tee */}
+              {teeProduct && (
+                <article className="product-card-v2" data-id={teeProduct.id}>
+                  <div className="product-card-img-wrap">
+                    <img src={teeProduct.image} alt={teeProduct.name} className="product-card-img" />
+                    <button 
+                      onClick={() => handleWishlistToggle(teeProduct)}
+                      className={`wishlist-btn ${isItemInWishlist(teeProduct.id) ? "active" : ""}`} 
+                      aria-label="Add to wishlist"
+                    >
+                      <Heart className="w-4 h-4 fill-current" />
+                    </button>
+                    <span className="badge-tag new-drop-badge">New Drop</span>
+                    
+                    {/* Slide-up Quick Add Drawer on Hover */}
+                    <div className="quick-add-hover-drawer">
+                      <span className="quick-add-drawer-label">Quick Add</span>
+                      <div className="quick-add-drawer-sizes">
+                        {["S", "M", "L", "XL"].map((size) => (
+                          <button 
+                            key={size}
+                            onClick={() => handleQuickAdd(teeProduct, size)}
+                            className="quick-add-size-circle"
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="product-card-details">
+                    <span className="product-scripture-ref">{teeProduct.scripture ? `${teeProduct.scripture.book} ${teeProduct.scripture.chapter}:${teeProduct.scripture.verse}` : "Romans 13:12"}</span>
+                    <h3 className="product-card-title">{teeProduct.name}</h3>
+                    <p className="product-card-fabric">Fabric: 240 GSM Organic Heavyweight Cotton</p>
+                    <div className="product-card-price-row">
+                      <span className="product-card-price">₹{teeProduct.base_price}</span>
+                      {teeProduct.original_price && <span className="product-card-price-original">₹{teeProduct.original_price}</span>}
+                    </div>
+                    <p className="product-card-verse-quote">"Cast off the works of darkness and put on the armor of light."</p>
                   </div>
                 </article>
               )}
@@ -616,7 +619,7 @@ export default function StorefrontHomePage() {
 
       case "why-ruven":
         return showWhyRuven && (
-          <section key="why-ruven" className="why-ruven section-padding-lg">
+          <section key="why-ruven" className="why-ruven section-padding-lg border-b border-border-warm">
             <div className="why-ruven-header">
               <span className="section-subtitle-lowercase">{whyRuvenSettings.subtitle}</span>
               <h2 className="editorial-title-v2">{whyRuvenSettings.title}</h2>
@@ -640,7 +643,7 @@ export default function StorefrontHomePage() {
 
       case "testimonials":
         return showTestimonials && (
-          <section key="testimonials" className="community-testimonials">
+          <section key="testimonials" className="community-testimonials border-b border-border-warm">
             <div className="testimonials-header-v2">
               <span className="testimonials-subtitle-v2">{testimonialsSettings.subtitle}</span>
               <h2 className="testimonials-title-v2">{testimonialsSettings.title}</h2>
@@ -688,7 +691,7 @@ export default function StorefrontHomePage() {
 
       case "instagram-gallery":
         return showInstagram && (
-          <section key="instagram-gallery" className="instagram-gallery section-padding-lg">
+          <section key="instagram-gallery" className="instagram-gallery section-padding-lg border-b border-border-warm">
             <div className="instagram-header-v2">
               <span className="instagram-subtitle-v2">{instagramSettings.subtitle}</span>
               <h2 className="instagram-title-v2">{instagramSettings.title}</h2>
