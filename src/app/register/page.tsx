@@ -90,7 +90,7 @@ function RegisterForm() {
   const isLnValid = lastName.trim().length > 0;
   const isPhoneValid = phone.trim().length > 0 && /^\+91\s?\d{10}$|^\d{10}$/.test(phone.trim().replace(/\s/g, ""));
   const isEmailValid = email.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const isOtpValid = otpCode.trim().length === 6 && /^\d+$/.test(otpCode.trim());
+  const isOtpValid = (otpCode.trim().length === 6 || otpCode.trim().length === 8) && /^\d+$/.test(otpCode.trim());
 
   // Countdown timer for Resend
   useEffect(() => {
@@ -189,8 +189,8 @@ function RegisterForm() {
     if (!otpCode.trim()) {
       setOtpError("OTP code is required.");
       return;
-    } else if (otpCode.trim().length !== 6) {
-      setOtpError("OTP code must be exactly 6 digits.");
+    } else if (otpCode.trim().length !== 6 && otpCode.trim().length !== 8) {
+      setOtpError("OTP code must be 6 or 8 digits.");
       return;
     }
 
@@ -202,7 +202,7 @@ function RegisterForm() {
 
     if (isDummy) {
       await new Promise<void>((res) => setTimeout(res, 1200));
-      if (otpCode === "123456" || otpCode.length === 6) {
+      if (otpCode === "123456" || otpCode.length === 6 || otpCode.length === 8) {
         document.cookie = "mock_customer_session=true; path=/; max-age=86400";
         document.cookie = `mock_user_email=${email.trim()}; path=/; max-age=86400`;
         document.cookie = `mock_user_name=${firstName.trim()} ${lastName.trim()}; path=/; max-age=86400`;
@@ -406,22 +406,22 @@ function RegisterForm() {
 
                   {/* OTP Code */}
                   <div style={{ marginBottom: "24px" }}>
-                    <label htmlFor="register-otp" style={labelSt}>6-Digit Code</label>
+                    <label htmlFor="register-otp" style={labelSt}>Verification Code</label>
                     <input
                       id="register-otp"
                       type="text"
                       className="no-double-border"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      maxLength={6}
-                      placeholder="123456"
+                      maxLength={8}
+                      placeholder="123456 (or 12345678)"
                       value={otpCode}
                       onChange={(e) => { setOtpCode(e.target.value); if (otpError) setOtpError(""); }}
                       onFocus={() => setOtpFocused(true)}
                       onBlur={() => setOtpFocused(false)}
                       aria-describedby={otpError ? "register-otp-error" : undefined}
                       aria-invalid={otpError ? "true" : "false"}
-                      style={{ ...baseInput, letterSpacing: otpCode ? "0.5em" : "normal", textAlign: otpCode ? "center" : "left", fontSize: otpCode ? "18px" : "13px", borderColor: otpError ? T.errorRed : isOtpValid ? T.successGreen : otpFocused ? T.brandBurgundy : T.border }}
+                      style={{ ...baseInput, letterSpacing: otpCode ? "0.3em" : "normal", textAlign: otpCode ? "center" : "left", fontSize: otpCode ? "18px" : "13px", borderColor: otpError ? T.errorRed : isOtpValid ? T.successGreen : otpFocused ? T.brandBurgundy : T.border }}
                     />
                     {otpError && <span id="register-otp-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{otpError}</span>}
                   </div>

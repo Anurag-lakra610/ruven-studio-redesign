@@ -106,7 +106,7 @@ function LoginForm() {
   const phoneRegex = /^\+?91\s?\d{10}$|^\d{10}$/; // Indian style or general 10 digit
 
   const isIdValid = emailRegex.test(identifier.trim()) || phoneRegex.test(identifier.trim().replace(/\s/g, ""));
-  const isOtpValid = otpCode.trim().length === 6 && /^\d+$/.test(otpCode.trim());
+  const isOtpValid = (otpCode.trim().length === 6 || otpCode.trim().length === 8) && /^\d+$/.test(otpCode.trim());
 
   const handleGetOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -225,8 +225,8 @@ function LoginForm() {
     if (!otpCode.trim()) {
       setOtpError("OTP code is required.");
       return;
-    } else if (otpCode.trim().length !== 6) {
-      setOtpError("OTP code must be exactly 6 digits.");
+    } else if (otpCode.trim().length !== 6 && otpCode.trim().length !== 8) {
+      setOtpError("OTP code must be 6 or 8 digits.");
       return;
     }
 
@@ -242,7 +242,7 @@ function LoginForm() {
     if (!isEmail) {
       if (isSandboxMode) {
         await new Promise<void>((res) => setTimeout(res, 1000));
-        if (otpCode === "123456" || otpCode.length === 6) {
+        if (otpCode === "123456" || otpCode.length === 6 || otpCode.length === 8) {
           document.cookie = "mock_customer_session=true; path=/; max-age=86400";
           document.cookie = `mock_user_email=${val}; path=/; max-age=86400`;
           document.cookie = "mock_user_name=Phone Customer; path=/; max-age=86400";
@@ -285,7 +285,7 @@ function LoginForm() {
     // 2. Sandbox bypass login
     if (isSandboxMode) {
       await new Promise<void>((res) => setTimeout(res, 1000));
-      if (otpCode === "123456" || otpCode.length === 6) {
+      if (otpCode === "123456" || otpCode.length === 6 || otpCode.length === 8) {
         if (val === "admin@ruven.in") {
           document.cookie = "mock_admin_session=true; path=/; max-age=86400";
           document.cookie = "mock_user_email=admin@ruven.in; path=/; max-age=86400";
@@ -546,22 +546,22 @@ function LoginForm() {
 
                   {/* OTP Code */}
                   <div style={{ marginBottom: "24px" }}>
-                    <label htmlFor="login-otp" style={labelSt}>6-Digit Code</label>
+                    <label htmlFor="login-otp" style={labelSt}>Verification Code</label>
                     <input
                       id="login-otp"
                       type="text"
                       className="no-double-border"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      maxLength={6}
-                      placeholder="123456"
+                      maxLength={8}
+                      placeholder="123456 (or 12345678)"
                       value={otpCode}
                       onChange={(e) => { setOtpCode(e.target.value); if (otpError) setOtpError(""); }}
                       onFocus={() => setOtpFocused(true)}
                       onBlur={() => setOtpFocused(false)}
                       aria-describedby={otpError ? "login-otp-error" : undefined}
                       aria-invalid={otpError ? "true" : "false"}
-                      style={{ ...baseInput, letterSpacing: otpCode ? "0.5em" : "normal", textAlign: otpCode ? "center" : "left", fontSize: otpCode ? "18px" : "13px", borderColor: otpError ? T.errorRed : isOtpValid ? T.successGreen : otpFocused ? T.brandBurgundy : T.border }}
+                      style={{ ...baseInput, letterSpacing: otpCode ? "0.3em" : "normal", textAlign: otpCode ? "center" : "left", fontSize: otpCode ? "18px" : "13px", borderColor: otpError ? T.errorRed : isOtpValid ? T.successGreen : otpFocused ? T.brandBurgundy : T.border }}
                     />
                     {otpError && <span id="login-otp-error" role="alert" style={{ display: "block", fontSize: "11px", color: T.errorRed, marginTop: "4px" }}>{otpError}</span>}
                   </div>
