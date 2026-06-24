@@ -112,6 +112,140 @@ export const MOCK_PRODUCTS: MockProduct[] = [
       { id: "d1111111-1111-1111-1111-111111111116", sku: "RU-HD-RNW-L", size: "L", color: "Warm Charcoal", stock: 80 },
       { id: "d1111111-1111-1111-1111-111111111117", sku: "RU-HD-RNW-XL", size: "XL", color: "Warm Charcoal", stock: 45 },
     ]
+  },
+  {
+    id: "f1111111-1111-1111-1111-111111111113",
+    category_id: "c1111111-1111-1111-1111-111111111113",
+    category_slug: "hoodies",
+    name: "Armor of Light Heavyweight Zip Hoodie",
+    slug: "armor-of-light-heavyweight-zip-hoodie",
+    description: "380 GSM ultra-heavy French Terry zip-up hoodie. Double-lined hoodie with custom metallic zipper and screen-printed linear shield details representing strength.",
+    base_price: 3799.00,
+    original_price: 4599.00,
+    image: "/faith_hoodie_product.png",
+    status: "Published",
+    meta_title: "Armor of Light Heavyweight Zip Hoodie — Ruven Studio",
+    meta_description: "380 GSM premium French Terry zip hoodie with linear shield design. Inspired by Romans 13:12.",
+    scripture: {
+      book: "Romans",
+      chapter: 13,
+      verse: "12",
+      translation: "ESV",
+      text_content: "The night is far gone; the day is at hand. So then let us cast off the works of darkness and put on the armor of light."
+    },
+    variants: [
+      { id: "d1111111-1111-1111-1111-111111111130", sku: "RU-ZIP-S", size: "S", color: "Warm Charcoal", stock: 30 },
+      { id: "d1111111-1111-1111-1111-111111111131", sku: "RU-ZIP-M", size: "M", color: "Warm Charcoal", stock: 50 },
+      { id: "d1111111-1111-1111-1111-111111111132", sku: "RU-ZIP-L", size: "L", color: "Warm Charcoal", stock: 50 },
+      { id: "d1111111-1111-1111-1111-111111111133", sku: "RU-ZIP-XL", size: "XL", color: "Warm Charcoal", stock: 25 },
+    ]
+  },
+  {
+    id: "f1111111-1111-1111-1111-111111111114",
+    category_id: "c1111111-1111-1111-1111-111111111112",
+    category_slug: "oversized-tees",
+    name: "Guard Your Heart Oversized Tee",
+    slug: "guard-your-heart-oversized-tee",
+    description: "240 GSM organic cotton boxy oversized streetwear tee. Linear anatomical heart graphic screen-printed on the back with Proverbs 4:23 lettering on front.",
+    base_price: 1899.00,
+    original_price: 2399.00,
+    image: "/section2.png",
+    status: "Published",
+    meta_title: "Guard Your Heart Oversized Tee — Ruven Studio",
+    meta_description: "Premium oversized 240 GSM tee with linear heart graphic. Inspired by Proverbs 4:23.",
+    scripture: {
+      book: "Proverbs",
+      chapter: 4,
+      verse: "23",
+      translation: "ESV",
+      text_content: "Keep your heart with all vigilance, for from it flow the springs of life."
+    },
+    variants: [
+      { id: "d1111111-1111-1111-1111-111111111140", sku: "RU-TEE-GYH-S", size: "S", color: "Stone Cream", stock: 80 },
+      { id: "d1111111-1111-1111-1111-111111111141", sku: "RU-TEE-GYH-M", size: "M", color: "Stone Cream", stock: 100 },
+      { id: "d1111111-1111-1111-1111-111111111142", sku: "RU-TEE-GYH-L", size: "L", color: "Stone Cream", stock: 100 },
+      { id: "d1111111-1111-1111-1111-111111111143", sku: "RU-TEE-GYH-XL", size: "XL", color: "Stone Cream", stock: 40 },
+    ]
+  },
+  {
+    id: "f1111111-1111-1111-1111-111111111115",
+    category_id: "c1111111-1111-1111-1111-111111111112",
+    category_slug: "oversized-tees",
+    name: "Walk by Faith Heavyweight Tee",
+    slug: "walk-by-faith-heavyweight-tee",
+    description: "240 GSM heavy combed cotton boxy tee. Hand-screen printed typographic design featuring 2 Corinthians 5:7 in clean Scandinavian aesthetics.",
+    base_price: 1999.00,
+    original_price: 2499.00,
+    image: "/brand_story_editorial.png",
+    status: "Published",
+    meta_title: "Walk by Faith Heavyweight Tee — Ruven Studio",
+    meta_description: "Minimalist typographic 240 GSM organic cotton tee. Inspired by 2 Corinthians 5:7.",
+    scripture: {
+      book: "2 Corinthians",
+      chapter: 5,
+      verse: "7",
+      translation: "ESV",
+      text_content: "For we walk by faith, not by sight."
+    },
+    variants: [
+      { id: "d1111111-1111-1111-1111-111111111150", sku: "RU-TEE-WBF-S", size: "S", color: "Sage Green", stock: 70 },
+      { id: "d1111111-1111-1111-1111-111111111151", sku: "RU-TEE-WBF-M", size: "M", color: "Sage Green", stock: 90 },
+      { id: "d1111111-1111-1111-1111-111111111152", sku: "RU-TEE-WBF-L", size: "L", color: "Sage Green", stock: 90 },
+      { id: "d1111111-1111-1111-1111-111111111153", sku: "RU-TEE-WBF-XL", size: "XL", color: "Sage Green", stock: 35 },
+    ]
+  },
+  {
+    id: "f1111111-1111-1111-1111-111111111116",
+    category_id: "c1111111-1111-1111-1111-111111111111",
+    category_slug: "streetwear",
+    name: "Sovereign Light Boxy Tee",
+    slug: "sovereign-light-boxy-tee",
+    description: "240 GSM boxy cut streetwear tee. Features minimalist linear Genesis 1:3 light rays design on the back and brand logo on chest.",
+    base_price: 1999.00,
+    original_price: 2499.00,
+    image: "/oversized_tee_product.png",
+    status: "Published",
+    meta_title: "Sovereign Light Boxy Tee — Ruven Studio",
+    meta_description: "Boxy 240 GSM streetwear tee with minimalist Genesis 1:3 graphic.",
+    scripture: {
+      book: "Genesis",
+      chapter: 1,
+      verse: "3",
+      translation: "ESV",
+      text_content: "And God said, 'Let there be light,' and there was light."
+    },
+    variants: [
+      { id: "d1111111-1111-1111-1111-111111111160", sku: "RU-TEE-SVL-S", size: "S", color: "Desert Sand", stock: 85 },
+      { id: "d1111111-1111-1111-1111-111111111161", sku: "RU-TEE-SVL-M", size: "M", color: "Desert Sand", stock: 110 },
+      { id: "d1111111-1111-1111-1111-111111111162", sku: "RU-TEE-SVL-L", size: "L", color: "Desert Sand", stock: 110 },
+      { id: "d1111111-1111-1111-1111-111111111163", sku: "RU-TEE-SVL-XL", size: "XL", color: "Desert Sand", stock: 50 },
+    ]
+  },
+  {
+    id: "f1111111-1111-1111-1111-111111111117",
+    category_id: "c1111111-1111-1111-1111-111111111113",
+    category_slug: "hoodies",
+    name: "Fruits of the Spirit Heavyweight Hoodie",
+    slug: "fruits-of-the-spirit-heavyweight-hoodie",
+    description: "380 GSM ultra-heavy French Terry hoodie. Minimalist scriptural embroidery details on the sleeve cuff representing the fruits of the Spirit from Galatians 5:22.",
+    base_price: 3499.00,
+    original_price: 4299.00,
+    image: "/faith_hoodie_product.png",
+    status: "Published",
+    meta_title: "Fruits of the Spirit Heavyweight Hoodie — Ruven Studio",
+    meta_description: "380 GSM loopback French Terry hoodie with Galatians 5:22 scriptural embroidery.",
+    scripture: {
+      book: "Galatians",
+      chapter: 5,
+      verse: "22",
+      translation: "ESV",
+      text_content: "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness..."
+    },
+    variants: [
+      { id: "d1111111-1111-1111-1111-111111111170", sku: "RU-HD-FTS-M", size: "M", color: "Warm Charcoal", stock: 50 },
+      { id: "d1111111-1111-1111-1111-111111111171", sku: "RU-HD-FTS-L", size: "L", color: "Warm Charcoal", stock: 65 },
+      { id: "d1111111-1111-1111-1111-111111111172", sku: "RU-HD-FTS-XL", size: "XL", color: "Warm Charcoal", stock: 30 },
+    ]
   }
 ];
 

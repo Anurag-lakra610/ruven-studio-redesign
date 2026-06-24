@@ -3350,16 +3350,20 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 auto var(--spacing-xl);
 }
 
+.best-sellers-wrapper {
+  position: relative;
+  max-width: var(--max-width-site);
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+}
+
 .best-sellers-layout {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  gap: 2.2rem;
-  padding: 2.5rem 1.5rem 3.5rem;
-  margin: 0 auto;
-  max-width: var(--max-width-site);
-  width: 100%;
+  gap: 2rem;
+  padding: 1.5rem 0 2.5rem;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
 }
@@ -3368,144 +3372,102 @@ h1, h2, h3, h4, h5, h6 {
   display: none; /* Chrome, Safari, Opera */
 }
 
-@media (min-width: 1024px) {
-  .best-sellers-layout {
-    justify-content: center;
-    padding: 2.5rem 0 3.5rem;
+/* Floating Navigation Scroll Buttons */
+.scroll-arrow-btn {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 25;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.best-sellers-wrapper:hover .scroll-arrow-btn {
+  opacity: 0.75;
+  pointer-events: auto;
+}
+
+.scroll-arrow-btn:hover {
+  opacity: 0.98 !important;
+  background: var(--color-white);
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-arrow-btn.left-arrow {
+  left: -1rem;
+}
+
+.scroll-arrow-btn.right-arrow {
+  right: -1rem;
+}
+
+@media (max-width: 1024px) {
+  .scroll-arrow-btn {
+    display: none;
   }
 }
 
-.apple-product-card {
+/* Nike-Style Clean Borderless Card */
+.nike-product-card {
   flex: 0 0 auto;
-  width: 440px;
-  height: 520px;
-  background: var(--color-bg-card);
-  border-radius: 28px; /* Large premium rounded rects */
-  border: 1px solid rgba(17, 17, 17, 0.04);
-  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.015);
+  width: 380px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   position: relative;
-  overflow: hidden;
   scroll-snap-align: start;
-  transition: all var(--transition-medium);
+  background: transparent;
+  transition: transform var(--transition-medium);
 }
 
-.apple-product-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(17, 17, 17, 0.08);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+.nike-product-card:hover {
+  transform: translateY(-4px);
 }
 
-/* Card Header Text at top */
-.apple-card-text {
-  padding: 2.2rem 2.2rem 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.apple-card-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.2rem;
-}
-
-.apple-card-scripture-ref {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--color-brand-burgundy-light);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.apple-card-badge {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  font-family: var(--font-sans);
-}
-
-.apple-card-badge.best-seller {
-  background: var(--color-brand-burgundy);
-  color: var(--color-white);
-}
-
-.apple-card-badge.new-drop {
-  background: var(--color-brand-sage);
-  color: var(--color-white);
-}
-
-.apple-card-title {
-  font-family: var(--font-sans);
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--color-text-primary);
-}
-
-.apple-card-fabric {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
-
-.apple-card-price-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.2rem;
-}
-
-.apple-card-price {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-
-.apple-card-price-original {
-  font-size: 0.88rem;
-  font-weight: 500;
-  text-decoration: line-through;
-  color: var(--color-text-light-muted);
-}
-
-/* Bottom Aligned Image Bleed */
-.apple-card-img-wrap {
+/* Image container */
+.nike-card-img-wrap {
   position: relative;
-  height: 52%; /* Takes the bottom half and bleeds to edge */
+  aspect-ratio: 3 / 4; /* Clean taller aspect ratio */
   width: 100%;
-  background-color: #F6F6F6;
+  border-radius: 16px;
   overflow: hidden;
-  margin-top: auto;
+  background-color: #F6F6F6;
 }
 
-.apple-card-img {
+.nike-card-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-slow);
 }
 
-.apple-product-card:hover .apple-card-img {
-  transform: scale(1.04);
+.nike-product-card:hover .nike-card-img {
+  transform: scale(1.02);
 }
 
-/* Wishlist Button on the image */
-.apple-card-img-wrap .wishlist-btn {
+/* Wishlist Heart button absolute positioned on the top right */
+.nike-card-img-wrap .wishlist-btn {
   position: absolute;
   top: 1.2rem;
   right: 1.2rem;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  width: 38px;
-  height: 38px;
+  background: var(--color-white);
+  border: none;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -3513,54 +3475,111 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   color: var(--color-text-primary);
   transition: all var(--transition-fast);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.apple-card-img-wrap .wishlist-btn:hover {
+.nike-card-img-wrap .wishlist-btn:hover {
   transform: scale(1.08);
-  background: rgba(255, 255, 255, 0.95);
   color: var(--color-brand-burgundy);
 }
 
-.apple-card-img-wrap .wishlist-btn.active {
+.nike-card-img-wrap .wishlist-btn.active {
   color: var(--color-brand-burgundy);
 }
 
-/* Glassmorphic Slide-up Hover Drawer */
-.apple-card-quick-add {
+/* Text Content details below the image wrapper */
+.nike-card-details {
+  padding-top: 1.2rem;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.nike-card-ref-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nike-card-scripture-ref {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--color-brand-burgundy-light);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nike-card-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-brand-burgundy);
+}
+
+.nike-card-title {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+
+.nike-card-fabric {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.nike-card-price-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.nike-card-price {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.nike-card-price-original {
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: line-through;
+  color: var(--color-text-light-muted);
+}
+
+/* Glassmorphic Slide-up Quick Add Size Drawer on hover over image */
+.nike-card-quick-add {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   transform: translateY(101%);
   transition: transform var(--transition-medium) cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 15;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.apple-card-img-wrap:hover .apple-card-quick-add {
+.nike-card-img-wrap:hover .nike-card-quick-add {
   transform: translateY(0);
 }
 
 @media (max-width: 640px) {
-  .apple-product-card {
-    width: 320px;
-    height: 480px;
-  }
-  .apple-card-text {
-    padding: 1.5rem 1.6rem 1rem;
-  }
-  .apple-card-title {
-    font-size: 1.2rem;
+  .nike-product-card {
+    width: 290px;
   }
 }
 
