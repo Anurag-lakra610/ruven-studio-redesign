@@ -640,34 +640,77 @@ export default function StorefrontHomePage() {
 
       case "testimonials":
         return showTestimonials && (
-          <section key="testimonials" className="community-testimonials section-padding-lg">
-            <div className="testimonials-header">
-              <span className="section-subtitle-lowercase">{testimonialsSettings.subtitle}</span>
-              <h2 className="editorial-title-v2">{testimonialsSettings.title}</h2>
+          <section key="testimonials" className="community-testimonials">
+            <div className="testimonials-header-v2">
+              <span className="testimonials-subtitle-v2">{testimonialsSettings.subtitle}</span>
+              <h2 className="testimonials-title-v2">{testimonialsSettings.title}</h2>
             </div>
-            <div className="testimonials-grid">
-              {testimonialsSettings.reviews.map((rev: any, idx: number) => (
-                <div key={idx} className="testimonial-card">
-                  <div className="testimonial-rating" role="img" aria-label={`${rev.rating} out of 5 stars`}>
-                    {Array.from({ length: rev.rating }).map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-brand-burgundy text-brand-burgundy inline-block mr-0.5" />
-                    ))}
-                  </div>
-                  <p className="testimonial-quote">"{rev.quote}"</p>
-                  <div className="testimonial-author">
-                    <div 
-                      className="author-avatar-initials" 
-                      style={{ backgroundColor: rev.avatar_color || "var(--color-brand-burgundy)", color: rev.avatar_text_color || "var(--color-white)" }}
-                    >
-                      {rev.author_initial}
+            
+            <div className="testimonials-marquee-wrapper">
+              <div className="testimonials-marquee-track">
+                {/* Render Copy 1 */}
+                {testimonialsSettings.reviews.map((rev: any, idx: number) => (
+                  <div key={`copy1-${idx}`} className="testimonial-card-v2">
+                    <div className="testimonial-rating-v2" role="img" aria-label={`${rev.rating} out of 5 stars`}>
+                      {Array.from({ length: rev.rating }).map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-brand-burgundy text-brand-burgundy inline-block" />
+                      ))}
                     </div>
-                    <div className="author-details">
-                      <span className="author-name">{rev.author_name}</span>
-                      <span className="author-loc">{rev.author_sub}</span>
+                    <p className="testimonial-quote-v2">"{rev.quote}"</p>
+                    <div className="testimonial-author-v2">
+                      <div className="author-avatar-v2">
+                        {rev.author_initial}
+                      </div>
+                      <div className="author-details-v2">
+                        <span className="author-name-v2">{rev.author_name}</span>
+                        <span className="author-loc-v2">{rev.author_sub}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+                
+                {/* Render Copy 2 */}
+                {testimonialsSettings.reviews.map((rev: any, idx: number) => (
+                  <div key={`copy2-${idx}`} className="testimonial-card-v2">
+                    <div className="testimonial-rating-v2" role="img" aria-label={`${rev.rating} out of 5 stars`}>
+                      {Array.from({ length: rev.rating }).map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-brand-burgundy text-brand-burgundy inline-block" />
+                      ))}
+                    </div>
+                    <p className="testimonial-quote-v2">"{rev.quote}"</p>
+                    <div className="testimonial-author-v2">
+                      <div className="author-avatar-v2">
+                        {rev.author_initial}
+                      </div>
+                      <div className="author-details-v2">
+                        <span className="author-name-v2">{rev.author_name}</span>
+                        <span className="author-loc-v2">{rev.author_sub}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Render Copy 3 */}
+                {testimonialsSettings.reviews.map((rev: any, idx: number) => (
+                  <div key={`copy3-${idx}`} className="testimonial-card-v2">
+                    <div className="testimonial-rating-v2" role="img" aria-label={`${rev.rating} out of 5 stars`}>
+                      {Array.from({ length: rev.rating }).map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-brand-burgundy text-brand-burgundy inline-block" />
+                      ))}
+                    </div>
+                    <p className="testimonial-quote-v2">"{rev.quote}"</p>
+                    <div className="testimonial-author-v2">
+                      <div className="author-avatar-v2">
+                        {rev.author_initial}
+                      </div>
+                      <div className="author-details-v2">
+                        <span className="author-name-v2">{rev.author_name}</span>
+                        <span className="author-loc-v2">{rev.author_sub}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         );

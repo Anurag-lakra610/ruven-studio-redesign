@@ -3637,81 +3637,148 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Section 8: Community Stories */
+/* Section 8: Testimonials (Horizontal Scrolling Loop) */
 .community-testimonials {
   background-color: var(--color-bg-warm);
   border-bottom: 1px solid var(--color-border);
+  padding: 6rem 0;
+  overflow: hidden;
 }
 
-.testimonials-header {
+.testimonials-header-v2 {
   max-width: var(--max-width-site);
-  margin: 0 auto var(--spacing-xl);
+  margin: 0 auto 3rem;
+  padding: 0 var(--spacing-3xl);
+  text-align: center;
 }
 
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-lg);
-  max-width: var(--max-width-site);
-  margin: 0 auto;
+.testimonials-subtitle-v2 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-brand-burgundy-light);
+  margin-bottom: 0.4rem;
+  display: block;
 }
 
-.testimonial-card {
+.testimonials-title-v2 {
+  font-family: var(--font-editorial);
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* Marquee Scroll Container */
+.testimonials-marquee-wrapper {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+  padding: 1.5rem 0;
+  /* Cinematic edge fading mask */
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.testimonials-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 2rem;
+  animation: testimonialLoop 40s linear infinite;
+  will-change: transform;
+}
+
+.testimonials-marquee-wrapper:hover .testimonials-marquee-track {
+  animation-play-state: paused;
+}
+
+.testimonial-card-v2 {
+  width: 380px;
   background: var(--color-bg-card);
-  padding: var(--spacing-lg);
+  padding: 2.2rem;
   border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: var(--spacing-md);
+  gap: 1.5rem;
   box-shadow: var(--shadow-subtle);
+  transition: all var(--transition-medium);
 }
 
-.testimonial-rating {
-  color: var(--color-brand-gold);
-  font-size: 0.85rem;
-  letter-spacing: 2px;
+.testimonial-card-v2:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-brand-burgundy-light);
+  box-shadow: var(--shadow-premium);
 }
 
-.testimonial-quote {
+.testimonial-rating-v2 {
+  display: flex;
+  gap: 3px;
+  color: var(--color-brand-burgundy-light);
+}
+
+.testimonial-quote-v2 {
   font-size: 0.95rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--color-text-primary);
   font-style: italic;
   flex-grow: 1;
   text-transform: none;
 }
 
-.testimonial-author {
+.testimonial-author-v2 {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.2rem;
 }
 
-.author-avatar-initials {
-  width: 38px;
-  height: 38px;
+.author-avatar-v2 {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
   font-weight: 700;
+  background-color: var(--color-brand-burgundy);
+  color: var(--color-white);
+  box-shadow: 0 4px 10px rgba(103, 0, 0, 0.15);
 }
 
-.author-details {
+.author-details-v2 {
   display: flex;
   flex-direction: column;
 }
 
-.author-name {
+.author-name-v2 {
   font-size: 0.88rem;
   font-weight: 700;
   color: var(--color-text-primary);
 }
 
-.author-loc {
+.author-loc-v2 {
   font-size: 0.72rem;
   color: var(--color-text-muted);
+}
+
+@keyframes testimonialLoop {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.333333%);
+  }
 }
 
 /* Section 9: Instagram Social Wall */
