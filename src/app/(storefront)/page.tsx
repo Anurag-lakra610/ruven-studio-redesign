@@ -724,43 +724,62 @@ export default function StorefrontHomePage() {
     const faqData = [
       {
         q: "What sizes do you offer?",
-        a: "S, M, L, and XL across all styles. Refer to the size chart on each product page for exact measurements."
+        a: "We offer S, M, L, and XL across all our styles. Please refer to the detailed size chart available on each product page for exact sleeve, chest, and length measurements."
       },
       {
-        q: "What is your return policy?",
-        a: "We offer a 7-day exchange window from the date of delivery. Items must be unworn, unwashed, and in original packaging."
+        q: "What is your return and exchange policy?",
+        a: "We provide a 7-day exchange window from the date of delivery. All items must be unworn, unwashed, and in their original packaging with tags intact. Returns for store credit are also available."
       },
       {
         q: "How long does shipping take?",
-        a: "5–7 business days across India. Free shipping on all orders above ₹1500."
+        a: "Orders are processed within 24–48 hours. Shipping typically takes 5–7 business days across India. We offer complimentary shipping on all orders above ₹1,500."
       },
       {
-        q: "How do I reach support?",
-        a: "Email us at hello@ruvenstudio.in or message us on WhatsApp. We respond within 24 hours."
+        q: "How can I reach customer support?",
+        a: "We are here to help. You can email us at hello@ruvenstudio.in or reach out directly on WhatsApp at +91 98765 43210. Our support team typically responds within 24 hours."
       }
     ];
 
     return (
-      <section className="section-padding bg-bg-warm dark:bg-zinc-950 py-16 px-6 md:px-12 lg:px-20 border-t border-border-warm" id="faq-section">
-        <div className="max-w-2xl mx-auto space-y-8">
-          <div className="text-center space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-brand-gold block">common inquiries</span>
-            <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-text-primary">Frequently Asked Questions</h2>
+      <section className="faq-section-v2 border-t border-border-warm" id="faq-section">
+        <div className="faq-container-v2">
+          {/* Left Column: Heading and Subtitle */}
+          <div className="faq-info-col">
+            <span className="faq-subtitle">common inquiries</span>
+            <h2 className="faq-headline">Frequently Asked Questions</h2>
+            <p className="faq-help-text">
+              Have other questions? We are always here to help. Contact our customer support team at{" "}
+              <a href="mailto:hello@ruvenstudio.in" className="faq-email-link">
+                hello@ruvenstudio.in
+              </a>{" "}
+              or chat with us.
+            </p>
           </div>
           
-          <div className="divide-y divide-border-warm">
+          {/* Right Column: Accordion List */}
+          <div className="faq-accordion-col">
             {faqData.map((item, idx) => {
               const isOpen = openIndex === idx;
               return (
-                <div key={idx} className="py-4 font-sans">
+                <div key={idx} className="faq-item-v2">
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : idx)}
-                    className="w-full flex justify-between items-center text-left py-2 text-text-primary hover:text-brand-burgundy transition-colors focus:outline-none"
+                    className="faq-question-btn"
                     aria-expanded={isOpen}
                   >
-                    <span className="text-sm font-medium">{item.q}</span>
-                    <span className="text-lg font-light leading-none ml-4 select-none">
-                      {isOpen ? "−" : "+"}
+                    <span className="faq-question-text">{item.q}</span>
+                    <span className="faq-icon-wrap">
+                      <svg 
+                        className={`faq-plus-icon ${isOpen ? "rotate-45" : ""}`} 
+                        viewBox="0 0 16 16" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="1.5"
+                        style={{ width: "10px", height: "10px" }}
+                      >
+                        <line x1="8" y1="2" x2="8" y2="14" />
+                        <line x1="2" y1="8" x2="14" y2="8" />
+                      </svg>
                     </span>
                   </button>
                   
@@ -770,10 +789,10 @@ export default function StorefrontHomePage() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
-                        <p className="text-sm text-text-muted mt-2 pr-6 leading-relaxed">
+                        <p className="faq-answer-text">
                           {item.a}
                         </p>
                       </motion.div>
