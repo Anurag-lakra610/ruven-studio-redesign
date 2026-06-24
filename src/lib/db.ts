@@ -542,9 +542,9 @@ export const MOCK_HOMEPAGE_SECTIONS: HomepageSection[] = [
     section_order: 3,
     is_active: true,
     settings: {
-      subtitle: "editorial drop 01",
-      title: "The Armor & Protection Campaign",
-      description: "A meticulous collection representing strength and spiritual integrity in a chaotic world. Styled with Scandinavian minimalism and heavyweight textures.",
+      subtitle: "new arrivals",
+      title: "Ruven Studio New Arrivals",
+      description: "A curated selection of our latest graphic tees and hoodies. Styled with Scandinavian minimalism, custom heavy textures, and faith-inspired messages.",
       statement_title: "Every Thread Tells a Story",
       statement_description: "Our graphics are not simple illustrations. They are screen-printed conversations waiting to happen, serving as reminders of mental renewal, clarity, and protection in God.",
       statement_cta_text: "Browse All Apparel",
@@ -671,9 +671,9 @@ export const MOCK_HOMEPAGE_SECTIONS: HomepageSection[] = [
 
 export const MOCK_CAMPAIGN_SETTINGS: CampaignSettings = {
   id: "c2222222-2222-2222-2222-222222222222",
-  campaign_name: "The Armor & Protection Campaign",
-  subtitle: "editorial drop 01",
-  description: "A meticulous collection representing strength and spiritual integrity in a chaotic world. Styled with Scandinavian minimalism and heavyweight textures.",
+  campaign_name: "Ruven Studio New Arrivals",
+  subtitle: "new arrivals",
+  description: "A curated selection of our latest graphic tees and hoodies. Styled with Scandinavian minimalism, custom heavy textures, and faith-inspired messages.",
   tee_product_id: "f1111111-1111-1111-1111-111111111111",
   hoodie_product_id: "f1111111-1111-1111-1111-111111111112",
   is_active: true,

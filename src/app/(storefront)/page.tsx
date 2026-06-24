@@ -131,9 +131,9 @@ export default function StorefrontHomePage() {
   const featuredCampaignSection = getSection("featured-campaign");
   const showFeaturedCampaign = featuredCampaignSection ? featuredCampaignSection.is_active : true;
   const campaignSettings = {
-    subtitle: campaign?.subtitle || featuredCampaignSection?.settings?.subtitle || "editorial drop 01",
-    title: campaign?.campaign_name || featuredCampaignSection?.settings?.title || "The Armor & Protection Campaign",
-    description: campaign?.description || featuredCampaignSection?.settings?.description || "A meticulous collection representing strength and spiritual integrity in a chaotic world. Styled with Scandinavian minimalism and heavyweight textures.",
+    subtitle: campaign?.subtitle || featuredCampaignSection?.settings?.subtitle || "new arrivals",
+    title: campaign?.campaign_name || featuredCampaignSection?.settings?.title || "Ruven Studio New Arrivals",
+    description: campaign?.description || featuredCampaignSection?.settings?.description || "A curated selection of our latest graphic tees and hoodies. Styled with Scandinavian minimalism, custom heavy textures, and faith-inspired messages.",
     statement_title: featuredCampaignSection?.settings?.statement_title || "Every Thread Tells a Story",
     statement_description: featuredCampaignSection?.settings?.statement_description || "Our graphics are not simple illustrations. They are screen-printed conversations waiting to happen, serving as reminders of mental renewal, clarity, and protection in God.",
     statement_cta_text: featuredCampaignSection?.settings?.statement_cta_text || "Browse All Apparel",
@@ -498,7 +498,7 @@ export default function StorefrontHomePage() {
               <span className="immersive-subtitle">{lifestyleSettings.subtitle}</span>
               <h2 className="immersive-statement" dangerouslySetInnerHTML={{ __html: lifestyleSettings.title.replace(/\n/g, '<br />') }} />
               <p className="immersive-subtext">{lifestyleSettings.description}</p>
-              <Link href={lifestyleSettings.cta_link} className="cta-button cta-button-charcoal">
+              <Link href={lifestyleSettings.cta_link} className="cta-button cta-button-primary">
                 <span className="btn-content">
                   <span className="btn-text">{lifestyleSettings.cta_text}</span>
                   <span className="btn-icon">
