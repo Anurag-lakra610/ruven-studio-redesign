@@ -59,7 +59,6 @@ function RegisterForm() {
   const redirectParam = searchParams?.get("redirect");
   const getRedirectUrl = () => {
     if (!redirectParam) return "/";
-    if (redirectParam === "/account") return "/account/profile";
     return redirectParam;
   };
   const destination = getRedirectUrl();

@@ -681,25 +681,19 @@ export const Header: React.FC = () => {
             )}
 
             {isProfileDropdownOpen && isAuthenticated && (
-              <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xl z-50 p-6 rounded-none text-left animate-fade-in">
-                <div className="space-y-4">
+              <div className="absolute right-0 top-full mt-2 w-[240px] bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800 shadow-xl z-50 p-5 rounded-none text-left animate-fade-in font-sans">
+                <div className="space-y-3">
                   {/* Title / Welcome */}
-                  <div className="space-y-1">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-zinc-400">
-                      Ruven Studio
-                    </span>
-                    <h4 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mt-1">
-                      Welcome back,
+                  <div className="space-y-0.5">
+                    <h4 className="text-[11px] font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wide">
+                      Hello {userName.split(" ")[0]}
                     </h4>
-                    <div className="text-sm font-semibold uppercase text-zinc-900 dark:text-zinc-50 tracking-wide">
-                      {userName}
-                    </div>
-                    <span className="text-[9px] font-mono font-bold text-[#670000] dark:text-red-400 block pt-0.5">
+                    <p className="text-[9px] text-zinc-400 dark:text-zinc-500 font-mono tracking-wider uppercase">
                       {memberLevel}
-                    </span>
+                    </p>
                   </div>
 
-                  <div className="border-t border-zinc-100 dark:border-zinc-800/80 my-2" />
+                  <div className="border-b border-zinc-150 dark:border-zinc-800/80 my-2" />
 
                   {/* Primary CTA */}
                   <button
@@ -707,12 +701,12 @@ export const Header: React.FC = () => {
                       setIsProfileDropdownOpen(false);
                       router.push("/shop");
                     }}
-                    className="w-full text-center py-2.5 bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 hover:bg-[#670000] hover:text-white dark:hover:bg-[#670000] dark:hover:text-white transition-all text-[9px] font-bold uppercase tracking-widest rounded-none cursor-pointer"
+                    className="w-full text-center py-2.5 bg-[#670000] text-white hover:bg-black transition-colors text-[9px] font-bold uppercase tracking-widest rounded-none cursor-pointer"
                   >
                     Continue Shopping
                   </button>
 
-                  <div className="border-t border-zinc-100 dark:border-zinc-800/80 my-2" />
+                  <div className="border-b border-zinc-150 dark:border-zinc-800/80 my-2" />
 
                   {/* Nav links */}
                   <div className="space-y-2">
@@ -722,33 +716,40 @@ export const Header: React.FC = () => {
                       { label: "Recently Viewed", path: "/account/recent" },
                       { label: "Saved Addresses", path: "/account/addresses" },
                       { label: "Journal Library", path: "/account/journal" },
-                      { label: "Rewards & Membership", path: "/account/rewards" },
-                      { label: "Profile Settings", path: "/account/profile" },
-                      { label: "Support", path: "/support" }
+                      { label: "Rewards & Tier", path: "/account/rewards" }
                     ].map((link) => (
                       <Link
                         key={link.path}
                         href={link.path}
                         onClick={() => setIsProfileDropdownOpen(false)}
-                        className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors py-1"
+                        className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-[#670000] dark:hover:text-red-400 transition-colors"
                       >
                         {link.label}
                       </Link>
                     ))}
                   </div>
 
-                  <div className="border-t border-zinc-100 dark:border-zinc-800/80 my-2" />
+                  <div className="border-b border-zinc-150 dark:border-zinc-800/80 my-2" />
 
-                  {/* Sign out */}
-                  <button
-                    onClick={() => {
-                      setIsProfileDropdownOpen(false);
-                      handleLogout();
-                    }}
-                    className="w-full text-left text-[11px] font-bold uppercase tracking-wider text-[#670000] dark:text-red-400 hover:underline cursor-pointer"
-                  >
-                    Logout
-                  </button>
+                  {/* Edit Profile & Sign out */}
+                  <div className="space-y-2">
+                    <Link
+                      href="/account/profile"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                      className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-[#670000] dark:hover:text-red-400 transition-colors"
+                    >
+                      Edit Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setIsProfileDropdownOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full text-left text-[10px] font-bold uppercase tracking-wider text-[#670000] dark:text-red-400 hover:underline cursor-pointer transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
