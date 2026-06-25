@@ -749,6 +749,42 @@ function LoginForm() {
                     )}
                   </button>
 
+                  {/* Enter as Tester Bypass Button */}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setLoading(true);
+                      await new Promise<void>((res) => setTimeout(res, 600));
+                      document.cookie = "mock_customer_session=true; path=/; max-age=86400";
+                      document.cookie = "mock_user_email=anurag2002march@gmail.com; path=/; max-age=86400";
+                      document.cookie = "mock_user_name=Anurag Lakra; path=/; max-age=86400";
+                      setLoading(false);
+                      router.push("/account");
+                    }}
+                    disabled={loading}
+                    style={{
+                      background: "transparent",
+                      color: "#670000",
+                      border: "1px solid #670000",
+                      borderRadius: 0,
+                      height: "44px",
+                      width: "100%",
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                      fontWeight: 600,
+                      cursor: loading ? "not-allowed" : "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      marginBottom: "20px",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    Enter as Tester (Anurag Lakra)
+                  </button>
+
                   <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
                     <div style={{ flex: 1, height: "0.5px", background: T.border }} />
                     <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.05em", color: T.muted }}>OR</span>
