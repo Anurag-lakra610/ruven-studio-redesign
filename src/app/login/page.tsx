@@ -129,6 +129,27 @@ function LoginForm() {
       return;
     }
 
+    // Tester direct login bypass
+    const testerPhone = "7625906625";
+    const testerEmail = "anurag2002march@gmail.com";
+    const isTesterPhone = cleanPhone.includes(testerPhone);
+    const isTesterEmail = val.toLowerCase() === testerEmail.toLowerCase();
+
+    if (isTesterPhone || isTesterEmail) {
+      await new Promise<void>((res) => setTimeout(res, 800));
+      document.cookie = "mock_customer_session=true; path=/; max-age=86400";
+      document.cookie = `mock_user_email=${isTesterEmail ? testerEmail : "7625906625"}; path=/; max-age=86400`;
+      document.cookie = "mock_user_name=Anurag Lakra; path=/; max-age=86400";
+
+      if (rememberMe) {
+        localStorage.setItem("ruven_remembered_identifier", val);
+        localStorage.setItem("ruven_remember_me", "true");
+      }
+      setLoading(false);
+      router.push("/account");
+      return;
+    }
+
     setIsEmail(emailCheck);
     setLoading(true);
 

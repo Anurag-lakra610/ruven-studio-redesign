@@ -77,12 +77,29 @@ export default function AccountPage() {
           const sessionUser = { email, name };
           setUser(sessionUser);
           
-          // 2. Fetch customer from Supabase DB
-          const { data: dbCustomer } = await supabase
-            .from("customers")
-            .select("id, phone, first_name, last_name")
-            .eq("email", email)
-            .maybeSingle();
+          // 2. Fetch customer from Supabase DB (dynamically support email or phone identifiers)
+          const isEmailIdentifier = email.includes("@");
+          let dbCustomer = null;
+
+          if (isEmailIdentifier) {
+            const { data } = await supabase
+              .from("customers")
+              .select("id, phone, first_name, last_name")
+              .eq("email", email)
+              .maybeSingle();
+            dbCustomer = data;
+          } else {
+            const cleanSessionPhone = email.replace(/\D/g, ""); // keep only digits
+            if (cleanSessionPhone.length >= 10) {
+              const last10 = cleanSessionPhone.slice(-10);
+              const { data } = await supabase
+                .from("customers")
+                .select("id, phone, first_name, last_name")
+                .ilike("phone", `%${last10}%`)
+                .maybeSingle();
+              dbCustomer = data;
+            }
+          }
 
           if (dbCustomer) {
             const fullName = [dbCustomer.first_name, dbCustomer.last_name].filter(Boolean).join(" ");
