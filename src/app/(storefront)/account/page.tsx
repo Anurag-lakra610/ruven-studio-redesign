@@ -17,6 +17,8 @@ interface Order {
 export default function AccountPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [loadingOrders, setLoadingOrders] = useState(true);
   const [user, setUser] = useState<{ email: string; name: string } | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [phone, setPhone] = useState<string>("");
@@ -40,14 +42,14 @@ export default function AccountPage() {
     }, 3000);
 
     const checkSession = async () => {
+      let email = "";
+      let name = "Valued Customer";
+
       try {
         const supabase = createClient();
         
         // 1. Check real Supabase user session
         const { data: { user: authUser } } = await supabase.auth.getUser();
-        
-        let email = "";
-        let name = "Valued Customer";
         
         if (authUser) {
           email = authUser.email || "";
@@ -69,15 +71,21 @@ export default function AccountPage() {
             name = getCookie("mock_user_name") || "Valued Customer";
           }
         }
+      } catch (err) {
+        console.error("Auth session check error:", err);
+      }
 
-        if (email) {
-          resolved = true;
-          clearTimeout(timeoutId);
-          
-          const sessionUser = { email, name };
-          setUser(sessionUser);
-          
-          // 2. Fetch customer from Supabase DB (dynamically support email or phone identifiers)
+      if (email) {
+        resolved = true;
+        clearTimeout(timeoutId);
+        
+        const sessionUser = { email, name };
+        setUser(sessionUser);
+        setLoading(false); // LAUNCH THE DASHBOARD IMMEDIATELY
+
+        // Now run the DB queries in the background (non-blocking)
+        try {
+          const supabase = createClient();
           const isEmailIdentifier = email.includes("@");
           let dbCustomer = null;
 
@@ -110,7 +118,7 @@ export default function AccountPage() {
               setPhone(dbCustomer.phone);
             }
 
-            // 3. Fetch customer shipping address
+            // Fetch shipping address
             const { data: dbAddress } = await supabase
               .from("customer_addresses")
               .select("*")
@@ -128,8 +136,40 @@ export default function AccountPage() {
                 country: dbAddress.country
               });
             }
+          }
+        } catch (profileErr) {
+          console.error("Profile background query error:", profileErr);
+        } finally {
+          setLoadingProfile(false);
+        }
 
-            // 4. Fetch customer orders
+        // Fetch orders in the background
+        try {
+          const supabase = createClient();
+          let customerId = null;
+
+          const isEmailIdentifier = email.includes("@");
+          if (isEmailIdentifier) {
+            const { data } = await supabase
+              .from("customers")
+              .select("id")
+              .eq("email", email)
+              .maybeSingle();
+            customerId = data?.id;
+          } else {
+            const cleanSessionPhone = email.replace(/\D/g, "");
+            if (cleanSessionPhone.length >= 10) {
+              const last10 = cleanSessionPhone.slice(-10);
+              const { data } = await supabase
+                .from("customers")
+                .select("id")
+                .ilike("phone", `%${last10}%`)
+                .maybeSingle();
+              customerId = data?.id;
+            }
+          }
+
+          if (customerId) {
             const { data: ordersData } = await supabase
               .from("orders")
               .select(`
@@ -148,7 +188,7 @@ export default function AccountPage() {
                   )
                 )
               `)
-              .eq("customer_id", dbCustomer.id)
+              .eq("customer_id", customerId)
               .order("created_at", { ascending: false });
 
             if (ordersData) {
@@ -178,15 +218,15 @@ export default function AccountPage() {
               setOrders(formattedOrders);
             }
           }
-        } else {
-          resolved = true;
-          clearTimeout(timeoutId);
-          router.push("/login");
+        } catch (ordersErr) {
+          console.error("Orders background query error:", ordersErr);
+        } finally {
+          setLoadingOrders(false);
         }
-      } catch (err) {
-        console.error("Error checking session & DB details:", err);
-      } finally {
-        setLoading(false);
+      } else {
+        resolved = true;
+        clearTimeout(timeoutId);
+        router.push("/login");
       }
     };
 
@@ -263,56 +303,82 @@ export default function AccountPage() {
               Profile Directory
             </h3>
 
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="p-2.5 bg-[#F5F3EE] dark:bg-[#2C2C2A] text-[#670000] dark:text-[#B33A3A] flex-shrink-0">
-                  <Mail className="w-4 h-4 stroke-[1.5]" />
+            {loadingProfile ? (
+              <div className="space-y-6 mt-6 animate-pulse">
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 bg-zinc-200 dark:bg-zinc-800 rounded-none" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-2 bg-zinc-200 dark:bg-zinc-800 w-1/3" />
+                    <div className="h-3 bg-zinc-200 dark:bg-zinc-800 w-3/4" />
+                  </div>
                 </div>
-                <div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#888880] block">Email Address</span>
-                  <span className="text-sm text-[#1A1A18] dark:text-[#ECECEC] font-medium break-all mt-1 block">{user.email}</span>
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 bg-zinc-200 dark:bg-zinc-800 rounded-none" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-2 bg-zinc-200 dark:bg-zinc-800 w-1/4" />
+                    <div className="h-3 bg-zinc-200 dark:bg-zinc-800 w-1/2" />
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="p-2.5 bg-[#F5F3EE] dark:bg-[#2C2C2A] text-[#670000] dark:text-[#B33A3A] flex-shrink-0">
-                  <Phone className="w-4 h-4 stroke-[1.5]" />
-                </div>
-                <div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#888880] block">Contact Number</span>
-                  <span className="text-sm text-[#1A1A18] dark:text-[#ECECEC] font-medium mt-1 block">
-                    {phone || <span className="italic text-[#888880] font-normal">Not Provided</span>}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="p-2.5 bg-[#F5F3EE] dark:bg-[#2C2C2A] text-[#670000] dark:text-[#B33A3A] flex-shrink-0">
-                  <MapPin className="w-4 h-4 stroke-[1.5]" />
-                </div>
-                <div>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#888880] block">Shipping Address</span>
-                  {address ? (
-                    <p className="text-sm text-[#1A1A18] dark:text-[#ECECEC] font-medium mt-1 leading-relaxed">
-                      {address.line1}
-                      {address.line2 && <><br />{address.line2}</>}
-                      <br />{address.city}, {address.state} - {address.zipCode}
-                      <br />{address.country}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-[#888880] italic mt-1 font-normal">
-                      No shipping location configured.
-                    </p>
-                  )}
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 bg-zinc-200 dark:bg-zinc-800 rounded-none" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-2 bg-zinc-200 dark:bg-zinc-800 w-1/3" />
+                    <div className="h-3 bg-zinc-200 dark:bg-zinc-800 w-5/6" />
+                  </div>
                 </div>
               </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-2.5 bg-[#F5F3EE] dark:bg-[#2C2C2A] text-[#670000] dark:text-[#B33A3A] flex-shrink-0">
+                    <Mail className="w-4 h-4 stroke-[1.5]" />
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#888880] block">Email Address</span>
+                    <span className="text-sm text-[#1A1A18] dark:text-[#ECECEC] font-medium break-all mt-1 block">{user.email}</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="p-2.5 bg-[#F5F3EE] dark:bg-[#2C2C2A] text-[#670000] dark:text-[#B33A3A] flex-shrink-0">
+                    <Phone className="w-4 h-4 stroke-[1.5]" />
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#888880] block">Contact Number</span>
+                    <span className="text-sm text-[#1A1A18] dark:text-[#ECECEC] font-medium mt-1 block">
+                      {phone || <span className="italic text-[#888880] font-normal">Not Provided</span>}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="p-2.5 bg-[#F5F3EE] dark:bg-[#2C2C2A] text-[#670000] dark:text-[#B33A3A] flex-shrink-0">
+                    <MapPin className="w-4 h-4 stroke-[1.5]" />
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#888880] block">Shipping Address</span>
+                    {address ? (
+                      <p className="text-sm text-[#1A1A18] dark:text-[#ECECEC] font-medium mt-1 leading-relaxed">
+                        {address.line1}
+                        {address.line2 && <><br />{address.line2}</>}
+                        <br />{address.city}, {address.state} - {address.zipCode}
+                        <br />{address.country}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-[#888880] italic mt-1 font-normal">
+                        No shipping location configured.
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-              <div className="pt-4">
-                <button className="w-full py-3.5 border border-[#1A1A18] dark:border-[#ECECEC] bg-transparent text-[#1A1A18] dark:text-[#ECECEC] hover:bg-[#1A1A18] dark:hover:bg-[#ECECEC] hover:text-white dark:hover:text-[#1A1A18] transition-all duration-300 text-[10px] tracking-widest font-bold uppercase rounded-none cursor-pointer">
-                  Manage Profile
-                </button>
+                <div className="pt-4">
+                  <button className="w-full py-3.5 border border-[#1A1A18] dark:border-[#ECECEC] bg-transparent text-[#1A1A18] dark:text-[#ECECEC] hover:bg-[#1A1A18] dark:hover:bg-[#ECECEC] hover:text-white dark:hover:text-[#1A1A18] transition-all duration-300 text-[10px] tracking-widest font-bold uppercase rounded-none cursor-pointer">
+                    Manage Profile
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right order list */}
@@ -328,7 +394,27 @@ export default function AccountPage() {
             </div>
 
             <div>
-              {orders.length === 0 ? (
+              {loadingOrders ? (
+                <div className="space-y-6 animate-pulse">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="p-6 border border-[#E5E3DD] dark:border-[#2C2C2A] bg-[#FAFAFA] dark:bg-[#1A1A18]/30 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                      <div className="space-y-3 flex-1">
+                        <div className="flex items-center gap-3">
+                          <div className="h-5 bg-zinc-200 dark:bg-zinc-800 w-24" />
+                          <div className="h-5 bg-zinc-200 dark:bg-zinc-800 w-16" />
+                        </div>
+                        <div className="h-4 bg-zinc-200 dark:bg-zinc-800 w-2/3" />
+                        <div className="h-3 bg-zinc-200 dark:bg-zinc-800 w-32" />
+                      </div>
+                      <div className="w-full md:w-32 space-y-2 pt-4 md:pt-0 border-t md:border-t-0 border-[#E5E3DD] dark:border-[#2C2C2A]">
+                        <div className="h-2 bg-zinc-200 dark:bg-zinc-800 w-12 md:ml-auto" />
+                        <div className="h-4 bg-zinc-200 dark:bg-zinc-800 w-16 md:ml-auto" />
+                        <div className="h-8 bg-zinc-200 dark:bg-zinc-800 w-full rounded-none" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : orders.length === 0 ? (
                 <div className="py-24 text-center space-y-6">
                   <div className="p-5 bg-[#F5F3EE] dark:bg-[#1A1A18] text-[#670000] dark:text-[#B33A3A] inline-block rounded-none">
                     <Package className="w-10 h-10 stroke-[1.0]" />
