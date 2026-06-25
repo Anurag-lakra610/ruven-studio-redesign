@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { Eye, EyeOff, Check, X } from "lucide-react";
@@ -55,6 +55,14 @@ const labelSt: React.CSSProperties = {
 
 function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams?.get("redirect");
+  const getRedirectUrl = () => {
+    if (!redirectParam) return "/";
+    if (redirectParam === "/account") return "/account/profile";
+    return redirectParam;
+  };
+  const destination = getRedirectUrl();
 
   // Form values
   const [firstName, setFirstName] = useState("");
@@ -206,7 +214,7 @@ function RegisterForm() {
         document.cookie = "mock_customer_session=true; path=/; max-age=86400";
         document.cookie = `mock_user_email=${email.trim()}; path=/; max-age=86400`;
         document.cookie = `mock_user_name=${firstName.trim()} ${lastName.trim()}; path=/; max-age=86400`;
-        router.push("/account");
+        router.push(destination);
       } else {
         setOtpError("Incorrect OTP code. Try 123456.");
         setLoading(false);
@@ -223,7 +231,7 @@ function RegisterForm() {
       });
       if (authErr) throw authErr;
 
-      router.push("/account");
+      router.push(destination);
     } catch (err: any) {
       setOtpError(err.message || "Incorrect verification code. Please try again.");
       setLoading(false);
@@ -667,7 +675,13 @@ export default function RegisterPage() {
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#FFFFFF", overflowX: "hidden" }}>
         <Header />
         <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-          <RegisterForm />
+          <Suspense fallback={
+            <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", color: "#888880", fontSize: "13px" }}>
+              Loading registration options...
+            </div>
+          }>
+            <RegisterForm />
+          </Suspense>
         </div>
       </div>
     </CartProvider>

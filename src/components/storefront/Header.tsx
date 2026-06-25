@@ -46,6 +46,91 @@ export const Header: React.FC = () => {
   const router = useRouter();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState("Anurag Lakra");
+  const [memberLevel, setMemberLevel] = useState("Silver Member");
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+  const handleLogout = () => {
+    document.cookie = "mock_customer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "mock_admin_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "mock_user_email=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "mock_user_name=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "mock_user_phone=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    
+    try {
+      const supabase = createClient();
+      supabase.auth.signOut().then(() => {
+        setIsAuthenticated(false);
+        router.push("/login");
+      });
+      return;
+    } catch (e) {
+      console.warn(e);
+    }
+    setIsAuthenticated(false);
+    router.push("/login");
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const fetchUserName = async () => {
+      const getCookie = (name: string) => {
+        if (typeof document === "undefined") return "";
+        const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)"));
+        return match ? decodeURIComponent(match[2]) : "";
+      };
+      
+      const cookieName = getCookie("mock_user_name");
+      if (cookieName) {
+        setUserName(cookieName);
+      }
+
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          if (user.user_metadata?.first_name) {
+            setUserName(`${user.user_metadata.first_name} ${user.user_metadata.last_name || ""}`.trim());
+          } else if (user.email) {
+            setUserName(user.email.split("@")[0]);
+          }
+          
+          const { data: customer } = await supabase
+            .from("customers")
+            .select("first_name, last_name, loyalty_points")
+            .eq("email", user.email)
+            .maybeSingle();
+            
+          if (customer) {
+            const fullName = [customer.first_name, customer.last_name].filter(Boolean).join(" ");
+            if (fullName) setUserName(fullName);
+            
+            const points = customer.loyalty_points || 0;
+            if (points >= 2500) setMemberLevel("Sovereign Member");
+            else if (points >= 1000) setMemberLevel("Gold Member");
+            else if (points >= 500) setMemberLevel("Silver Member");
+            else setMemberLevel("Bronze Member");
+          }
+        }
+      } catch (err) {
+        console.warn("Header user metadata fetch failed:", err);
+      }
+    };
+    
+    fetchUserName();
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!isProfileDropdownOpen) return;
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".profile-dropdown-container")) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [isProfileDropdownOpen]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -576,13 +661,98 @@ export const Header: React.FC = () => {
             )}
           </button>
 
-          <Link
-            href={isAuthenticated ? "/account" : "/login"}
-            className="nav-action-btn"
-            aria-label="Account Settings"
-          >
-            <User className="w-5 h-5" />
-          </Link>
+          <div className="relative profile-dropdown-container flex items-center">
+            {isAuthenticated ? (
+              <button
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="nav-action-btn cursor-pointer"
+                aria-label="Account Menu"
+              >
+                <User className="w-5 h-5" />
+              </button>
+            ) : (
+              <Link
+                href={`/login?redirect=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname + window.location.search : "")}`}
+                className="nav-action-btn"
+                aria-label="Login"
+              >
+                <User className="w-5 h-5" />
+              </Link>
+            )}
+
+            {isProfileDropdownOpen && isAuthenticated && (
+              <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xl z-50 p-6 rounded-none text-left animate-fade-in">
+                <div className="space-y-4">
+                  {/* Title / Welcome */}
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-zinc-400">
+                      Ruven Studio
+                    </span>
+                    <h4 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mt-1">
+                      Welcome back,
+                    </h4>
+                    <div className="text-sm font-semibold uppercase text-zinc-900 dark:text-zinc-50 tracking-wide">
+                      {userName}
+                    </div>
+                    <span className="text-[9px] font-mono font-bold text-[#670000] dark:text-red-400 block pt-0.5">
+                      {memberLevel}
+                    </span>
+                  </div>
+
+                  <div className="border-t border-zinc-100 dark:border-zinc-800/80 my-2" />
+
+                  {/* Primary CTA */}
+                  <button
+                    onClick={() => {
+                      setIsProfileDropdownOpen(false);
+                      router.push("/shop");
+                    }}
+                    className="w-full text-center py-2.5 bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 hover:bg-[#670000] hover:text-white dark:hover:bg-[#670000] dark:hover:text-white transition-all text-[9px] font-bold uppercase tracking-widest rounded-none cursor-pointer"
+                  >
+                    Continue Shopping
+                  </button>
+
+                  <div className="border-t border-zinc-100 dark:border-zinc-800/80 my-2" />
+
+                  {/* Nav links */}
+                  <div className="space-y-2">
+                    {[
+                      { label: "My Orders", path: "/account/orders" },
+                      { label: "Wishlist", path: "/account/wishlist" },
+                      { label: "Recently Viewed", path: "/account/recent" },
+                      { label: "Saved Addresses", path: "/account/addresses" },
+                      { label: "Journal Library", path: "/account/journal" },
+                      { label: "Rewards & Membership", path: "/account/rewards" },
+                      { label: "Profile Settings", path: "/account/profile" },
+                      { label: "Support", path: "/support" }
+                    ].map((link) => (
+                      <Link
+                        key={link.path}
+                        href={link.path}
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                        className="block text-[11px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors py-1"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div className="border-t border-zinc-100 dark:border-zinc-800/80 my-2" />
+
+                  {/* Sign out */}
+                  <button
+                    onClick={() => {
+                      setIsProfileDropdownOpen(false);
+                      handleLogout();
+                    }}
+                    className="w-full text-left text-[11px] font-bold uppercase tracking-wider text-[#670000] dark:text-red-400 hover:underline cursor-pointer"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           <button
             onClick={() => setCartOpen(true)}
@@ -1100,19 +1270,61 @@ export const Header: React.FC = () => {
                     <Heart className="w-4 h-4 text-brand-burgundy" />
                   </button>
 
-                  {/* BUG 9: Mobile account link — User icon + text side-by-side */}
-                  <Link
-                    href={isAuthenticated ? "/account" : "/login"}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between w-full text-xs font-bold uppercase tracking-wider text-text-primary"
-                    aria-label="My Account"
-                  >
-                    <span className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-brand-burgundy" />
-                      <span>Account</span>
-                    </span>
-                    <ChevronRight className="w-3.5 h-3.5 text-text-muted" />
-                  </Link>
+                  {/* Mobile account dropdown/list options */}
+                  {isAuthenticated ? (
+                    <div className="space-y-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Welcome back, {userName.split(" ")[0]}</span>
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-[#670000] dark:text-red-400">{memberLevel}</span>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        {[
+                          { label: "My Orders", path: "/account/orders" },
+                          { label: "Wishlist", path: "/account/wishlist" },
+                          { label: "Recently Viewed", path: "/account/recent" },
+                          { label: "Saved Addresses", path: "/account/addresses" },
+                          { label: "Journal Library", path: "/account/journal" },
+                          { label: "Rewards Lounge", path: "/account/rewards" },
+                          { label: "Profile", path: "/account/profile" },
+                          { label: "Settings", path: "/account/settings" },
+                          { label: "Support", path: "/support" }
+                        ].map((link) => (
+                          <Link
+                            key={link.path}
+                            href={link.path}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-955 dark:hover:text-zinc-200 py-1"
+                          >
+                            {link.label}
+                          </Link>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          handleLogout();
+                        }}
+                        className="w-full text-left text-[10px] font-bold uppercase tracking-wider text-[#670000] dark:text-red-400 hover:underline pt-2 border-t border-zinc-100 dark:border-zinc-800"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      href={`/login?redirect=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname + window.location.search : "")}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between w-full text-xs font-bold uppercase tracking-wider text-text-primary"
+                      aria-label="My Account"
+                    >
+                      <span className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-brand-burgundy" />
+                        <span>Sign In</span>
+                      </span>
+                      <ChevronRight className="w-3.5 h-3.5 text-text-muted" />
+                    </Link>
+                  )}
                 </div>
               </div>
             </motion.div>

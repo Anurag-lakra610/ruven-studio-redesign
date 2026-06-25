@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { Eye, EyeOff } from "lucide-react";
@@ -55,6 +55,14 @@ const labelSt: React.CSSProperties = {
 
 function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams?.get("redirect");
+  const getRedirectUrl = () => {
+    if (!redirectParam) return "/";
+    if (redirectParam === "/account") return "/account/profile";
+    return redirectParam;
+  };
+  const destination = getRedirectUrl();
 
   // Form values
   const [identifier, setIdentifier] = useState("");
@@ -146,7 +154,7 @@ function LoginForm() {
         localStorage.setItem("ruven_remember_me", "true");
       }
       setLoading(false);
-      router.push("/account");
+      router.push(destination);
       return;
     }
 
@@ -267,7 +275,7 @@ function LoginForm() {
           document.cookie = "mock_customer_session=true; path=/; max-age=86400";
           document.cookie = `mock_user_email=${val}; path=/; max-age=86400`;
           document.cookie = "mock_user_name=Phone Customer; path=/; max-age=86400";
-          router.push("/account");
+          router.push(destination);
         } else {
           setOtpError("Incorrect OTP code. Try 123456.");
           setLoading(false);
@@ -295,7 +303,7 @@ function LoginForm() {
         });
         if (authErr) throw authErr;
 
-        router.push("/account");
+        router.push(destination);
       } catch (err: any) {
         setOtpError(err.message || "Incorrect verification code. Please try again.");
         setLoading(false);
@@ -317,7 +325,7 @@ function LoginForm() {
           document.cookie = `mock_user_email=${val}; path=/; max-age=86400`;
           const derivedName = val.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, c => c.toUpperCase());
           document.cookie = `mock_user_name=${derivedName}; path=/; max-age=86400`;
-          router.push("/account");
+          router.push(destination);
         }
       } else {
         setOtpError("Incorrect OTP. Try 123456.");
@@ -336,7 +344,7 @@ function LoginForm() {
       });
       if (authErr) throw authErr;
 
-      router.push("/account");
+      router.push(destination);
     } catch (err: any) {
       setOtpError(err.message || "Incorrect verification code. Please try again.");
       setLoading(false);
@@ -401,7 +409,7 @@ function LoginForm() {
       document.cookie = "mock_customer_session=true; path=/; max-age=86400";
       document.cookie = "mock_user_email=google.user@gmail.com; path=/; max-age=86400";
       document.cookie = "mock_user_name=Google Tester; path=/; max-age=86400";
-      router.push("/account");
+      router.push(destination);
       return;
     }
     try {
@@ -759,7 +767,7 @@ function LoginForm() {
                       document.cookie = "mock_user_email=anurag2002march@gmail.com; path=/; max-age=86400";
                       document.cookie = "mock_user_name=Anurag Lakra; path=/; max-age=86400";
                       setLoading(false);
-                      router.push("/account");
+                      router.push(destination);
                     }}
                     disabled={loading}
                     style={{
@@ -860,7 +868,13 @@ export default function LoginPage() {
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#FFFFFF", overflowX: "hidden" }}>
         <Header />
         <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-          <LoginForm />
+          <Suspense fallback={
+            <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", color: "#888880", fontSize: "13px" }}>
+              Loading login options...
+            </div>
+          }>
+            <LoginForm />
+          </Suspense>
         </div>
       </div>
     </CartProvider>
