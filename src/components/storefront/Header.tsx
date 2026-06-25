@@ -49,6 +49,7 @@ export const Header: React.FC = () => {
   const [userName, setUserName] = useState("Anurag Lakra");
   const [memberLevel, setMemberLevel] = useState("Silver Member");
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [phone, setPhone] = useState("");
 
   const handleLogout = () => {
     document.cookie = "mock_customer_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
@@ -84,10 +85,18 @@ export const Header: React.FC = () => {
       if (cookieName) {
         setUserName(cookieName);
       }
+      const cookiePhone = getCookie("mock_user_phone") || getCookie("mock_user_email");
+      if (cookiePhone) {
+        setPhone(cookiePhone);
+      }
 
       try {
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          if (user.phone) setPhone(user.phone);
+          else if (user.email) setPhone(user.email);
+        }
         if (user) {
           if (user.user_metadata?.first_name) {
             setUserName(`${user.user_metadata.first_name} ${user.user_metadata.last_name || ""}`.trim());
@@ -661,15 +670,19 @@ export const Header: React.FC = () => {
             )}
           </button>
 
-          <div className="relative profile-dropdown-container flex items-center">
+          <div 
+            className="relative profile-dropdown-container flex items-center h-full py-2"
+            onMouseEnter={() => setIsProfileDropdownOpen(true)}
+            onMouseLeave={() => setIsProfileDropdownOpen(false)}
+          >
             {isAuthenticated ? (
-              <button
-                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+              <Link
+                href="/account"
                 className="nav-action-btn cursor-pointer"
                 aria-label="Account Menu"
               >
                 <User className="w-5 h-5" />
-              </button>
+              </Link>
             ) : (
               <Link
                 href={`/login?redirect=${encodeURIComponent(typeof window !== "undefined" ? window.location.pathname + window.location.search : "")}`}
@@ -682,42 +695,31 @@ export const Header: React.FC = () => {
 
             {isProfileDropdownOpen && isAuthenticated && (
               <div 
-                className="absolute right-0 top-full mt-2 w-[260px] bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800 shadow-xl z-50 p-5 rounded-none text-left animate-fade-in font-sans"
-                style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.08)" }}
+                className="absolute right-0 top-full mt-2 w-[270px] bg-white dark:bg-zinc-900 border border-zinc-150 dark:border-zinc-800 shadow-xl z-50 p-5 pt-4 rounded-none text-left animate-fade-in font-sans"
+                style={{ 
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.05), 0 0 1px rgba(0,0,0,0.1)",
+                  color: "#3e4152"
+                }}
               >
                 <div className="space-y-1">
                   {/* User greeting */}
-                  <div className="px-1 pb-2">
-                    <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">
-                      Hello {userName.split(" ")[0]}
+                  <div className="px-1 pb-1">
+                    <h4 className="text-[12px] font-bold text-[#3e4152] dark:text-zinc-50 uppercase tracking-wide">
+                      Hello {userName}
                     </h4>
-                    <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono tracking-wider uppercase mt-0.5">
-                      {memberLevel}
+                    <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono mt-0.5">
+                      {phone}
                     </p>
                   </div>
 
-                  <div className="border-b border-zinc-150 dark:border-zinc-800/80 my-2" />
+                  <div className="border-b border-[#F5F5F6] dark:border-zinc-800/80 my-2" />
 
-                  {/* Shopping CTA */}
-                  <button
-                    onClick={() => {
-                      setIsProfileDropdownOpen(false);
-                      router.push("/shop");
-                    }}
-                    className="w-full text-center py-2.5 bg-[#670000] text-white hover:bg-black transition-colors text-[9px] font-bold uppercase tracking-widest rounded-none cursor-pointer my-1.5"
-                  >
-                    Continue Shopping
-                  </button>
-
-                  <div className="border-b border-zinc-150 dark:border-zinc-800/80 my-2" />
-
-                  {/* Nav links */}
+                  {/* Group 1 */}
                   <div className="space-y-0.5">
                     {[
-                      { label: "My Orders", path: "/account/orders" },
+                      { label: "Orders", path: "/account/orders" },
                       { label: "Wishlist", path: "/account/wishlist" },
                       { label: "Recently Viewed", path: "/account/recent" },
-                      { label: "Saved Addresses", path: "/account/addresses" },
                       { label: "Journal Library", path: "/account/journal" },
                       { label: "Rewards & Membership", path: "/account/rewards" }
                     ].map((link) => (
@@ -725,16 +727,36 @@ export const Header: React.FC = () => {
                         key={link.path}
                         href={link.path}
                         onClick={() => setIsProfileDropdownOpen(false)}
-                        className="block py-2 px-1 text-xs font-medium text-zinc-600 hover:text-[#670000] dark:text-zinc-400 dark:hover:text-red-400 transition-colors"
+                        className="block py-1.5 px-1 text-[12px] font-normal text-[#3e4152] hover:text-[#670000] dark:text-zinc-400 dark:hover:text-red-400 transition-colors"
                       >
                         {link.label}
                       </Link>
                     ))}
                   </div>
 
-                  <div className="border-b border-zinc-150 dark:border-zinc-800/80 my-2" />
+                  <div className="border-b border-[#F5F5F6] dark:border-zinc-800/80 my-2" />
 
-                  {/* Account Settings & Logout */}
+                  {/* Group 2 */}
+                  <div className="space-y-0.5">
+                    {[
+                      { label: "Saved Addresses", path: "/account/addresses" },
+                      { label: "Preferences & Settings", path: "/account/settings" },
+                      { label: "Contact Support", path: "/support" }
+                    ].map((link) => (
+                      <Link
+                        key={link.path}
+                        href={link.path}
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                        className="block py-1.5 px-1 text-[12px] font-normal text-[#3e4152] hover:text-[#670000] dark:text-zinc-400 dark:hover:text-red-400 transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+
+                  <div className="border-b border-[#F5F5F6] dark:border-zinc-800/80 my-2" />
+
+                  {/* Group 3 */}
                   <div className="space-y-0.5 pt-1">
                     <Link
                       href="/account/profile"
